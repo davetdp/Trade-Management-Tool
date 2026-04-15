@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIL — Trade Management Tool</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #050d1a;
+      --surface:   #0b1929;
+      --border:    rgba(0,180,255,0.12);
+      --accent:    #00b4ff;
+      --accent2:   #0066cc;
+      --green:     #00e5a0;
+      --red:       #ff4d6a;
+      --amber:     #ffb830;
+      --text:      #e8f4ff;
+      --muted:     #6a8aaa;
+      --card-bg:   rgba(5, 20, 45, 0.92);
+    }
+
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+
+    /* ── TOP NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 56px;
+      background: rgba(5,13,26,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+    }
+    .nav-left { display: flex; align-items: center; gap: 14px; }
+    .pil-logo {
+      background: linear-gradient(135deg, #0055aa, #00aaff);
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 15px; letter-spacing: 2px;
+      padding: 6px 12px; border-radius: 6px;
+    }
+    .nav-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px; font-weight: 600; color: var(--text);
+      border-left: 1px solid var(--border); padding-left: 14px; letter-spacing: 0.3px;
+    }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-stat { text-align: right; }
+    .nav-stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
+    .nav-stat-value { font-size: 13px; font-weight: 600; }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed; top: 56px; left: 0; bottom: 0; z-index: 900;
+      width: 220px;
+      background: rgba(5,13,26,0.9);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .sidebar-section { padding: 8px 16px 4px; font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 20px; font-size: 13px; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent;
+    }
+    .sidebar-item:hover { color: var(--text); background: rgba(0,180,255,0.06); }
+    .sidebar-item.active { color: var(--accent); background: rgba(0,180,255,0.08); border-left-color: var(--accent); }
+    .sidebar-icon { width: 16px; height: 16px; opacity: 0.8; }
+
+    /* ── KPI STRIP ── */
+    .kpi-strip {
+      position: fixed; bottom: 0; left: 220px; right: 0; z-index: 900;
+      height: 60px;
+      background: rgba(5,13,26,0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 24px; gap: 40px;
+    }
+    .kpi { display: flex; flex-direction: column; gap: 2px; }
+    .kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .kpi-value { font-size: 15px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+    .kpi-value.green { color: var(--green); }
+    .kpi-value.red   { color: var(--red); }
+    .kpi-value.blue  { color: var(--accent); }
+    .kpi-divider { width: 1px; height: 32px; background: var(--border); }
+
+    /* ── MAP ── */
+    #map {
+      position: fixed;
+      top: 56px; left: 220px; right: 0; bottom: 60px;
+    }
+    .leaflet-container { background: #020d1e !important; }
+    .leaflet-control-zoom {
+      border: 1px solid var(--border) !important;
+      border-radius: 8px !important;
+      overflow: hidden;
+    }
+    .leaflet-control-zoom a {
+      background: var(--surface) !important;
+      color: var(--accent) !important;
+      border-bottom: 1px solid var(--border) !important;
+      font-size: 16px !important;
+    }
+    .leaflet-control-zoom a:hover { background: rgba(0,180,255,0.15) !important; }
+
+    /* ── VESSEL MARKER ── */
+    .vessel-marker {
+      cursor: pointer;
+      transition: transform 0.2s;
+      filter: drop-shadow(0 0 6px rgba(0,180,255,0.8));
+    }
+    .vessel-marker:hover { transform: scale(1.3); filter: drop-shadow(0 0 12px rgba(0,180,255,1)); }
+
+    /* ── POPUP CARD ── */
+    .vessel-popup {
+      width: 290px;
+      background: var(--card-bg);
+      border: 1px solid rgba(0,180,255,0.25);
+      border-radius: 14px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,180,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+    .popup-header {
+      background: linear-gradient(135deg, rgba(0,80,180,0.5), rgba(0,180,255,0.2));
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(0,180,255,0.15);
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .popup-vessel-name { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.3px; }
+    .popup-route { font-size: 11px; color: rgba(180,220,255,0.7); margin-top: 3px; }
+    .popup-badge {
+      font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-transit  { background: rgba(0,180,255,0.2); color: var(--accent); border: 1px solid rgba(0,180,255,0.3); }
+    .badge-loading  { background: rgba(255,184,48,0.2); color: var(--amber); border: 1px solid rgba(255,184,48,0.3); }
+    .badge-arrived  { background: rgba(0,229,160,0.2); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
+
+    .popup-body { padding: 14px 16px; }
+    .popup-section-title { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+    .pnl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .pnl-item {
+      background: rgba(0,180,255,0.04);
+      border: 1px solid rgba(0,180,255,0.1);
+      border-radius: 8px; padding: 9px 10px;
+    }
+    .pnl-item-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+    .pnl-item-value { font-size: 14px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+
+    .popup-divider { height: 1px; background: rgba(0,180,255,0.1); margin: 12px 0; }
+
+    .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+    .detail-label { font-size: 11px; color: var(--muted); }
+    .detail-value { font-size: 11px; font-weight: 600; color: var(--text); }
+
+    .utilization-bar-wrap { margin-top: 12px; }
+    .util-label-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .util-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .util-pct { font-size: 11px; font-weight: 700; color: var(--green); }
+    .util-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
+    .util-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #0066cc, #00e5a0); }
+
+    /* Hide default Leaflet popup chrome */
+    .leaflet-popup-content-wrapper { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; border-radius: 14px !important; }
+    .leaflet-popup-content { margin: 0 !important; }
+    .leaflet-popup-tip-container { display: none !important; }
+    .leaflet-popup-close-button { display: none !important; }
+
+    /* Glowing route lines */
+    .route-path { stroke: rgba(0,180,255,0.25); stroke-width: 1.5; stroke-dasharray: 5,5; fill: none; }
+
+    /* Animated ping rings around vessels */
+    @keyframes sonar { 0%{r:8;opacity:0.8;} 100%{r:24;opacity:0;} }
+
+    /* ── PORT MARKER ── */
+    .port-marker {
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s;
+    }
+    .port-marker:hover { transform: scale(1.2); }
+    .port-dot-outer {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,184,48,0.15);
+      border: 1.5px solid rgba(255,184,48,0.6);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 10px rgba(255,184,48,0.4);
+    }
+    .port-dot-inner {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #ffb830;
+      box-shadow: 0 0 6px #ffb830;
+    }
+
+    /* ── PORT POPUP CARD ── */
+    .port-popup {
+      width: 270px;
+      background: rgba(20, 12, 3, 0.94);
+      border: 1px solid rgba(255,184,48,0.25);
+      border-radius: 14px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,184,48,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+    .port-popup-header {
+      background: linear-gradient(135deg, rgba(180,100,0,0.4), rgba(255,184,48,0.15));
+      padding: 13px 16px 11px;
+      border-bottom: 1px solid rgba(255,184,48,0.15);
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .port-popup-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; color: #fff; }
+    .port-popup-country { font-size: 11px; color: rgba(255,220,140,0.7); margin-top: 2px; }
+    .port-badge {
+      font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
+      background: rgba(255,184,48,0.18); color: var(--amber);
+      border: 1px solid rgba(255,184,48,0.3);
+      text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+    }
+    .port-popup-body { padding: 13px 16px; }
+
+    /* delinquency meter */
+    .delinq-section { margin-bottom: 14px; }
+    .delinq-title { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .delinq-value-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+    .delinq-days { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; line-height: 1; }
+    .delinq-unit { font-size: 12px; color: var(--muted); }
+    .delinq-trend { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
+    .trend-up   { background: rgba(255,77,106,0.15); color: var(--red); }
+    .trend-down { background: rgba(0,229,160,0.15); color: var(--green); }
+    .trend-flat { background: rgba(106,138,170,0.15); color: var(--muted); }
+    .delinq-bar-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; margin-top: 4px; }
+    .delinq-bar-fill  { height: 100%; border-radius: 10px; }
+
+    /* container inventory grid */
+    .inv-title { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .inv-card {
+      background: rgba(255,184,48,0.05);
+      border: 1px solid rgba(255,184,48,0.12);
+      border-radius: 8px; padding: 9px 11px;
+    }
+    .inv-card-type { font-size: 11px; font-weight: 700; color: var(--amber); letter-spacing: 0.5px; margin-bottom: 2px; }
+    .inv-card-desc { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
+    .inv-card-count { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); line-height: 1; }
+    .inv-card-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    .port-divider { height: 1px; background: rgba(255,184,48,0.1); margin: 11px 0; }
+    .port-detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .port-detail-label { font-size: 11px; color: var(--muted); }
+    .port-detail-value { font-size: 11px; font-weight: 600; color: var(--text); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="pil-logo">PIL</div>
+    <div class="nav-title">Trade Management Tool</div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-stat">
+      <div class="nav-stat-label">Fleet Active</div>
+      <div class="nav-stat-value" style="color:var(--green)">4 / 4 Vessels</div>
+    </div>
+    <div class="nav-stat">
+      <div class="nav-stat-label">Total Revenue (YTD)</div>
+      <div class="nav-stat-value" style="color:var(--accent)">USD 148.6M</div>
+    </div>
+    <div class="nav-stat">
+      <div class="nav-stat-label">Net Profit (YTD)</div>
+      <div class="nav-stat-value" style="color:var(--green)">USD 31.2M</div>
+    </div>
+    <div class="nav-dot"></div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-section">Navigation</div>
+  <div class="sidebar-item active">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    Live Map
+  </div>
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Fleet Overview
+  </div>
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    P&amp;L Analytics
+  </div>
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Voyage Reports
+  </div>
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    Counterparties
+  </div>
+
+  <div class="sidebar-section" style="margin-top:16px">Trade Lanes</div>
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    Asia – Africa
+  </div>
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    Asia – Oceania
+  </div>
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    Intra-Asia
+  </div>
+</aside>
+
+<!-- MAP -->
+<div id="map"></div>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi">
+    <div class="kpi-label">Total TEU Capacity</div>
+    <div class="kpi-value blue">41,800 TEU</div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi">
+    <div class="kpi-label">Avg. Utilisation</div>
+    <div class="kpi-value green">87.3%</div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi">
+    <div class="kpi-label">Total Revenue (Apr)</div>
+    <div class="kpi-value blue">USD 18.4M</div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi">
+    <div class="kpi-label">Total Costs (Apr)</div>
+    <div class="kpi-value" style="color:var(--amber)">USD 12.9M</div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi">
+    <div class="kpi-label">Net Profit (Apr)</div>
+    <div class="kpi-value green">USD 5.5M</div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi">
+    <div class="kpi-label">Voyages In Progress</div>
+    <div class="kpi-value blue">4</div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi">
+    <div class="kpi-label">On-Time Performance</div>
+    <div class="kpi-value green">91.2%</div>
+  </div>
+</div>
+
+<script>
+// ── MAP INIT ────────────────────────────────────────────────
+const map = L.map('map', {
+  center: [10, 90],
+  zoom: 3,
+  minZoom: 2,
+  maxZoom: 10,
+  zoomControl: true,
+  attributionControl: false
+});
+
+// Dark maritime tile layer
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
+
+// ── VESSEL DATA ─────────────────────────────────────────────
+const vessels = [
+  {
+    name: 'PIL CAPE PIONEER',
+    position: [-35.2, 20.8],
+    route: 'Shanghai → Cape Town → Hamburg',
+    status: 'Transit',
+    badgeClass: 'badge-transit',
+    flag: '🇸🇬',
+    imo: '9741023',
+    built: 2018,
+    teu: 11200,
+    teuLoaded: 9856,
+    speed: '14.2 kts',
+    heading: 'NW',
+    eta: '22 Apr 2025',
+    revenue:   { label: 'Voyage Revenue',  value: 'USD 6.84M',  color: 'var(--green)' },
+    costs:     { label: 'Voyage Costs',    value: 'USD 4.61M',  color: 'var(--red)' },
+    profit:    { label: 'Net Profit',      value: 'USD 2.23M',  color: 'var(--green)' },
+    margin:    { label: 'Profit Margin',   value: '32.6%',      color: 'var(--accent)' },
+    fuel: 'USD 1.42M',
+    port: 'USD 0.38M',
+    crew: 'USD 0.27M',
+    util: 88,
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+  },
+  {
+    name: 'PIL OCEANIA STAR',
+    position: [-31.5, 153.8],
+    route: 'Singapore → Sydney → Auckland',
+    status: 'Arrived',
+    badgeClass: 'badge-arrived',
+    flag: '🇸🇬',
+    imo: '9612874',
+    built: 2015,
+    teu: 8500,
+    teuLoaded: 7140,
+    speed: '0.0 kts',
+    heading: '—',
+    eta: 'Berthed',
+    revenue:   { label: 'Voyage Revenue',  value: 'USD 4.21M',  color: 'var(--green)' },
+    costs:     { label: 'Voyage Costs',    value: 'USD 3.18M',  color: 'var(--red)' },
+    profit:    { label: 'Net Profit',      value: 'USD 1.03M',  color: 'var(--green)' },
+    margin:    { label: 'Profit Margin',   value: '24.5%',      color: 'var(--accent)' },
+    fuel: 'USD 0.98M',
+    port: 'USD 0.52M',
+    crew: 'USD 0.24M',
+    util: 84,
+    utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)'
+  },
+  {
+    name: 'PIL ORIENT EXPRESS',
+    position: [30.8, 123.1],
+    route: 'Singapore → Shanghai → Busan',
+    status: 'Loading',
+    badgeClass: 'badge-loading',
+    flag: '🇸🇬',
+    imo: '9803541',
+    built: 2020,
+    teu: 13400,
+    teuLoaded: 11490,
+    speed: '0.0 kts',
+    heading: '—',
+    eta: 'Departs 17 Apr',
+    revenue:   { label: 'Voyage Revenue',  value: 'USD 7.92M',  color: 'var(--green)' },
+    costs:     { label: 'Voyage Costs',    value: 'USD 5.04M',  color: 'var(--red)' },
+    profit:    { label: 'Net Profit',      value: 'USD 2.88M',  color: 'var(--green)' },
+    margin:    { label: 'Profit Margin',   value: '36.4%',      color: 'var(--accent)' },
+    fuel: 'USD 1.71M',
+    port: 'USD 0.61M',
+    crew: 'USD 0.29M',
+    util: 86,
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+  },
+  {
+    name: 'PIL SINGAPORE HUB',
+    position: [1.1, 104.2],
+    route: 'Shanghai → Singapore → Colombo',
+    status: 'Transit',
+    badgeClass: 'badge-transit',
+    flag: '🇸🇬',
+    imo: '9556789',
+    built: 2016,
+    teu: 8700,
+    teuLoaded: 7743,
+    speed: '12.8 kts',
+    heading: 'SW',
+    eta: '18 Apr 2025',
+    revenue:   { label: 'Voyage Revenue',  value: 'USD 5.18M',  color: 'var(--green)' },
+    costs:     { label: 'Voyage Costs',    value: 'USD 3.62M',  color: 'var(--red)' },
+    profit:    { label: 'Net Profit',      value: 'USD 1.56M',  color: 'var(--green)' },
+    margin:    { label: 'Profit Margin',   value: '30.1%',      color: 'var(--accent)' },
+    fuel: 'USD 1.18M',
+    port: 'USD 0.44M',
+    crew: 'USD 0.26M',
+    util: 89,
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+  }
+];
+
+// ── SHIP SVG ICON ────────────────────────────────────────────
+function shipIcon(color = '#00b4ff') {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <g filter="url(#glow)">
+      <!-- hull -->
+      <path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="${color}" opacity="0.95"/>
+      <!-- superstructure -->
+      <rect x="13" y="14" width="10" height="9" rx="2" fill="${color}" opacity="0.9"/>
+      <!-- bridge -->
+      <rect x="15" y="11" width="6" height="5" rx="1.5" fill="${color}"/>
+      <!-- chimney -->
+      <rect x="17.5" y="8" width="2" height="5" rx="1" fill="${color}" opacity="0.8"/>
+      <!-- bow -->
+      <path d="M28 22 L32 24 L25 27 Z" fill="${color}" opacity="0.7"/>
+    </g>
+  </svg>`;
+  return L.divIcon({
+    html: `<div class="vessel-marker">${svg}</div>`,
+    className: '',
+    iconSize: [36, 36],
+    iconAnchor: [18, 18]
+  });
+}
+
+// ── POPUP HTML ───────────────────────────────────────────────
+function buildPopup(v) {
+  return `
+  <div class="vessel-popup">
+    <div class="popup-header">
+      <div>
+        <div class="popup-vessel-name">${v.flag} ${v.name}</div>
+        <div class="popup-route">${v.route}</div>
+      </div>
+      <span class="popup-badge ${v.badgeClass}">${v.status}</span>
+    </div>
+    <div class="popup-body">
+      <div class="popup-section-title">Profit & Loss — Current Voyage</div>
+      <div class="pnl-grid">
+        <div class="pnl-item">
+          <div class="pnl-item-label">${v.revenue.label}</div>
+          <div class="pnl-item-value" style="color:${v.revenue.color}">${v.revenue.value}</div>
+        </div>
+        <div class="pnl-item">
+          <div class="pnl-item-label">${v.costs.label}</div>
+          <div class="pnl-item-value" style="color:${v.costs.color}">${v.costs.value}</div>
+        </div>
+        <div class="pnl-item">
+          <div class="pnl-item-label">${v.profit.label}</div>
+          <div class="pnl-item-value" style="color:${v.profit.color}">${v.profit.value}</div>
+        </div>
+        <div class="pnl-item">
+          <div class="pnl-item-label">${v.margin.label}</div>
+          <div class="pnl-item-value" style="color:${v.margin.color}">${v.margin.value}</div>
+        </div>
+      </div>
+
+      <div class="popup-section-title">Cost Breakdown</div>
+      <div class="detail-row"><span class="detail-label">Fuel &amp; Bunker</span><span class="detail-value">${v.fuel}</span></div>
+      <div class="detail-row"><span class="detail-label">Port Charges</span><span class="detail-value">${v.port}</span></div>
+      <div class="detail-row"><span class="detail-label">Crew &amp; Operations</span><span class="detail-value">${v.crew}</span></div>
+
+      <div class="popup-divider"></div>
+
+      <div class="popup-section-title">Vessel Details</div>
+      <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
+      <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
+      <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
+      <div class="detail-row"><span class="detail-label">Heading</span><span class="detail-value">${v.heading}</span></div>
+      <div class="detail-row"><span class="detail-label">ETA / Status</span><span class="detail-value">${v.eta}</span></div>
+
+      <div class="utilization-bar-wrap">
+        <div class="util-label-row">
+          <span class="util-label">Container Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
+          <span class="util-pct">${v.util}%</span>
+        </div>
+        <div class="util-track">
+          <div class="util-fill" style="width:${v.util}%; background:${v.utilColor}"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── RENDER VESSELS ───────────────────────────────────────────
+const colors = ['#00b4ff', '#00e5a0', '#ffb830', '#00b4ff'];
+
+vessels.forEach((v, i) => {
+  const icon = shipIcon(colors[i]);
+  const marker = L.marker(v.position, { icon }).addTo(map);
+
+  const popup = L.popup({
+    maxWidth: 300,
+    minWidth: 290,
+    className: 'vessel-popup-wrapper',
+    offset: [0, -10],
+    autoPan: true,
+    closeOnClick: false
+  }).setContent(buildPopup(v));
+
+  marker.on('mouseover', function () { this.openPopup(); });
+  marker.on('mouseout',  function () { this.closePopup(); });
+  marker.bindPopup(popup);
+
+  // Sonar ping ring using SVG overlay
+  const size = 80;
+  const pingIcon = L.divIcon({
+    html: `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="8" fill="none" stroke="${colors[i]}" stroke-width="1.5" opacity="0.7">
+        <animate attributeName="r" from="8" to="34" dur="2.${i}s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" from="0.7" to="0" dur="2.${i}s" repeatCount="indefinite"/>
+      </circle>
+    </svg>`,
+    className: '',
+    iconSize: [size, size],
+    iconAnchor: [size/2, size/2]
+  });
+  L.marker(v.position, { icon: pingIcon, interactive: false, zIndexOffset: -100 }).addTo(map);
+});
+
+// ── PORT DATA ───────────────────────────────────────────────
+const ports = [
+  {
+    name: 'Port of Santos',
+    country: '🇧🇷 Santos, Brazil',
+    type: 'Hub Port',
+    unlocode: 'BR STS',
+    position: [-23.95, -46.33],
+    avgDelinquency: 18.4,
+    delinqTrend: '+2.1 days vs last month',
+    trendClass: 'trend-up',
+    delinqColor: '#ff4d6a',
+    delinqBarPct: 74,   // relative severity 0–100
+    d2: { count: 312, label: 'Units on Ground' },
+    d5: { count: 187, label: 'Units on Ground' },
+    nextCall: '24 Apr 2025',
+    terminalOps: 'Santos Brasil Terminais',
+    dwell: '4.2 days avg',
+  },
+  {
+    name: 'Port of San Antonio',
+    country: '🇨🇱 San Antonio, Chile',
+    type: 'Regional Port',
+    unlocode: 'CL SAI',
+    position: [-33.58, -71.62],
+    avgDelinquency: 11.7,
+    delinqTrend: '−1.4 days vs last month',
+    trendClass: 'trend-down',
+    delinqColor: '#00e5a0',
+    delinqBarPct: 47,
+    d2: { count: 148, label: 'Units on Ground' },
+    d5: { count: 94,  label: 'Units on Ground' },
+    nextCall: '02 May 2025',
+    terminalOps: 'Puerto Central S.A.',
+    dwell: '3.6 days avg',
+  },
+  {
+    name: 'Port of Fremantle',
+    country: '🇦🇺 Perth, Australia',
+    type: 'Gateway Port',
+    unlocode: 'AU FRE',
+    position: [-32.05, 115.74],
+    avgDelinquency: 8.2,
+    delinqTrend: 'Stable (±0.3 days)',
+    trendClass: 'trend-flat',
+    delinqColor: '#ffb830',
+    delinqBarPct: 33,
+    d2: { count: 224, label: 'Units on Ground' },
+    d5: { count: 139, label: 'Units on Ground' },
+    nextCall: '19 Apr 2025',
+    terminalOps: 'Patrick Terminals',
+    dwell: '2.9 days avg',
+  }
+];
+
+// ── PORT ICON ────────────────────────────────────────────────
+function portIcon() {
+  return L.divIcon({
+    html: `<div class="port-marker">
+      <div class="port-dot-outer"><div class="port-dot-inner"></div></div>
+    </div>`,
+    className: '',
+    iconSize: [22, 22],
+    iconAnchor: [11, 11]
+  });
+}
+
+// ── PORT POPUP HTML ──────────────────────────────────────────
+function buildPortPopup(p) {
+  return `
+  <div class="port-popup">
+    <div class="port-popup-header">
+      <div>
+        <div class="port-popup-name">${p.name}</div>
+        <div class="port-popup-country">${p.country}</div>
+      </div>
+      <span class="port-badge">${p.type}</span>
+    </div>
+    <div class="port-popup-body">
+
+      <div class="delinq-section">
+        <div class="delinq-title">Avg. Container Delinquency</div>
+        <div class="delinq-value-row">
+          <span class="delinq-days" style="color:${p.delinqColor}">${p.avgDelinquency}</span>
+          <span class="delinq-unit">days</span>
+          <span class="delinq-trend ${p.trendClass}">${p.delinqTrend}</span>
+        </div>
+        <div class="delinq-bar-track">
+          <div class="delinq-bar-fill" style="width:${p.delinqBarPct}%; background:${p.delinqColor}; opacity:0.75"></div>
+        </div>
+      </div>
+
+      <div class="port-divider"></div>
+
+      <div class="inv-title">Containers Available on Land</div>
+      <div class="inv-grid">
+        <div class="inv-card">
+          <div class="inv-card-type">D2</div>
+          <div class="inv-card-desc">20' Dry Standard</div>
+          <div class="inv-card-count">${p.d2.count}</div>
+          <div class="inv-card-label">${p.d2.label}</div>
+        </div>
+        <div class="inv-card">
+          <div class="inv-card-type">D5</div>
+          <div class="inv-card-desc">40' High Cube</div>
+          <div class="inv-card-count">${p.d5.count}</div>
+          <div class="inv-card-label">${p.d5.label}</div>
+        </div>
+      </div>
+
+      <div class="port-divider"></div>
+
+      <div class="port-detail-row"><span class="port-detail-label">UN/LOCODE</span><span class="port-detail-value">${p.unlocode}</span></div>
+      <div class="port-detail-row"><span class="port-detail-label">Terminal Operator</span><span class="port-detail-value">${p.terminalOps}</span></div>
+      <div class="port-detail-row"><span class="port-detail-label">Avg. Dwell Time</span><span class="port-detail-value">${p.dwell}</span></div>
+      <div class="port-detail-row"><span class="port-detail-label">Next PIL Call</span><span class="port-detail-value">${p.nextCall}</span></div>
+    </div>
+  </div>`;
+}
+
+// ── RENDER PORTS ─────────────────────────────────────────────
+ports.forEach(p => {
+  const marker = L.marker(p.position, { icon: portIcon() }).addTo(map);
+
+  const popup = L.popup({
+    maxWidth: 280,
+    minWidth: 270,
+    className: 'vessel-popup-wrapper',
+    offset: [0, -8],
+    autoPan: true,
+    closeOnClick: false
+  }).setContent(buildPortPopup(p));
+
+  marker.on('mouseover', function () { this.openPopup(); });
+  marker.on('mouseout',  function () { this.closePopup(); });
+  marker.bindPopup(popup);
+});
+
+</script>
+</body>
+</html>
