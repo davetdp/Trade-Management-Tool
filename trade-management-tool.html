@@ -165,6 +165,18 @@
       position: fixed;
       top: 58px; left: 220px; right: 0; bottom: 62px;
     }
+    /* Radial glow overlay — dark vignette with blue centre bloom */
+    #map-glow {
+      position: fixed;
+      top: 58px; left: 220px; right: 0; bottom: 62px;
+      pointer-events: none; z-index: 500;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 50%,
+          rgba(0,60,120,0.08) 0%,
+          rgba(0,20,60,0.18) 45%,
+          rgba(2,8,20,0.52) 100%);
+    }
+    body.sidebar-hidden #map-glow { left: 0 !important; }
     .leaflet-container { background: #020d1e !important; }
     .leaflet-tile-pane { filter: brightness(1.7); }
     .leaflet-control-zoom {
@@ -442,6 +454,7 @@
 
 <!-- MAP -->
 <div id="map"></div>
+<div id="map-glow"></div>
 
 <!-- KPI STRIP -->
 <div class="kpi-strip">
