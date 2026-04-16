@@ -394,7 +394,8 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 // ── VESSEL DATA ─────────────────────────────────────────────
 const vessels = [
   {
-    name: 'PIL CAPE PIONEER',
+    name: 'Kota Cantik',
+    vvd: 'KCTK0041W',
     position: [-35.2, 20.8],
     route: 'Shanghai → Cape Town → Hamburg',
     status: 'Transit',
@@ -418,7 +419,8 @@ const vessels = [
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
   },
   {
-    name: 'PIL OCEANIA STAR',
+    name: 'Kota Cahaya',
+    vvd: 'KCHY0005N',
     position: [-31.5, 153.8],
     route: 'Singapore → Sydney → Auckland',
     status: 'Arrived',
@@ -442,7 +444,8 @@ const vessels = [
     utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)'
   },
   {
-    name: 'PIL ORIENT EXPRESS',
+    name: 'Kota Cempaka',
+    vvd: 'KCPK0101S',
     position: [30.8, 123.1],
     route: 'Singapore → Shanghai → Busan',
     status: 'Loading',
@@ -466,7 +469,8 @@ const vessels = [
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
   },
   {
-    name: 'PIL SINGAPORE HUB',
+    name: 'Kota Cepat',
+    vvd: 'KCPT0001E',
     position: [1.1, 104.2],
     route: 'Shanghai → Singapore → Colombo',
     status: 'Transit',
@@ -528,6 +532,7 @@ function buildPopup(v) {
     <div class="popup-header">
       <div>
         <div class="popup-vessel-name">${v.flag} ${v.name}</div>
+        <div style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;margin:2px 0 3px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</div>
         <div class="popup-route">${v.route}</div>
       </div>
       <span class="popup-badge ${v.badgeClass}">${v.status}</span>
