@@ -514,27 +514,61 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
   function calcOffset() {
     const pt      = map.latLngToContainerPoint(marker.getLatLng());
     const mapSize = map.getSize();
-    const pad     = 14; // min gap from any screen edge
+    const pad     = 14;   // min gap from screen edge
+    const mHalf   = 18;   // half of marker icon size
+    const gap     = 8;    // gap between marker edge and popup
 
-    // ── Vertical ──────────────────────────────────────────────
-    // Popup body sits ABOVE its tip. To open below the marker, push
-    // the tip down far enough that the body clears the marker icon.
-    const offsetY = (pt.y < popupH + 60)
-      ? popupH + 20   // below: tip way down, body appears under marker
-      : -20;          // above: tip just above marker (default)
+    // Space available in each direction (from marker to screen edge)
+    const spaceAbove = pt.y - pad;
+    const spaceBelow = mapSize.y - pt.y - pad;
+    const spaceLeft  = pt.x - pad;
+    const spaceRight = mapSize.x - pt.x - pad;
 
-    // ── Horizontal ────────────────────────────────────────────
-    // Calculate where the popup's left and right edges would land,
-    // then shift inward exactly enough to keep both edges on screen.
-    let offsetX = 0;
-    const half = popupW / 2;
-    const projRight = pt.x + half;          // where right edge lands
-    const projLeft  = pt.x - half;          // where left edge lands
+    // Surplus space = available − what the popup needs in that direction
+    const scores = {
+      above: spaceAbove - (popupH + mHalf + gap),
+      below: spaceBelow - (popupH + mHalf + gap),
+      left:  spaceLeft  - (popupW + mHalf + gap),
+      right: spaceRight - (popupW + mHalf + gap),
+    };
 
-    if (projRight > mapSize.x - pad) {
-      offsetX = (mapSize.x - pad) - projRight;   // shift left
-    } else if (projLeft < pad) {
-      offsetX = pad - projLeft;                   // shift right
+    // Pick the direction with the most surplus space
+    const dir = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+
+    let offsetX = 0, offsetY = 0;
+
+    if (dir === 'above') {
+      // Popup body floats above — tip clears the marker icon
+      offsetY = -(mHalf + gap);
+      const rEdge = pt.x + popupW / 2;
+      const lEdge = pt.x - popupW / 2;
+      if (rEdge > mapSize.x - pad) offsetX = (mapSize.x - pad) - rEdge;
+      else if (lEdge < pad)        offsetX = pad - lEdge;
+
+    } else if (dir === 'below') {
+      // Tip pushed far down so popup body sits below the marker
+      offsetY = popupH + mHalf + gap;
+      const rEdge = pt.x + popupW / 2;
+      const lEdge = pt.x - popupW / 2;
+      if (rEdge > mapSize.x - pad) offsetX = (mapSize.x - pad) - rEdge;
+      else if (lEdge < pad)        offsetX = pad - lEdge;
+
+    } else if (dir === 'right') {
+      // Tip pushed right; popup body appears to the right of the marker
+      offsetX = mHalf + gap + popupW / 2;
+      offsetY = popupH / 2;   // vertically centred on marker
+      // Clamp vertically so popup doesn't clip top/bottom
+      const tipY = pt.y + offsetY;
+      if (tipY > mapSize.y - pad)        offsetY = mapSize.y - pad - pt.y;
+      else if (tipY - popupH < pad)      offsetY = pad + popupH - pt.y;
+
+    } else {
+      // left — tip pushed left; popup body appears to the left of the marker
+      offsetX = -(mHalf + gap + popupW / 2);
+      offsetY = popupH / 2;
+      const tipY = pt.y + offsetY;
+      if (tipY > mapSize.y - pad)        offsetY = mapSize.y - pad - pt.y;
+      else if (tipY - popupH < pad)      offsetY = pad + popupH - pt.y;
     }
 
     popup.options.offset = L.point(offsetX, offsetY);
