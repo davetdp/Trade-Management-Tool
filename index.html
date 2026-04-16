@@ -1087,7 +1087,9 @@ legendEl.onAdd = function () {
       ${Object.entries(tradeLanes).map(([name, { color }]) => {
         const count = laneVesselCount[name] || 0;
         return `
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+        <div class="leg-lane-row" data-lane="${name}"
+             onclick="window.pilFilter('${name}')"
+             style="display:flex;align-items:center;gap:8px;margin-bottom:3px;cursor:pointer;padding:3px 4px;transition:opacity 0.2s,background 0.2s;">
           <svg width="14" height="14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
             <path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="${color}"/>
             <rect x="13" y="14" width="10" height="9" rx="2" fill="${color}" opacity="0.9"/>
@@ -1107,9 +1109,40 @@ legendEl.addTo(map);
 
 // ── RENDER VESSELS ───────────────────────────────────────────
 
+const vesselMarkers = []; // store refs for filter
+let pilActiveFilter = null;
+
+window.pilFilter = function(laneName) {
+  pilActiveFilter = (pilActiveFilter === laneName) ? null : laneName;
+  const laneServices = pilActiveFilter ? (tradeLanes[pilActiveFilter]?.services || []) : null;
+
+  vesselMarkers.forEach(({ marker, pingMarker, v, baseColor }) => {
+    if (v.isDryDock) return;
+    const active = !laneServices || laneServices.includes(v.service);
+    const displayColor = active ? baseColor : '#2e3a4a';
+    marker.setIcon(shipIcon(displayColor));
+    // dim ping ring
+    const pingEl = pingMarker.getElement();
+    if (pingEl) pingEl.style.opacity = active ? '1' : '0.15';
+  });
+
+  // update legend row styles
+  document.querySelectorAll('.leg-lane-row').forEach(el => {
+    const lane = el.dataset.lane;
+    const active = !pilActiveFilter || pilActiveFilter === lane;
+    el.style.opacity = active ? '1' : '0.35';
+    el.style.background = (pilActiveFilter === lane) ? 'rgba(255,255,255,0.08)' : '';
+    el.style.borderRadius = '6px';
+  });
+};
+
+map.on('click', function() {
+  if (pilActiveFilter) window.pilFilter(pilActiveFilter);
+});
+
 vessels.forEach((v, i) => {
-  const color = v.isDryDock ? '#c0c8d8' : vesselColor(v.service);
-  const icon = shipIcon(color);
+  const baseColor = v.isDryDock ? '#c0c8d8' : vesselColor(v.service);
+  const icon = shipIcon(baseColor);
   const marker = L.marker(v.position, { icon }).addTo(map);
 
   const popup = L.popup({
@@ -1127,7 +1160,7 @@ vessels.forEach((v, i) => {
   const size = 80;
   const pingIcon = L.divIcon({
     html: `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="40" cy="40" r="8" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.7">
+      <circle cx="40" cy="40" r="8" fill="none" stroke="${baseColor}" stroke-width="1.5" opacity="0.7">
         <animate attributeName="r" from="8" to="34" dur="2.${i}s" repeatCount="indefinite"/>
         <animate attributeName="opacity" from="0.7" to="0" dur="2.${i}s" repeatCount="indefinite"/>
       </circle>
@@ -1136,7 +1169,9 @@ vessels.forEach((v, i) => {
     iconSize: [size, size],
     iconAnchor: [size/2, size/2]
   });
-  L.marker(v.position, { icon: pingIcon, interactive: false, zIndexOffset: -100 }).addTo(map);
+  const pingMarker = L.marker(v.position, { icon: pingIcon, interactive: false, zIndexOffset: -100 }).addTo(map);
+
+  vesselMarkers.push({ marker, pingMarker, v, baseColor });
 });
 
 // ── PORT DATA ─────────────────────────────────────────────────
