@@ -49,19 +49,15 @@
       font-size: 15px; font-weight: 600; color: var(--text);
       border-left: 1px solid var(--border); padding-left: 14px; letter-spacing: 0.3px;
     }
-    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .nav-right { display: flex; align-items: center; gap: 0; }
     .nav-stat {
       text-align: right; position: relative;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 6px 14px;
-      transition: background 0.2s, border-color 0.2s;
+      padding: 4px 18px;
+      transition: background 0.2s;
+      border-radius: 10px;
     }
-    .nav-stat:hover {
-      background: rgba(0,180,255,0.07);
-      border-color: rgba(0,180,255,0.2);
-    }
+    .nav-stat:hover { background: rgba(255,255,255,0.04); }
+    .nav-divider { width: 1px; height: 28px; background: rgba(0,180,255,0.12); flex-shrink: 0; }
     .nav-stat .nav-tip {
       position: absolute; top: calc(100% + 8px); right: 0;
       background: rgba(8,18,40,0.97); border: 1px solid rgba(255,255,255,0.12);
@@ -363,6 +359,7 @@
     <div class="nav-title">Trade Management Tool</div>
   </div>
   <div class="nav-right">
+    <div class="nav-divider"></div>
     <div class="nav-stat">
       <div class="nav-stat-label">Fleet Active</div>
       <div class="nav-stat-value" id="kpi-fleet" style="color:var(--green)">9 / 10 Vessels</div>
@@ -374,22 +371,27 @@
         <div class="nav-tip-row"><span class="nav-tip-dot" style="background:#c0c8d8;"></span><span style="color:#6a8aaa;">1 vessel in dry dock</span></div>
       </div>
     </div>
+    <div class="nav-divider"></div>
     <div class="nav-stat">
       <div class="nav-stat-label">Total Revenue (YTD)</div>
       <div class="nav-stat-value" id="kpi-rev-ytd" style="color:var(--accent)">USD 148.6M</div>
     </div>
+    <div class="nav-divider"></div>
     <div class="nav-stat">
       <div class="nav-stat-label">Net P&amp;L (YTD)</div>
       <div class="nav-stat-value" id="kpi-pnl-ytd" style="color:var(--green)">USD 31.2M</div>
     </div>
+    <div class="nav-divider"></div>
     <div class="nav-stat">
       <div class="nav-stat-label">Forecast P&amp;L (YTD)</div>
       <div class="nav-stat-value" id="kpi-fcst-ytd" style="color:var(--muted)">USD 29.8M</div>
     </div>
+    <div class="nav-divider"></div>
     <div class="nav-stat">
       <div class="nav-stat-label">Forecast vs Actual (YTD)</div>
       <div class="nav-stat-value" id="kpi-var-ytd" style="color:var(--green)">+4.7%</div>
     </div>
+    <div class="nav-divider"></div>
     <div class="nav-dot"></div>
   </div>
 </nav>
