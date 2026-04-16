@@ -68,7 +68,24 @@
       border-right: 1px solid var(--border);
       padding: 20px 0;
       display: flex; flex-direction: column; gap: 4px;
+      transition: transform 0.25s ease;
     }
+    .sidebar.collapsed { transform: translateX(-220px); }
+    .sidebar-toggle {
+      position: fixed; top: 50%; left: 220px; transform: translateY(-50%);
+      z-index: 950; width: 18px; height: 48px;
+      background: rgba(5,13,26,0.9); border: 1px solid var(--border);
+      border-left: none; border-radius: 0 6px 6px 0;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--muted); transition: left 0.25s ease, color 0.15s;
+    }
+    .sidebar-toggle:hover { color: var(--accent); }
+    .sidebar-toggle svg { width: 10px; height: 10px; transition: transform 0.25s ease; }
+    .sidebar.collapsed + .sidebar-toggle { left: 0; }
+    .sidebar.collapsed + .sidebar-toggle svg { transform: rotate(180deg); }
+    /* Expand map/kpi when sidebar collapsed */
+    body.sidebar-hidden #map { left: 0 !important; }
+    body.sidebar-hidden .kpi-strip { left: 0 !important; }
     .sidebar-section { padding: 8px 16px 4px; font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
     .sidebar-item {
       display: flex; align-items: center; gap: 10px;
@@ -345,6 +362,13 @@
     Intra-Asia
   </div>
 </aside>
+
+<!-- SIDEBAR TOGGLE -->
+<div class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8">
+    <polyline points="7,2 3,5 7,8"/>
+  </svg>
+</div>
 
 <!-- MAP -->
 <div id="map"></div>
@@ -1210,6 +1234,15 @@ function updatePortVisibility() {
 map.on('zoomend', updatePortVisibility);
 updatePortVisibility(); // run once on load
 
+// ── SIDEBAR TOGGLE ───────────────────────────────────────────
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const toggle  = document.getElementById('sidebarToggle');
+  const isCollapsed = sidebar.classList.toggle('collapsed');
+  document.body.classList.toggle('sidebar-hidden', isCollapsed);
+  // Let Leaflet know the map size changed
+  setTimeout(() => map.invalidateSize(), 260);
+}
 </script>
 </body>
 </html>
