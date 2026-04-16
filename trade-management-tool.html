@@ -963,7 +963,7 @@ function buildPopup(v) {
   return `
   <div class="vessel-popup">
     <div class="popup-header">
-      <div style="flex:1;min-width:0;">
+      <div>
         <div style="display:flex;align-items:center;gap:7px;margin-bottom:1px;">
           <svg width="38" height="22" viewBox="0 0 52 30" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
             <path d="M1 5 Q4.5 2 8 5 Q11.5 8 15 5 L15 8.5 Q11.5 11.5 8 8.5 Q4.5 5.5 1 8.5 Z" fill="#1a6abf"/>
@@ -973,20 +973,13 @@ function buildPopup(v) {
           </svg>
           <div class="popup-vessel-name">${v.name}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+        <div style="display:flex;align-items:center;gap:6px;margin:2px 0 3px;">
           <span style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</span>
           <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(0,180,255,0.15);color:var(--accent);border:1px solid rgba(0,180,255,0.3);letter-spacing:0.5px;">${v.service}</span>
         </div>
+        <div class="popup-route">${v.route.replace(v.nextPort, `<strong style="color:#fff;font-weight:700;">${v.nextPort}</strong>`)}</div>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;max-width:105px;">
-        <span class="popup-badge ${v.badgeClass}">${v.status}</span>
-        <div style="font-size:9px;color:rgba(180,220,255,0.6);text-align:right;line-height:1.6;">
-          ${v.route.split(' → ').map(p => p.trim() === v.nextPort
-            ? `<span style="color:#fff;font-weight:700;">${p}</span>`
-            : `<span>${p}</span>`
-          ).join('<span style="color:rgba(100,160,220,0.4);"> › </span>')}
-        </div>
-      </div>
+      <span class="popup-badge ${v.badgeClass}">${v.status}</span>
     </div>
     <div class="popup-body">
       <div class="popup-section-title">Profit & Loss — Current Voyage</div>
