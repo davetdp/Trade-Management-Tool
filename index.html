@@ -580,7 +580,10 @@ function buildPopup(v) {
   <div class="vessel-popup">
     <div class="popup-header">
       <div>
-        <div class="popup-vessel-name">${v.name}</div>
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:1px;">
+          <span style="background:linear-gradient(135deg,#0055aa,#00aaff);color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.5px;padding:2px 6px;border-radius:4px;line-height:1.4;flex-shrink:0;">PIL</span>
+          <div class="popup-vessel-name">${v.name}</div>
+        </div>
         <div style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;margin:2px 0 3px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</div>
         <div class="popup-route">${v.route}</div>
       </div>
