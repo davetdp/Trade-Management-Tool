@@ -1017,19 +1017,54 @@ const ports = [
     portCoords[short]  = p.position;
     portCoords[p.name] = p.position;
   });
-  // Ports not yet in the main list
   portCoords['Suva'] = [-18.14, 178.44];
+
+  // Realistic maritime waypoints per vessel (avoids land crossings)
+  const seaRoutes = {
+    // South Atlantic → Cape Town: skirt south of Cape of Good Hope
+    'Kota Cantik': [
+      [-35.2, 20.8], [-35.6, 19.5], [-35.3, 18.5]
+    ],
+    // Singapore (east) → Malacca Strait → Bay of Bengal → Colombo
+    'Kota Cepat': [
+      [1.1, 104.2], [1.2, 103.6], [2.2, 102.2],
+      [4.5, 100.5], [6.5, 99.3], [8.5, 93.5], [7.2, 83.5]
+    ],
+    // Mid-Arabian Sea → northward along Oman coast → Strait of Hormuz → Jebel Ali
+    'Kota Gadang': [
+      [17.8, 57.4], [20.5, 57.8], [22.8, 59.4],
+      [24.3, 58.6], [24.8, 57.5], [25.7, 57.0],
+      [26.3, 56.4], [25.5, 55.7]
+    ],
+    // Arabian Sea westward toward Salalah (Oman coast) — open ocean, add gentle arc
+    'Kota Eagle': [
+      [7.4, 67.2], [11.5, 62.0], [14.5, 57.5]
+    ],
+    // Indian Ocean west toward Mombasa — open water north of Madagascar
+    'Kota Ebony': [
+      [-4.6, 53.1], [-3.2, 49.5], [-2.0, 45.5], [-3.5, 42.0]
+    ],
+    // Eastern Pacific → Callao — open ocean, slight curve
+    'Kota Layang': [
+      [-11.8, -90.5], [-12.0, -84.0]
+    ],
+    // Vanuatu → Fiji — Pacific island-hopping arc
+    'Kota Oasis': [
+      [-18.4, 169.8], [-17.2, 172.5], [-17.0, 175.5]
+    ]
+  };
 
   vessels.forEach(v => {
     if (!v.status.startsWith('On route to')) return;
     const destPos = portCoords[v.nextPort];
     if (!destPos) return;
     const color = vesselColor(v.service);
-    L.polyline([v.position, destPos], {
+    const waypts = seaRoutes[v.name] || [v.position];
+    L.polyline([...waypts, destPos], {
       color,
       weight: 2,
       dashArray: '8, 10',
-      opacity: 0.55,
+      opacity: 0.6,
       interactive: false
     }).addTo(map);
   });
