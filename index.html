@@ -496,24 +496,46 @@ const vessels = [
 ];
 
 // ── SMART POPUP POSITIONING ──────────────────────────────────
-// Calculates the best offset so the popup always fits on screen
-// instead of always opening above the marker.
-function openSmartPopup(marker, popup, popupW, popupH) {
-  const pt      = map.latLngToContainerPoint(marker.getLatLng());
-  const mapSize = map.getSize();
-  const pad     = 16; // min gap from map edge
+// Fixes the Leaflet mouseover/mouseout blinking bug:
+// When the popup opens over the marker it triggers mouseout → close → reopen loop.
+// Solution: delay the close by 200ms, and cancel it if the mouse re-enters
+// the marker OR moves over the popup card itself.
+let _closeTimer = null;
 
-  // Vertical: open above by default; switch to below if near top
-  const offsetY = (pt.y - popupH - pad > 0) ? -(popupH / 2 + 10) : (popupH / 2 + 10);
+function bindSmartPopup(marker, popup, popupW, popupH) {
 
-  // Horizontal: centre on marker, then clamp to stay inside map
-  let offsetX = 0;
-  const halfW = popupW / 2 + pad;
-  if (pt.x < halfW)               offsetX =  halfW - pt.x;
-  else if (pt.x > mapSize.x - halfW) offsetX = -(halfW - (mapSize.x - pt.x));
+  function calcOffset() {
+    const pt      = map.latLngToContainerPoint(marker.getLatLng());
+    const mapSize = map.getSize();
+    const pad     = 16;
+    const offsetY = (pt.y - popupH - pad > 0) ? -(popupH / 2 + 10) : (popupH / 2 + 10);
+    let offsetX = 0;
+    const halfW = popupW / 2 + pad;
+    if (pt.x < halfW)                    offsetX =  halfW - pt.x;
+    else if (pt.x > mapSize.x - halfW)   offsetX = -(halfW - (mapSize.x - pt.x));
+    popup.options.offset = L.point(offsetX, offsetY);
+  }
 
-  popup.options.offset = L.point(offsetX, offsetY);
-  marker.openPopup();
+  function scheduleClose() {
+    _closeTimer = setTimeout(() => marker.closePopup(), 200);
+  }
+
+  function cancelClose() {
+    clearTimeout(_closeTimer);
+  }
+
+  marker.on('mouseover', () => { cancelClose(); calcOffset(); marker.openPopup(); });
+  marker.on('mouseout',  () => scheduleClose());
+
+  // Once the popup DOM element exists, keep it open while the mouse is over it
+  popup.on('add', function () {
+    const el = this.getElement();
+    if (!el) return;
+    el.addEventListener('mouseenter', cancelClose);
+    el.addEventListener('mouseleave', scheduleClose);
+  });
+
+  marker.bindPopup(popup);
 }
 
 // ── SHIP SVG ICON ────────────────────────────────────────────
@@ -622,9 +644,7 @@ vessels.forEach((v, i) => {
     closeOnClick: false
   }).setContent(buildPopup(v));
 
-  marker.on('mouseover', function () { openSmartPopup(this, popup, 255, 420); });
-  marker.on('mouseout',  function () { this.closePopup(); });
-  marker.bindPopup(popup);
+  bindSmartPopup(marker, popup, 255, 420);
 
   // Sonar ping ring using SVG overlay
   const size = 80;
@@ -816,9 +836,7 @@ ports.forEach(p => {
     className: 'vessel-popup-wrapper',
     offset: [0, -8], autoPan: true, closeOnClick: false
   }).setContent(buildPortPopup(p));
-  marker.on('mouseover', function () { openSmartPopup(this, popup, 240, 380); });
-  marker.on('mouseout',  function () { this.closePopup(); });
-  marker.bindPopup(popup);
+  bindSmartPopup(marker, popup, 240, 380);
   portLayers[p.tier].addLayer(marker);
 });
 
