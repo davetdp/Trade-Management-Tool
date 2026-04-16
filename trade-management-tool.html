@@ -514,13 +514,17 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
   function calcOffset() {
     const pt      = map.latLngToContainerPoint(marker.getLatLng());
     const mapSize = map.getSize();
-    const pad     = 16;
+    const pad     = 12;
 
-    // Small vertical nudge only — Leaflet's popup tip already anchors to the marker.
-    // If near the top edge, shift down slightly so the card doesn't clip.
-    const offsetY = (pt.y < popupH + 60) ? 10 : -10;
+    // Leaflet popup body always sits ABOVE its tip anchor.
+    // To open BELOW the marker: push the tip down by (popupH + gap),
+    // which brings the body to just below the marker.
+    // To open ABOVE (default): small negative offset so the tip clears the icon.
+    const offsetY = (pt.y < popupH + 60)
+      ? popupH + 20    // open below — body spans from ~marker+20 downward
+      : -20;           // open above — body spans upward from marker
 
-    // Horizontal: shift inward if too close to left/right edge
+    // Horizontal: clamp so card never clips left/right edge
     let offsetX = 0;
     const halfW = popupW / 2 + pad;
     if (pt.x < halfW)                  offsetX =  halfW - pt.x;
@@ -665,7 +669,7 @@ vessels.forEach((v, i) => {
     minWidth: 250,
     className: 'vessel-popup-wrapper',
     offset: [0, -10],
-    autoPan: true,
+    autoPan: false,
     closeOnClick: false
   }).setContent(buildPopup(v));
 
@@ -859,7 +863,7 @@ ports.forEach(p => {
   const popup = L.popup({
     maxWidth: 240, minWidth: 235,
     className: 'vessel-popup-wrapper',
-    offset: [0, -8], autoPan: true, closeOnClick: false
+    offset: [0, -8], autoPan: false, closeOnClick: false
   }).setContent(buildPortPopup(p));
   bindSmartPopup(marker, popup, 240, 380);
   portLayers[p.tier].addLayer(marker);
