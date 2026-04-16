@@ -508,11 +508,17 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
     const pt      = map.latLngToContainerPoint(marker.getLatLng());
     const mapSize = map.getSize();
     const pad     = 16;
-    const offsetY = (pt.y - popupH - pad > 0) ? -(popupH / 2 + 10) : (popupH / 2 + 10);
+
+    // Small vertical nudge only — Leaflet's popup tip already anchors to the marker.
+    // If near the top edge, shift down slightly so the card doesn't clip.
+    const offsetY = (pt.y < popupH + 60) ? 10 : -10;
+
+    // Horizontal: shift inward if too close to left/right edge
     let offsetX = 0;
     const halfW = popupW / 2 + pad;
-    if (pt.x < halfW)                    offsetX =  halfW - pt.x;
-    else if (pt.x > mapSize.x - halfW)   offsetX = -(halfW - (mapSize.x - pt.x));
+    if (pt.x < halfW)                  offsetX =  halfW - pt.x;
+    else if (pt.x > mapSize.x - halfW) offsetX = -(halfW - (mapSize.x - pt.x));
+
     popup.options.offset = L.point(offsetX, offsetY);
   }
 
