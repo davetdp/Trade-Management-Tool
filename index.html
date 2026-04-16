@@ -1118,9 +1118,11 @@ legendEl.onAdd = function () {
       ${Object.entries(tradeLanes).map(([name, { color }]) => {
         const count = laneVesselCount[name] || 0;
         return `
-        <div class="leg-lane-row" data-lane="${name}"
+        <div class="leg-lane-row" data-lane="${name}" data-color="${color}"
              onclick="window.pilFilter('${name}')"
-             style="display:flex;align-items:center;gap:8px;margin-bottom:3px;cursor:pointer;padding:3px 4px;transition:opacity 0.2s,background 0.2s;">
+             onmouseenter="if(!pilActiveFilters.has('${name}')){this.style.background='${color}18';this.style.boxShadow='0 0 10px ${color}22';}"
+             onmouseleave="if(!pilActiveFilters.has('${name}')){this.style.background='';this.style.boxShadow='';}"
+             style="display:flex;align-items:center;gap:8px;margin-bottom:3px;cursor:pointer;padding:3px 4px;border-radius:8px;transition:opacity 0.2s,background 0.2s,box-shadow 0.2s;">
           <svg width="14" height="14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
             <path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="${color}"/>
             <rect x="13" y="14" width="10" height="9" rx="2" fill="${color}" opacity="0.9"/>
@@ -1265,11 +1267,12 @@ window.pilFilter = function(laneName) {
   // Update legend row styles
   document.querySelectorAll('.leg-lane-row').forEach(el => {
     const lane = el.dataset.lane;
+    const color = el.dataset.color;
     const selected = pilActiveFilters.has(lane);
     const dimmed = pilActiveFilters.size > 0 && !selected;
     el.style.opacity = dimmed ? '0.35' : '1';
-    el.style.background = selected ? 'rgba(255,255,255,0.08)' : '';
-    el.style.borderRadius = '6px';
+    el.style.background = selected ? `${color}28` : '';
+    el.style.boxShadow = selected ? `0 0 12px ${color}44, inset 0 0 0 1px ${color}55` : '';
   });
 
   // Recalculate all KPIs for the current filter state
@@ -1290,6 +1293,7 @@ map.on('click', function() {
     document.querySelectorAll('.leg-lane-row').forEach(el => {
       el.style.opacity = '1';
       el.style.background = '';
+      el.style.boxShadow = '';
     });
     pilUpdateKPIs();
   }
