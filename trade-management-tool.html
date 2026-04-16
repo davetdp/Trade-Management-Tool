@@ -492,9 +492,10 @@ const map = L.map('map', {
   zoom: 2,
   minZoom: 2,
   maxZoom: 10,
-  zoomControl: true,
+  zoomControl: false,
   attributionControl: false
 });
+L.control.zoom({ position: 'topright' }).addTo(map);
 
 // Dark maritime tile layer
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
