@@ -828,6 +828,154 @@
       </div>
 
     </div><!-- /pnl-columns -->
+
+    <!-- ── VESSEL DEPLOYMENT COMPARISON ── -->
+    <div style="padding: 0 28px 40px;">
+      <div style="margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:700;color:#fff;font-family:'Space Grotesk',sans-serif;margin-bottom:4px;">Vessel Deployment — April 2026</div>
+        <div style="font-size:11px;color:var(--muted);">Comparison of forecasted vs actual vessel deployment schedule. Highlights vessels delayed into next month or brought forward from next month.</div>
+      </div>
+
+      <!-- Legend -->
+      <div style="display:flex;gap:20px;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;"></span> As Forecasted
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--amber);display:inline-block;"></span> Delayed (slipped to May)
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);">
+          <span style="width:10px;height:10px;border-radius:50%;background:#818cf8;display:inline-block;"></span> Brought Forward (from May)
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--muted);display:inline-block;opacity:0.5;"></span> Dry Dock (excluded)
+        </div>
+      </div>
+
+      <!-- Deployment Table -->
+      <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+              <th style="padding:10px 14px;text-align:left;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Vessel</th>
+              <th style="padding:10px 14px;text-align:left;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Trade Lane</th>
+              <th style="padding:10px 14px;text-align:center;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Forecasted Dep.</th>
+              <th style="padding:10px 14px;text-align:center;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Actual Dep.</th>
+              <th style="padding:10px 14px;text-align:center;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Variance</th>
+              <th style="padding:10px 14px;text-align:left;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Status</th>
+              <th style="padding:10px 14px;text-align:left;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">P&L Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- As forecasted -->
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:9px 14px;font-weight:600;color:#e8f4ff;">Kota Cantik</td>
+              <td style="padding:9px 14px;color:var(--muted);">Africa (SAF1)</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">01 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">01 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--green);font-weight:600;">—</td>
+              <td style="padding:9px 14px;"><span style="background:rgba(0,229,160,0.12);color:var(--green);border:1px solid rgba(0,229,160,0.25);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">As Forecasted</span></td>
+              <td style="padding:9px 14px;color:var(--green);font-weight:600;">Nil</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);">
+              <td style="padding:9px 14px;font-weight:600;color:#e8f4ff;">Kota Eagle</td>
+              <td style="padding:9px 14px;color:var(--muted);">Middle East (MEX2)</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">03 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">03 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--green);font-weight:600;">—</td>
+              <td style="padding:9px 14px;"><span style="background:rgba(0,229,160,0.12);color:var(--green);border:1px solid rgba(0,229,160,0.25);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">As Forecasted</span></td>
+              <td style="padding:9px 14px;color:var(--green);font-weight:600;">Nil</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:9px 14px;font-weight:600;color:#e8f4ff;">Kota Layang</td>
+              <td style="padding:9px 14px;color:var(--muted);">ECSA & WCSA</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">05 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">05 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--green);font-weight:600;">—</td>
+              <td style="padding:9px 14px;"><span style="background:rgba(0,229,160,0.12);color:var(--green);border:1px solid rgba(0,229,160,0.25);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">As Forecasted</span></td>
+              <td style="padding:9px 14px;color:var(--green);font-weight:600;">Nil</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);">
+              <td style="padding:9px 14px;font-weight:600;color:#e8f4ff;">Kota Cempaka</td>
+              <td style="padding:9px 14px;color:var(--muted);">Intra Asia (CCS)</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">07 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">07 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--green);font-weight:600;">—</td>
+              <td style="padding:9px 14px;"><span style="background:rgba(0,229,160,0.12);color:var(--green);border:1px solid rgba(0,229,160,0.25);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">As Forecasted</span></td>
+              <td style="padding:9px 14px;color:var(--green);font-weight:600;">Nil</td>
+            </tr>
+            <!-- Delayed -->
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:9px 14px;font-weight:600;color:#e8f4ff;">Kota Ebony</td>
+              <td style="padding:9px 14px;color:var(--muted);">Africa (EAF1)</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">10 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--amber);font-weight:600;">04 May</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--amber);font-weight:600;">+24 days</td>
+              <td style="padding:9px 14px;"><span style="background:rgba(255,184,48,0.12);color:var(--amber);border:1px solid rgba(255,184,48,0.25);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">Delayed → May</span></td>
+              <td style="padding:9px 14px;color:var(--amber);font-weight:600;">−USD 1.72M</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);">
+              <td style="padding:9px 14px;font-weight:600;color:#e8f4ff;">Kota Gadang</td>
+              <td style="padding:9px 14px;color:var(--muted);">Middle East (MEX1)</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">12 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--amber);font-weight:600;">18 May</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--amber);font-weight:600;">+36 days</td>
+              <td style="padding:9px 14px;"><span style="background:rgba(255,184,48,0.12);color:var(--amber);border:1px solid rgba(255,184,48,0.25);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">Delayed → May</span></td>
+              <td style="padding:9px 14px;color:var(--amber);font-weight:600;">−USD 1.63M</td>
+            </tr>
+            <!-- Brought forward -->
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:9px 14px;font-weight:600;color:#e8f4ff;">Kota Cahaya</td>
+              <td style="padding:9px 14px;color:var(--muted);">Oceania (AUS1)</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">02 May</td>
+              <td style="padding:9px 14px;text-align:center;color:#818cf8;font-weight:600;">14 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:#818cf8;font-weight:600;">−18 days</td>
+              <td style="padding:9px 14px;"><span style="background:rgba(129,140,248,0.12);color:#818cf8;border:1px solid rgba(129,140,248,0.25);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">Brought Forward</span></td>
+              <td style="padding:9px 14px;color:#818cf8;font-weight:600;">+USD 1.03M</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);">
+              <td style="padding:9px 14px;font-weight:600;color:#e8f4ff;">Kota Oasis</td>
+              <td style="padding:9px 14px;color:var(--muted);">Pacific Islands (PAC1)</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">28 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--text);">21 Apr</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--green);font-weight:600;">—</td>
+              <td style="padding:9px 14px;"><span style="background:rgba(0,229,160,0.12);color:var(--green);border:1px solid rgba(0,229,160,0.25);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">As Forecasted</span></td>
+              <td style="padding:9px 14px;color:var(--green);font-weight:600;">Nil</td>
+            </tr>
+            <!-- Dry Dock -->
+            <tr>
+              <td style="padding:9px 14px;font-weight:600;color:var(--muted);opacity:0.6;">Kota Besar</td>
+              <td style="padding:9px 14px;color:var(--muted);opacity:0.6;">—</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--muted);opacity:0.6;">Dry Dock</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--muted);opacity:0.6;">Dry Dock</td>
+              <td style="padding:9px 14px;text-align:center;color:var(--muted);opacity:0.6;">—</td>
+              <td style="padding:9px 14px;opacity:0.6;"><span style="background:rgba(106,138,170,0.1);color:var(--muted);border:1px solid rgba(106,138,170,0.2);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;">Dry Dock</span></td>
+              <td style="padding:9px 14px;color:var(--muted);opacity:0.6;">Excluded</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Net deployment P&L impact summary -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px;">
+        <div style="background:rgba(255,184,48,0.07);border:1px solid rgba(255,184,48,0.2);border-radius:12px;padding:12px 16px;">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Delayed to May</div>
+          <div style="font-size:18px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--amber);">2 Vessels</div>
+          <div style="font-size:11px;color:var(--amber);margin-top:2px;">P&L deferred: −USD 3.35M</div>
+        </div>
+        <div style="background:rgba(129,140,248,0.07);border:1px solid rgba(129,140,248,0.2);border-radius:12px;padding:12px 16px;">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Brought Forward from May</div>
+          <div style="font-size:18px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:#818cf8;">1 Vessel</div>
+          <div style="font-size:11px;color:#818cf8;margin-top:2px;">P&L accelerated: +USD 1.03M</div>
+        </div>
+        <div style="background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.2);border-radius:12px;padding:12px 16px;">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Net Deployment Impact (Apr)</div>
+          <div style="font-size:18px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--amber);">−USD 2.32M</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">vs original Apr forecast</div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /pnl-panel-inner -->
 </div><!-- /pnl-panel -->
 
