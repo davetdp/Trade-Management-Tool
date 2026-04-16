@@ -1171,9 +1171,31 @@ function hexToRgb(hex) {
   return r + ',' + g + ',' + b;
 }
 
+// ── ANIMATED KPI COUNTER ─────────────────────────────────────
+const _kpiAnims = {}; // track running animations per element id
+
+function animateKPI(id, toVal, formatter, duration) {
+  if (_kpiAnims[id]) cancelAnimationFrame(_kpiAnims[id]);
+  const el = document.getElementById(id);
+  if (!el) return;
+  // Parse current displayed value as a number
+  const fromVal = parseFloat(el.textContent.replace(/[^0-9.\-]/g, '')) || 0;
+  if (Math.abs(toVal - fromVal) < 0.01) { el.textContent = formatter(toVal); return; }
+  const start = performance.now();
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; } // ease-in-out
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const cur = fromVal + (toVal - fromVal) * ease(t);
+    el.textContent = formatter(cur);
+    if (t < 1) _kpiAnims[id] = requestAnimationFrame(step);
+    else el.textContent = formatter(toVal);
+  }
+  _kpiAnims[id] = requestAnimationFrame(step);
+}
+
 function pilUpdateKPIs() {
+  const D = 550; // animation duration ms
   const allActive = vessels.filter(v => !v.isDryDock);
-  // Collect all services across selected lanes
   const activeServices = pilActiveFilters.size > 0
     ? [...pilActiveFilters].flatMap(lane => tradeLanes[lane]?.services || [])
     : null;
@@ -1181,37 +1203,37 @@ function pilUpdateKPIs() {
     ? allActive.filter(v => activeServices.includes(v.service))
     : allActive;
 
-  function fmt(val) { return 'USD ' + val.toFixed(1) + 'M'; }
-  function fmtPct(val) { return (val >= 0 ? '+' : '') + val.toFixed(1) + '%'; }
+  const fmt    = v => 'USD ' + v.toFixed(1) + 'M';
+  const fmtPct = v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+  const fmtTEU = v => Math.round(v).toLocaleString() + ' TEU';
+  const fmtUtil= v => v.toFixed(1) + '%';
+  const fmtInt = v => Math.round(v).toString();
 
   if (pilActiveFilters.size === 0) {
-    // Restore originals
-    document.getElementById('kpi-teu').textContent       = '82,000 TEU';
-    document.getElementById('kpi-util').textContent      = BASE_UTIL.toFixed(1) + '%';
-    document.getElementById('kpi-rev-apr').textContent   = fmt(BASE_APR_REV);
-    document.getElementById('kpi-cost-apr').textContent  = fmt(BASE_APR_COST);
-    document.getElementById('kpi-pnl-apr').textContent   = fmt(BASE_APR_PNL);
-    document.getElementById('kpi-fcst-apr').textContent  = fmt(BASE_APR_FCST);
-    document.getElementById('kpi-var-apr').textContent   = '+7.8%';
-    document.getElementById('kpi-var-apr').className     = 'kpi-value green';
-    document.getElementById('kpi-voy-blue').textContent  = '7';
-    document.getElementById('kpi-voy-green').textContent = '1';
-    document.getElementById('kpi-voy-amber').textContent = '1';
-    document.getElementById('kpi-fleet').textContent     = '9 / 10 Vessels';
-    document.getElementById('kpi-rev-ytd').textContent   = fmt(BASE_YTD_REV);
-    document.getElementById('kpi-pnl-ytd').textContent   = fmt(BASE_YTD_PNL);
-    document.getElementById('kpi-fcst-ytd').textContent  = fmt(BASE_YTD_FCST);
-    document.getElementById('kpi-var-ytd').textContent   = '+4.7%';
-    document.getElementById('kpi-var-ytd').style.color   = 'var(--green)';
+    animateKPI('kpi-teu',      82000,         fmtTEU,  D);
+    animateKPI('kpi-util',     BASE_UTIL,     fmtUtil, D);
+    animateKPI('kpi-rev-apr',  BASE_APR_REV,  fmt,     D);
+    animateKPI('kpi-cost-apr', BASE_APR_COST, fmt,     D);
+    animateKPI('kpi-pnl-apr',  BASE_APR_PNL,  fmt,     D);
+    animateKPI('kpi-fcst-apr', BASE_APR_FCST, fmt,     D);
+    animateKPI('kpi-var-apr',  7.8,           fmtPct,  D);
+    document.getElementById('kpi-var-apr').className = 'kpi-value green';
+    animateKPI('kpi-voy-blue',  7, fmtInt, D);
+    animateKPI('kpi-voy-green', 1, fmtInt, D);
+    animateKPI('kpi-voy-amber', 1, fmtInt, D);
+    document.getElementById('kpi-fleet').textContent = '9 / 10 Vessels';
+    animateKPI('kpi-rev-ytd',  BASE_YTD_REV,  fmt,     D);
+    animateKPI('kpi-pnl-ytd',  BASE_YTD_PNL,  fmt,     D);
+    animateKPI('kpi-fcst-ytd', BASE_YTD_FCST, fmt,     D);
+    animateKPI('kpi-var-ytd',  4.7,           fmtPct,  D);
+    document.getElementById('kpi-var-ytd').style.color = 'var(--green)';
     return;
   }
 
-  // Totals across all active vessels
   const totalRevM    = allActive.reduce((s, v) => s + (v.revM    || 0), 0);
   const totalCostM   = allActive.reduce((s, v) => s + (v.costM   || 0), 0);
   const totalProfitM = allActive.reduce((s, v) => s + (v.profitM || 0), 0);
 
-  // Filtered sums
   const fRevM    = filtered.reduce((s, v) => s + (v.revM    || 0), 0);
   const fCostM   = filtered.reduce((s, v) => s + (v.costM   || 0), 0);
   const fProfitM = filtered.reduce((s, v) => s + (v.profitM || 0), 0);
@@ -1223,44 +1245,38 @@ function pilUpdateKPIs() {
   const profitRatio = totalProfitM > 0 ? fProfitM / totalProfitM : 0;
   const avgUtil     = fTEU         > 0 ? fWtUtil  / fTEU          : 0;
 
-  // Scaled Apr KPIs
   const aprRev  = revRatio    * BASE_APR_REV;
   const aprCost = costRatio   * BASE_APR_COST;
   const aprPnl  = profitRatio * BASE_APR_PNL;
   const aprFcst = profitRatio * BASE_APR_FCST;
   const aprVar  = aprFcst > 0 ? (aprPnl - aprFcst) / aprFcst * 100 : 0;
-
-  // Scaled YTD KPIs
   const ytdRev  = revRatio    * BASE_YTD_REV;
   const ytdPnl  = profitRatio * BASE_YTD_PNL;
   const ytdFcst = profitRatio * BASE_YTD_FCST;
   const ytdVar  = ytdFcst > 0 ? (ytdPnl - ytdFcst) / ytdFcst * 100 : 0;
 
-  // Voyage status counts
   const fBlue  = filtered.filter(v => v.badgeClass === 'badge-transit').length;
   const fGreen = filtered.filter(v => v.badgeClass === 'badge-arrived').length;
   const fAmber = filtered.filter(v => v.badgeClass === 'badge-loading').length;
 
-  // Update bottom KPI strip
-  document.getElementById('kpi-teu').textContent       = fTEU.toLocaleString() + ' TEU';
-  document.getElementById('kpi-util').textContent      = avgUtil.toFixed(1) + '%';
-  document.getElementById('kpi-rev-apr').textContent   = fmt(aprRev);
-  document.getElementById('kpi-cost-apr').textContent  = fmt(aprCost);
-  document.getElementById('kpi-pnl-apr').textContent   = fmt(aprPnl);
-  document.getElementById('kpi-fcst-apr').textContent  = fmt(aprFcst);
-  document.getElementById('kpi-var-apr').textContent   = fmtPct(aprVar);
-  document.getElementById('kpi-var-apr').className     = 'kpi-value ' + (aprVar >= 0 ? 'green' : 'red');
-  document.getElementById('kpi-voy-blue').textContent  = fBlue;
-  document.getElementById('kpi-voy-green').textContent = fGreen;
-  document.getElementById('kpi-voy-amber').textContent = fAmber;
+  animateKPI('kpi-teu',      fTEU,     fmtTEU,  D);
+  animateKPI('kpi-util',     avgUtil,  fmtUtil, D);
+  animateKPI('kpi-rev-apr',  aprRev,   fmt,     D);
+  animateKPI('kpi-cost-apr', aprCost,  fmt,     D);
+  animateKPI('kpi-pnl-apr',  aprPnl,   fmt,     D);
+  animateKPI('kpi-fcst-apr', aprFcst,  fmt,     D);
+  animateKPI('kpi-var-apr',  aprVar,   fmtPct,  D);
+  document.getElementById('kpi-var-apr').className = 'kpi-value ' + (aprVar >= 0 ? 'green' : 'red');
+  animateKPI('kpi-voy-blue',  fBlue,  fmtInt, D);
+  animateKPI('kpi-voy-green', fGreen, fmtInt, D);
+  animateKPI('kpi-voy-amber', fAmber, fmtInt, D);
 
-  // Update top nav
-  document.getElementById('kpi-fleet').textContent     = filtered.length + ' / ' + TOTAL_FLEET + ' Vessels';
-  document.getElementById('kpi-rev-ytd').textContent   = fmt(ytdRev);
-  document.getElementById('kpi-pnl-ytd').textContent   = fmt(ytdPnl);
-  document.getElementById('kpi-fcst-ytd').textContent  = fmt(ytdFcst);
-  document.getElementById('kpi-var-ytd').textContent   = fmtPct(ytdVar);
-  document.getElementById('kpi-var-ytd').style.color   = ytdVar >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('kpi-fleet').textContent = filtered.length + ' / ' + TOTAL_FLEET + ' Vessels';
+  animateKPI('kpi-rev-ytd',  ytdRev,  fmt,    D);
+  animateKPI('kpi-pnl-ytd',  ytdPnl,  fmt,    D);
+  animateKPI('kpi-fcst-ytd', ytdFcst, fmt,    D);
+  animateKPI('kpi-var-ytd',  ytdVar,  fmtPct, D);
+  document.getElementById('kpi-var-ytd').style.color = ytdVar >= 0 ? 'var(--green)' : 'var(--red)';
 }
 
 window.pilFilter = function(laneName) {
