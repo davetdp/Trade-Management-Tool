@@ -72,16 +72,18 @@
     }
     .sidebar.collapsed { transform: translateX(-220px); }
     .sidebar-toggle {
-      position: fixed; top: 50%; left: 220px; transform: translateY(-50%);
-      z-index: 950; width: 18px; height: 48px;
-      background: rgba(5,13,26,0.9); border: 1px solid var(--border);
-      border-left: none; border-radius: 0 6px 6px 0;
+      position: fixed; top: 72px; left: 208px;
+      z-index: 1000; width: 24px; height: 24px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--muted); transition: left 0.25s ease, color 0.15s;
+      cursor: pointer; color: var(--muted);
+      transition: left 0.25s ease, color 0.15s, background 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
-    .sidebar-toggle:hover { color: var(--accent); }
+    .sidebar-toggle:hover { color: var(--accent); background: rgba(0,180,255,0.12); border-color: var(--accent); }
     .sidebar-toggle svg { width: 10px; height: 10px; transition: transform 0.25s ease; }
-    .sidebar.collapsed + .sidebar-toggle { left: 0; }
+    .sidebar.collapsed + .sidebar-toggle { left: 4px; }
     .sidebar.collapsed + .sidebar-toggle svg { transform: rotate(180deg); }
     /* Expand map/kpi when sidebar collapsed */
     body.sidebar-hidden #map { left: 0 !important; }
