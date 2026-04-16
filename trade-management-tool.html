@@ -184,54 +184,65 @@
     /* ── POPUP CARD ── */
     .vessel-popup {
       width: 250px;
-      background: var(--card-bg);
-      border: 1px solid rgba(0,180,255,0.25);
-      border-radius: 12px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,180,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+      background: rgba(8,18,36,0.97);
+      border: 1px solid rgba(0,180,255,0.18);
+      border-radius: 18px;
+      backdrop-filter: blur(24px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,180,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06);
       overflow: hidden;
       font-family: 'Inter', sans-serif;
     }
     .popup-header {
-      background: linear-gradient(135deg, rgba(0,80,180,0.5), rgba(0,180,255,0.2));
-      padding: 10px 12px 9px;
-      border-bottom: 1px solid rgba(0,180,255,0.15);
+      background: linear-gradient(135deg, rgba(0,70,160,0.55), rgba(0,180,255,0.18));
+      padding: 12px 14px 11px;
+      border-bottom: 1px solid rgba(0,180,255,0.1);
       display: flex; align-items: flex-start; justify-content: space-between;
     }
     .popup-vessel-name { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 0.3px; }
-    .popup-route { font-size: 10px; color: rgba(180,220,255,0.7); margin-top: 2px; }
+    .popup-route { font-size: 10px; color: rgba(180,220,255,0.65); margin-top: 2px; }
     .popup-badge {
-      font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 20px;
+      font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
       text-transform: uppercase; letter-spacing: 0.5px; text-align: center; line-height: 1.3;
+      white-space: nowrap;
     }
-    .badge-transit  { background: rgba(0,180,255,0.2); color: var(--accent); border: 1px solid rgba(0,180,255,0.3); }
-    .badge-loading  { background: rgba(255,184,48,0.2); color: var(--amber); border: 1px solid rgba(255,184,48,0.3); }
-    .badge-arrived  { background: rgba(0,229,160,0.2); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
-    .badge-drydock  { background: rgba(150,150,170,0.2); color: #a0a8b8; border: 1px solid rgba(150,150,170,0.3); }
+    .badge-transit  { background: rgba(0,180,255,0.15); color: var(--accent); border: 1px solid rgba(0,180,255,0.25); }
+    .badge-loading  { background: rgba(255,184,48,0.15); color: var(--amber); border: 1px solid rgba(255,184,48,0.25); }
+    .badge-arrived  { background: rgba(0,229,160,0.15); color: var(--green); border: 1px solid rgba(0,229,160,0.25); }
+    .badge-drydock  { background: rgba(150,150,170,0.15); color: #a0a8b8; border: 1px solid rgba(150,150,170,0.25); }
 
-    .popup-body { padding: 10px 12px; }
-    .popup-section-title { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+    .popup-body { padding: 12px 14px; }
+    .popup-section-title {
+      font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 1.2px; margin: 0 0 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .popup-section-title::before {
+      content: ''; display: inline-block; width: 3px; height: 10px;
+      border-radius: 2px; background: rgba(0,180,255,0.5); flex-shrink: 0;
+    }
 
-    .pnl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .pnl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px; }
     .pnl-item {
-      background: rgba(0,180,255,0.04);
+      background: rgba(0,180,255,0.05);
       border: 1px solid rgba(0,180,255,0.1);
-      border-radius: 6px; padding: 6px 8px;
+      border-radius: 12px; padding: 8px 10px;
     }
-    .pnl-item-label { font-size: 9px; color: var(--muted); margin-bottom: 3px; }
+    .pnl-item-label { font-size: 9px; color: var(--muted); margin-bottom: 4px; }
     .pnl-item-value { font-size: 12px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
 
-    .popup-divider { height: 1px; background: rgba(0,180,255,0.1); margin: 8px 0; }
+    .popup-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 10px 0; }
 
-    .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .detail-table { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; overflow: hidden; margin-bottom: 4px; }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .detail-row:last-child { border-bottom: none; }
     .detail-label { font-size: 10px; color: var(--muted); }
     .detail-value { font-size: 10px; font-weight: 600; color: var(--text); }
 
-    .utilization-bar-wrap { margin-top: 8px; }
-    .util-label-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .utilization-bar-wrap { margin-top: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 8px 10px; }
+    .util-label-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
     .util-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
     .util-pct { font-size: 10px; font-weight: 700; color: var(--green); }
-    .util-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
+    .util-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
     .util-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #0066cc, #00e5a0); }
 
     /* Hide default Leaflet popup chrome */
@@ -931,17 +942,21 @@ function buildPopup(v) {
     </div>
     <div class="popup-body">
       <div class="popup-section-title">Dry Dock Information</div>
-      <div class="detail-row"><span class="detail-label">Shipyard</span><span class="detail-value">${v.drydockYard}</span></div>
-      <div class="detail-row"><span class="detail-label">Dock Type</span><span class="detail-value">${v.drydockType}</span></div>
-      <div class="detail-row"><span class="detail-label">Dock In</span><span class="detail-value">${v.drydockStart}</span></div>
-      <div class="detail-row"><span class="detail-label">Est. Completion</span><span class="detail-value" style="color:var(--amber)">${v.drydockEta}</span></div>
+      <div class="detail-table">
+        <div class="detail-row"><span class="detail-label">Shipyard</span><span class="detail-value">${v.drydockYard}</span></div>
+        <div class="detail-row"><span class="detail-label">Dock Type</span><span class="detail-value">${v.drydockType}</span></div>
+        <div class="detail-row"><span class="detail-label">Dock In</span><span class="detail-value">${v.drydockStart}</span></div>
+        <div class="detail-row"><span class="detail-label">Est. Completion</span><span class="detail-value" style="color:var(--amber)">${v.drydockEta}</span></div>
+      </div>
       <div class="popup-divider"></div>
       <div class="popup-section-title">Vessel Details</div>
-      <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
-      <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
-      <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
-      <div class="detail-row"><span class="detail-label">Capacity</span><span class="detail-value">${v.teu.toLocaleString()} TEU</span></div>
-      <div class="detail-row"><span class="detail-label">Flag</span><span class="detail-value">${v.flag} Singapore</span></div>
+      <div class="detail-table">
+        <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
+        <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
+        <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
+        <div class="detail-row"><span class="detail-label">Capacity</span><span class="detail-value">${v.teu.toLocaleString()} TEU</span></div>
+        <div class="detail-row"><span class="detail-label">Flag</span><span class="detail-value">${v.flag} Singapore</span></div>
+      </div>
     </div>
   </div>`;
 
@@ -992,19 +1007,23 @@ function buildPopup(v) {
       </div>
 
       <div class="popup-section-title">Cost Breakdown</div>
-      <div class="detail-row"><span class="detail-label">Fuel &amp; Bunker</span><span class="detail-value">${v.fuel}</span></div>
-      <div class="detail-row"><span class="detail-label">Port Charges</span><span class="detail-value">${v.port}</span></div>
-      <div class="detail-row"><span class="detail-label">Crew &amp; Operations</span><span class="detail-value">${v.crew}</span></div>
+      <div class="detail-table">
+        <div class="detail-row"><span class="detail-label">Fuel &amp; Bunker</span><span class="detail-value">${v.fuel}</span></div>
+        <div class="detail-row"><span class="detail-label">Port Charges</span><span class="detail-value">${v.port}</span></div>
+        <div class="detail-row"><span class="detail-label">Crew &amp; Operations</span><span class="detail-value">${v.crew}</span></div>
+      </div>
 
       <div class="popup-divider"></div>
 
       <div class="popup-section-title">Vessel Details</div>
-      <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
-      <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
-      <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
-      <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
-      <div class="detail-row"><span class="detail-label">Heading</span><span class="detail-value">${v.heading}</span></div>
-      <div class="detail-row"><span class="detail-label">ETA / Status</span><span class="detail-value">${v.eta}</span></div>
+      <div class="detail-table">
+        <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
+        <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
+        <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
+        <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
+        <div class="detail-row"><span class="detail-label">Heading</span><span class="detail-value">${v.heading}</span></div>
+        <div class="detail-row"><span class="detail-label">ETA / Status</span><span class="detail-value">${v.eta}</span></div>
+      </div>
 
       <div class="utilization-bar-wrap">
         <div class="util-label-row">
