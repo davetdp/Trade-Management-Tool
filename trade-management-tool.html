@@ -742,7 +742,7 @@ const vessels = [
     name: 'Kota Besar',
     vvd: 'KBSR0000D',
     service: '—',
-    position: [1.45, 103.82],
+    position: [1.47, 103.85],
     status: 'In Dry Dock',
     badgeClass: 'badge-drydock',
     flag: '🇸🇬',
@@ -1046,7 +1046,7 @@ legendEl.addTo(map);
 // ── RENDER VESSELS ───────────────────────────────────────────
 
 vessels.forEach((v, i) => {
-  const color = v.isDryDock ? '#6b7280' : vesselColor(v.service);
+  const color = v.isDryDock ? '#c0c8d8' : vesselColor(v.service);
   const icon = shipIcon(color);
   const marker = L.marker(v.position, { icon }).addTo(map);
 
