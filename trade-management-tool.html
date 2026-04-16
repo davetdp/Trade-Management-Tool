@@ -128,10 +128,10 @@
 
     /* ── POPUP CARD ── */
     .vessel-popup {
-      width: 290px;
+      width: 250px;
       background: var(--card-bg);
       border: 1px solid rgba(0,180,255,0.25);
-      border-radius: 14px;
+      border-radius: 12px;
       backdrop-filter: blur(20px);
       box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,180,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
       overflow: hidden;
@@ -139,43 +139,43 @@
     }
     .popup-header {
       background: linear-gradient(135deg, rgba(0,80,180,0.5), rgba(0,180,255,0.2));
-      padding: 14px 16px 12px;
+      padding: 10px 12px 9px;
       border-bottom: 1px solid rgba(0,180,255,0.15);
       display: flex; align-items: flex-start; justify-content: space-between;
     }
-    .popup-vessel-name { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.3px; }
-    .popup-route { font-size: 11px; color: rgba(180,220,255,0.7); margin-top: 3px; }
+    .popup-vessel-name { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 0.3px; }
+    .popup-route { font-size: 10px; color: rgba(180,220,255,0.7); margin-top: 2px; }
     .popup-badge {
-      font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: 0.5px;
+      font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
     }
     .badge-transit  { background: rgba(0,180,255,0.2); color: var(--accent); border: 1px solid rgba(0,180,255,0.3); }
     .badge-loading  { background: rgba(255,184,48,0.2); color: var(--amber); border: 1px solid rgba(255,184,48,0.3); }
     .badge-arrived  { background: rgba(0,229,160,0.2); color: var(--green); border: 1px solid rgba(0,229,160,0.3); }
 
-    .popup-body { padding: 14px 16px; }
-    .popup-section-title { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .popup-body { padding: 10px 12px; }
+    .popup-section-title { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
 
-    .pnl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .pnl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
     .pnl-item {
       background: rgba(0,180,255,0.04);
       border: 1px solid rgba(0,180,255,0.1);
-      border-radius: 8px; padding: 9px 10px;
+      border-radius: 6px; padding: 6px 8px;
     }
-    .pnl-item-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
-    .pnl-item-value { font-size: 14px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+    .pnl-item-label { font-size: 9px; color: var(--muted); margin-bottom: 3px; }
+    .pnl-item-value { font-size: 12px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
 
-    .popup-divider { height: 1px; background: rgba(0,180,255,0.1); margin: 12px 0; }
+    .popup-divider { height: 1px; background: rgba(0,180,255,0.1); margin: 8px 0; }
 
-    .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
-    .detail-label { font-size: 11px; color: var(--muted); }
-    .detail-value { font-size: 11px; font-weight: 600; color: var(--text); }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .detail-label { font-size: 10px; color: var(--muted); }
+    .detail-value { font-size: 10px; font-weight: 600; color: var(--text); }
 
-    .utilization-bar-wrap { margin-top: 12px; }
-    .util-label-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-    .util-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
-    .util-pct { font-size: 11px; font-weight: 700; color: var(--green); }
-    .util-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
+    .utilization-bar-wrap { margin-top: 8px; }
+    .util-label-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .util-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .util-pct { font-size: 10px; font-weight: 700; color: var(--green); }
+    .util-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
     .util-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #0066cc, #00e5a0); }
 
     /* Hide default Leaflet popup chrome */
@@ -593,8 +593,8 @@ vessels.forEach((v, i) => {
   const marker = L.marker(v.position, { icon }).addTo(map);
 
   const popup = L.popup({
-    maxWidth: 300,
-    minWidth: 290,
+    maxWidth: 255,
+    minWidth: 250,
     className: 'vessel-popup-wrapper',
     offset: [0, -10],
     autoPan: true,
