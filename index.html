@@ -203,7 +203,7 @@
     .popup-badge {
       font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
       text-transform: uppercase; letter-spacing: 0.5px; text-align: center; line-height: 1.4;
-      flex-shrink: 0; max-width: 90px; word-break: break-word;
+      white-space: nowrap;
     }
     .badge-transit  { background: rgba(0,180,255,0.15); color: var(--accent); border: 1px solid rgba(0,180,255,0.25); }
     .badge-loading  { background: rgba(255,184,48,0.15); color: var(--amber); border: 1px solid rgba(255,184,48,0.25); }
@@ -964,7 +964,7 @@ function buildPopup(v) {
   <div class="vessel-popup">
     <div class="popup-header" style="flex-direction:column;gap:5px;">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div style="display:flex;align-items:center;gap:7px;">
+        <div style="display:flex;align-items:center;gap:7px;flex:1;min-width:0;">
           <svg width="38" height="22" viewBox="0 0 52 30" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
             <path d="M1 5 Q4.5 2 8 5 Q11.5 8 15 5 L15 8.5 Q11.5 11.5 8 8.5 Q4.5 5.5 1 8.5 Z" fill="#1a6abf"/>
             <path d="M1 11.5 Q4.5 8.5 8 11.5 Q11.5 14.5 15 11.5 L15 15 Q11.5 18 8 15 Q4.5 12 1 15 Z" fill="#1a6abf"/>
@@ -979,7 +979,7 @@ function buildPopup(v) {
             </div>
           </div>
         </div>
-        <span class="popup-badge ${v.badgeClass}" style="flex-shrink:0;max-width:88px;">${v.status}</span>
+        <span class="popup-badge ${v.badgeClass}" style="flex-shrink:0;">${v.status}</span>
       </div>
       <div class="popup-route" style="width:100%;">${v.route.replace(v.nextPort, `<strong style="color:#fff;font-weight:700;">${v.nextPort}</strong>`)}</div>
     </div>
