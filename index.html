@@ -1103,6 +1103,7 @@ legendEl.onAdd = function () {
       }).join('')}
     </div>
   `;
+  L.DomEvent.disableClickPropagation(div);
   return div;
 };
 legendEl.addTo(map);
