@@ -1089,9 +1089,11 @@ const legendEl = L.control({ position: 'bottomright' });
 legendEl.onAdd = function () {
   const div = L.DomUtil.create('div');
   div.style.cssText = `
-    background: rgba(5,13,26,0.92); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px; padding: 10px 14px; font-family: 'Inter', sans-serif;
-    backdrop-filter: blur(12px); min-width: 220px; margin-bottom: 8px;
+    background: rgba(8,20,45,0.55); border: 1px solid rgba(0,180,255,0.18);
+    border-radius: 14px; padding: 10px 14px; font-family: 'Inter', sans-serif;
+    backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+    min-width: 220px; margin-bottom: 8px;
   `;
   div.innerHTML = `
     <div onclick="(function(el){var items=document.getElementById('legendItems');var chev=el.querySelector('.leg-chev');var collapsed=items.style.display==='none';items.style.display=collapsed?'block':'none';chev.style.transform=collapsed?'rotate(0deg)':'rotate(-90deg)';})(this)"
