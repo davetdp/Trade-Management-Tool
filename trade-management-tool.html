@@ -159,17 +159,8 @@
     .kpi-value.red   { color: var(--red); }
     .kpi-value.blue  { color: var(--accent); }
     .kpi-divider { width: 1px; height: 28px; background: rgba(0,180,255,0.12); flex-shrink: 0; }
-    .kpi-spark { display: block; margin-top: 2px; }
 
     /* ── MAP ── */
-    #map-particles {
-      position: fixed;
-      top: 58px; left: 220px; right: 0; bottom: 62px;
-      pointer-events: none;
-      z-index: 499;
-      opacity: 1;
-    }
-    body.sidebar-hidden #map-particles { left: 0 !important; }
     #map {
       position: fixed;
       top: 58px; left: 220px; right: 0; bottom: 62px;
@@ -469,7 +460,6 @@
 </div>
 
 <!-- MAP -->
-<canvas id="map-particles"></canvas>
 <div id="map"></div>
 <div id="map-glow"></div>
 
@@ -478,43 +468,36 @@
   <div class="kpi">
     <div class="kpi-label">Total TEU Capacity</div>
     <div class="kpi-value blue" id="kpi-teu">82,000 TEU</div>
-    <svg class="kpi-spark" width="48" height="14" viewBox="0 0 48 14" xmlns="http://www.w3.org/2000/svg"><polyline points="0,12 12,7 24,9.5 36,4.5 48,2" fill="none" stroke="rgba(0,180,255,0.6)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="48" cy="2" r="2" fill="rgba(0,180,255,0.8)"/></svg>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Avg. Utilisation</div>
     <div class="kpi-value green" id="kpi-util">87.3%</div>
-    <svg class="kpi-spark" width="48" height="14" viewBox="0 0 48 14" xmlns="http://www.w3.org/2000/svg"><polyline points="0,12 12,5.3 24,8.7 36,2 48,2" fill="none" stroke="rgba(0,229,160,0.6)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="48" cy="2" r="2" fill="rgba(0,229,160,0.8)"/></svg>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Total Rev. (Apr)</div>
     <div class="kpi-value blue" id="kpi-rev-apr">USD 18.4M</div>
-    <svg class="kpi-spark" width="48" height="14" viewBox="0 0 48 14" xmlns="http://www.w3.org/2000/svg"><polyline points="0,12 12,9.5 24,5.1 36,3.9 48,2" fill="none" stroke="rgba(0,180,255,0.6)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="48" cy="2" r="2" fill="rgba(0,180,255,0.8)"/></svg>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Total Costs (Apr)</div>
     <div class="kpi-value" id="kpi-cost-apr" style="color:var(--amber)">USD 12.9M</div>
-    <svg class="kpi-spark" width="48" height="14" viewBox="0 0 48 14" xmlns="http://www.w3.org/2000/svg"><polyline points="0,12 12,7.7 24,4.9 36,3.4 48,2" fill="none" stroke="rgba(255,184,48,0.6)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="48" cy="2" r="2" fill="rgba(255,184,48,0.8)"/></svg>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Net P&amp;L (Apr)</div>
     <div class="kpi-value green" id="kpi-pnl-apr">USD 5.5M</div>
-    <svg class="kpi-spark" width="48" height="14" viewBox="0 0 48 14" xmlns="http://www.w3.org/2000/svg"><polyline points="0,12 12,10.9 24,6.4 36,4.2 48,2" fill="none" stroke="rgba(0,229,160,0.6)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="48" cy="2" r="2" fill="rgba(0,229,160,0.8)"/></svg>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Forecast P&amp;L (Apr)</div>
     <div class="kpi-value" id="kpi-fcst-apr" style="color:var(--muted)">USD 5.1M</div>
-    <svg class="kpi-spark" width="48" height="14" viewBox="0 0 48 14" xmlns="http://www.w3.org/2000/svg"><polyline points="0,2 12,7 24,12 36,7 48,7" fill="none" stroke="rgba(106,138,170,0.6)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="48" cy="7" r="2" fill="rgba(106,138,170,0.8)"/></svg>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Forecast vs Actual (Apr)</div>
     <div class="kpi-value green" id="kpi-var-apr">+7.8%</div>
-    <svg class="kpi-spark" width="48" height="14" viewBox="0 0 48 14" xmlns="http://www.w3.org/2000/svg"><polyline points="0,12 12,7 24,8.3 36,3.9 48,2" fill="none" stroke="rgba(0,229,160,0.6)" stroke-width="1.2" stroke-linejoin="round"/><circle cx="48" cy="2" r="2" fill="rgba(0,229,160,0.8)"/></svg>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
@@ -556,68 +539,6 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   subdomains: 'abcd',
   maxZoom: 19
 }).addTo(map);
-
-// ── PARTICLE BACKGROUND ─────────────────────────────────────
-(function() {
-  const canvas = document.getElementById('map-particles');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
-
-  function resize() {
-    const rect = canvas.getBoundingClientRect();
-    W = canvas.width  = rect.width;
-    H = canvas.height = rect.height;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function Particle() {
-    this.x = Math.random() * W;
-    this.y = Math.random() * H;
-    this.vx = (Math.random() - 0.5) * 0.3;
-    this.vy = (Math.random() - 0.5) * 0.3;
-    this.r  = Math.random() * 1.5 + 0.5;
-    this.alpha = Math.random() * 0.25 + 0.05;
-  }
-
-  for (let i = 0; i < 55; i++) particles.push(new Particle());
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    // Draw connection lines
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(0,140,220,${0.06 * (1 - dist/120)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-    // Draw particles
-    particles.forEach(p => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(0,180,255,${p.alpha})`;
-      ctx.fill();
-      // Move
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0) p.x = W;
-      if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H;
-      if (p.y > H) p.y = 0;
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
 
 // ── VESSEL DATA ─────────────────────────────────────────────
 const vessels = [
