@@ -364,16 +364,17 @@
     /* ── P&L ANALYTICS PANEL ── */
     #pnl-panel {
       position: fixed;
-      top: 58px; left: 0; right: 0; bottom: 0;
-      z-index: 1100;
+      top: 58px; left: 220px; right: 0; bottom: 62px;
+      z-index: 1050;
       background: var(--bg);
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(12px);
       pointer-events: none;
       transition: opacity 0.3s ease, transform 0.3s ease;
       overflow-y: auto;
       overflow-x: hidden;
     }
+    body.sidebar-hidden #pnl-panel { left: 0 !important; }
     #pnl-panel.open {
       opacity: 1;
       transform: translateY(0);
@@ -643,13 +644,13 @@
     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
     Live Map
   </div>
-  <div class="sidebar-item">
-    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-    Fleet Overview
-  </div>
   <div class="sidebar-item" onclick="window.openPnlPanel()">
     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     P&amp;L Analytics
+  </div>
+  <div class="sidebar-item">
+    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Fleet Overview
   </div>
   <div class="sidebar-item">
     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
