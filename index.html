@@ -354,7 +354,7 @@
   <div class="nav-right">
     <div class="nav-stat">
       <div class="nav-stat-label">Fleet Active</div>
-      <div class="nav-stat-value" style="color:var(--green)">9 / 10 Vessels</div>
+      <div class="nav-stat-value" id="kpi-fleet" style="color:var(--green)">9 / 10 Vessels</div>
       <div class="nav-tip">
         <div class="nav-tip-row"><span class="nav-tip-dot" style="background:#00b4ff;"></span><span>7 vessels on route</span></div>
         <div class="nav-tip-row"><span class="nav-tip-dot" style="background:#00e5a0;"></span><span>1 vessel arrived in port</span></div>
@@ -364,19 +364,19 @@
     </div>
     <div class="nav-stat">
       <div class="nav-stat-label">Total Revenue (YTD)</div>
-      <div class="nav-stat-value" style="color:var(--accent)">USD 148.6M</div>
+      <div class="nav-stat-value" id="kpi-rev-ytd" style="color:var(--accent)">USD 148.6M</div>
     </div>
     <div class="nav-stat">
       <div class="nav-stat-label">Net P&amp;L (YTD)</div>
-      <div class="nav-stat-value" style="color:var(--green)">USD 31.2M</div>
+      <div class="nav-stat-value" id="kpi-pnl-ytd" style="color:var(--green)">USD 31.2M</div>
     </div>
     <div class="nav-stat">
       <div class="nav-stat-label">Forecast P&amp;L (YTD)</div>
-      <div class="nav-stat-value" style="color:var(--muted)">USD 29.8M</div>
+      <div class="nav-stat-value" id="kpi-fcst-ytd" style="color:var(--muted)">USD 29.8M</div>
     </div>
     <div class="nav-stat">
       <div class="nav-stat-label">Forecast vs Actual (YTD)</div>
-      <div class="nav-stat-value" style="color:var(--green)">+4.7%</div>
+      <div class="nav-stat-value" id="kpi-var-ytd" style="color:var(--green)">+4.7%</div>
     </div>
     <div class="nav-dot"></div>
   </div>
@@ -442,37 +442,37 @@
 <div class="kpi-strip">
   <div class="kpi">
     <div class="kpi-label">Total TEU Capacity</div>
-    <div class="kpi-value blue">82,000 TEU</div>
+    <div class="kpi-value blue" id="kpi-teu">82,000 TEU</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Avg. Utilisation</div>
-    <div class="kpi-value green">87.3%</div>
+    <div class="kpi-value green" id="kpi-util">87.3%</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Total Rev. (Apr)</div>
-    <div class="kpi-value blue">USD 18.4M</div>
+    <div class="kpi-value blue" id="kpi-rev-apr">USD 18.4M</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Total Costs (Apr)</div>
-    <div class="kpi-value" style="color:var(--amber)">USD 12.9M</div>
+    <div class="kpi-value" id="kpi-cost-apr" style="color:var(--amber)">USD 12.9M</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Net P&amp;L (Apr)</div>
-    <div class="kpi-value green">USD 5.5M</div>
+    <div class="kpi-value green" id="kpi-pnl-apr">USD 5.5M</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Forecast P&amp;L (Apr)</div>
-    <div class="kpi-value" style="color:var(--muted)">USD 5.1M</div>
+    <div class="kpi-value" id="kpi-fcst-apr" style="color:var(--muted)">USD 5.1M</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Forecast vs Actual (Apr)</div>
-    <div class="kpi-value green">+7.8%</div>
+    <div class="kpi-value green" id="kpi-var-apr">+7.8%</div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
@@ -480,17 +480,17 @@
     <div style="display:flex;align-items:center;gap:10px;margin-top:2px;">
       <div class="voyage-dot-wrap">
         <span style="width:8px;height:8px;border-radius:50%;background:#00b4ff;flex-shrink:0;display:inline-block;"></span>
-        <span class="kpi-value blue" style="margin:0;">7</span>
+        <span class="kpi-value blue" id="kpi-voy-blue" style="margin:0;">7</span>
         <span class="vdot-tip">On route</span>
       </div>
       <div class="voyage-dot-wrap">
         <span style="width:8px;height:8px;border-radius:50%;background:#00e5a0;flex-shrink:0;display:inline-block;"></span>
-        <span class="kpi-value green" style="margin:0;">1</span>
+        <span class="kpi-value green" id="kpi-voy-green" style="margin:0;">1</span>
         <span class="vdot-tip">Arrived</span>
       </div>
       <div class="voyage-dot-wrap">
         <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0;display:inline-block;"></span>
-        <span class="kpi-value" style="margin:0;color:var(--amber);">1</span>
+        <span class="kpi-value" id="kpi-voy-amber" style="margin:0;color:var(--amber);">1</span>
         <span class="vdot-tip">Loading</span>
       </div>
     </div>
@@ -793,6 +793,16 @@ const vessels = [
     teu: 6500
   }
 ];
+
+// ── PARSE VESSEL FINANCIALS ──────────────────────────────────
+// Attach numeric revM / costM / profitM to each active vessel
+vessels.forEach(v => {
+  if (!v.isDryDock && v.revenue) {
+    v.revM    = parseFloat(v.revenue.value.replace(/[^0-9.]/g, ''));
+    v.costM   = parseFloat(v.costs.value.replace(/[^0-9.]/g, ''));
+    v.profitM = parseFloat(v.profit.value.replace(/[^0-9.]/g, ''));
+  }
+});
 
 // ── SMART POPUP POSITIONING ──────────────────────────────────
 // Fixes the Leaflet mouseover/mouseout blinking bug:
@@ -1113,6 +1123,100 @@ legendEl.addTo(map);
 const vesselMarkers = []; // store refs for filter
 let pilActiveFilter = null;
 
+// Base KPI values (match the hardcoded HTML display values)
+const BASE_APR_REV = 18.4, BASE_APR_COST = 12.9, BASE_APR_PNL = 5.5, BASE_APR_FCST = 5.1;
+const BASE_YTD_REV = 148.6, BASE_YTD_PNL = 31.2, BASE_YTD_FCST = 29.8;
+const BASE_UTIL = 87.3, TOTAL_FLEET = 10;
+
+function pilUpdateKPIs() {
+  const allActive = vessels.filter(v => !v.isDryDock);
+  const laneServices = pilActiveFilter ? (tradeLanes[pilActiveFilter]?.services || []) : null;
+  const filtered = laneServices
+    ? allActive.filter(v => laneServices.includes(v.service))
+    : allActive;
+
+  function fmt(val) { return 'USD ' + val.toFixed(1) + 'M'; }
+  function fmtPct(val) { return (val >= 0 ? '+' : '') + val.toFixed(1) + '%'; }
+
+  if (!pilActiveFilter) {
+    // Restore originals
+    document.getElementById('kpi-teu').textContent       = '82,000 TEU';
+    document.getElementById('kpi-util').textContent      = BASE_UTIL.toFixed(1) + '%';
+    document.getElementById('kpi-rev-apr').textContent   = fmt(BASE_APR_REV);
+    document.getElementById('kpi-cost-apr').textContent  = fmt(BASE_APR_COST);
+    document.getElementById('kpi-pnl-apr').textContent   = fmt(BASE_APR_PNL);
+    document.getElementById('kpi-fcst-apr').textContent  = fmt(BASE_APR_FCST);
+    document.getElementById('kpi-var-apr').textContent   = '+7.8%';
+    document.getElementById('kpi-var-apr').className     = 'kpi-value green';
+    document.getElementById('kpi-voy-blue').textContent  = '7';
+    document.getElementById('kpi-voy-green').textContent = '1';
+    document.getElementById('kpi-voy-amber').textContent = '1';
+    document.getElementById('kpi-fleet').textContent     = '9 / 10 Vessels';
+    document.getElementById('kpi-rev-ytd').textContent   = fmt(BASE_YTD_REV);
+    document.getElementById('kpi-pnl-ytd').textContent   = fmt(BASE_YTD_PNL);
+    document.getElementById('kpi-fcst-ytd').textContent  = fmt(BASE_YTD_FCST);
+    document.getElementById('kpi-var-ytd').textContent   = '+4.7%';
+    document.getElementById('kpi-var-ytd').style.color   = 'var(--green)';
+    return;
+  }
+
+  // Totals across all active vessels
+  const totalRevM    = allActive.reduce((s, v) => s + (v.revM    || 0), 0);
+  const totalCostM   = allActive.reduce((s, v) => s + (v.costM   || 0), 0);
+  const totalProfitM = allActive.reduce((s, v) => s + (v.profitM || 0), 0);
+
+  // Filtered sums
+  const fRevM    = filtered.reduce((s, v) => s + (v.revM    || 0), 0);
+  const fCostM   = filtered.reduce((s, v) => s + (v.costM   || 0), 0);
+  const fProfitM = filtered.reduce((s, v) => s + (v.profitM || 0), 0);
+  const fTEU     = filtered.reduce((s, v) => s + (v.teu     || 0), 0);
+  const fWtUtil  = filtered.reduce((s, v) => s + (v.util || 0) * (v.teu || 0), 0);
+
+  const revRatio    = totalRevM    > 0 ? fRevM    / totalRevM    : 0;
+  const costRatio   = totalCostM   > 0 ? fCostM   / totalCostM   : 0;
+  const profitRatio = totalProfitM > 0 ? fProfitM / totalProfitM : 0;
+  const avgUtil     = fTEU         > 0 ? fWtUtil  / fTEU          : 0;
+
+  // Scaled Apr KPIs
+  const aprRev  = revRatio    * BASE_APR_REV;
+  const aprCost = costRatio   * BASE_APR_COST;
+  const aprPnl  = profitRatio * BASE_APR_PNL;
+  const aprFcst = profitRatio * BASE_APR_FCST;
+  const aprVar  = aprFcst > 0 ? (aprPnl - aprFcst) / aprFcst * 100 : 0;
+
+  // Scaled YTD KPIs
+  const ytdRev  = revRatio    * BASE_YTD_REV;
+  const ytdPnl  = profitRatio * BASE_YTD_PNL;
+  const ytdFcst = profitRatio * BASE_YTD_FCST;
+  const ytdVar  = ytdFcst > 0 ? (ytdPnl - ytdFcst) / ytdFcst * 100 : 0;
+
+  // Voyage status counts
+  const fBlue  = filtered.filter(v => v.badgeClass === 'badge-transit').length;
+  const fGreen = filtered.filter(v => v.badgeClass === 'badge-arrived').length;
+  const fAmber = filtered.filter(v => v.badgeClass === 'badge-loading').length;
+
+  // Update bottom KPI strip
+  document.getElementById('kpi-teu').textContent       = fTEU.toLocaleString() + ' TEU';
+  document.getElementById('kpi-util').textContent      = avgUtil.toFixed(1) + '%';
+  document.getElementById('kpi-rev-apr').textContent   = fmt(aprRev);
+  document.getElementById('kpi-cost-apr').textContent  = fmt(aprCost);
+  document.getElementById('kpi-pnl-apr').textContent   = fmt(aprPnl);
+  document.getElementById('kpi-fcst-apr').textContent  = fmt(aprFcst);
+  document.getElementById('kpi-var-apr').textContent   = fmtPct(aprVar);
+  document.getElementById('kpi-var-apr').className     = 'kpi-value ' + (aprVar >= 0 ? 'green' : 'red');
+  document.getElementById('kpi-voy-blue').textContent  = fBlue;
+  document.getElementById('kpi-voy-green').textContent = fGreen;
+  document.getElementById('kpi-voy-amber').textContent = fAmber;
+
+  // Update top nav
+  document.getElementById('kpi-fleet').textContent     = filtered.length + ' / ' + TOTAL_FLEET + ' Vessels';
+  document.getElementById('kpi-rev-ytd').textContent   = fmt(ytdRev);
+  document.getElementById('kpi-pnl-ytd').textContent   = fmt(ytdPnl);
+  document.getElementById('kpi-fcst-ytd').textContent  = fmt(ytdFcst);
+  document.getElementById('kpi-var-ytd').textContent   = fmtPct(ytdVar);
+  document.getElementById('kpi-var-ytd').style.color   = ytdVar >= 0 ? 'var(--green)' : 'var(--red)';
+}
+
 window.pilFilter = function(laneName) {
   pilActiveFilter = (pilActiveFilter === laneName) ? null : laneName;
   const laneServices = pilActiveFilter ? (tradeLanes[pilActiveFilter]?.services || []) : null;
@@ -1127,7 +1231,7 @@ window.pilFilter = function(laneName) {
     if (pingEl) pingEl.style.opacity = active ? '1' : '0.15';
   });
 
-  // update legend row styles
+  // Update legend row styles
   document.querySelectorAll('.leg-lane-row').forEach(el => {
     const lane = el.dataset.lane;
     const active = !pilActiveFilter || pilActiveFilter === lane;
@@ -1135,6 +1239,9 @@ window.pilFilter = function(laneName) {
     el.style.background = (pilActiveFilter === lane) ? 'rgba(255,255,255,0.08)' : '';
     el.style.borderRadius = '6px';
   });
+
+  // Recalculate all KPIs for the current filter state
+  pilUpdateKPIs();
 };
 
 map.on('click', function() {
