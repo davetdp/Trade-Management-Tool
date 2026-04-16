@@ -212,10 +212,10 @@
 
     /* ── PORT POPUP CARD ── */
     .port-popup {
-      width: 270px;
+      width: 235px;
       background: rgba(20, 12, 3, 0.94);
       border: 1px solid rgba(255,184,48,0.25);
-      border-radius: 14px;
+      border-radius: 11px;
       backdrop-filter: blur(20px);
       box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,184,48,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
       overflow: hidden;
@@ -223,50 +223,50 @@
     }
     .port-popup-header {
       background: linear-gradient(135deg, rgba(180,100,0,0.4), rgba(255,184,48,0.15));
-      padding: 13px 16px 11px;
+      padding: 9px 11px 8px;
       border-bottom: 1px solid rgba(255,184,48,0.15);
-      display: flex; align-items: flex-start; justify-content: space-between;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 6px;
     }
-    .port-popup-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; color: #fff; }
-    .port-popup-country { font-size: 11px; color: rgba(255,220,140,0.7); margin-top: 2px; }
+    .port-popup-name { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700; color: #fff; }
+    .port-popup-country { font-size: 10px; color: rgba(255,220,140,0.7); margin-top: 2px; }
     .port-badge {
-      font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
+      font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 20px;
       background: rgba(255,184,48,0.18); color: var(--amber);
       border: 1px solid rgba(255,184,48,0.3);
-      text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+      text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; flex-shrink: 0;
     }
-    .port-popup-body { padding: 13px 16px; }
+    .port-popup-body { padding: 9px 11px; }
 
     /* delinquency meter */
-    .delinq-section { margin-bottom: 14px; }
-    .delinq-title { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-    .delinq-value-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
-    .delinq-days { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; line-height: 1; }
-    .delinq-unit { font-size: 12px; color: var(--muted); }
-    .delinq-trend { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
+    .delinq-section { margin-bottom: 9px; }
+    .delinq-title { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .delinq-value-row { display: flex; align-items: baseline; gap: 5px; margin-bottom: 5px; flex-wrap: wrap; }
+    .delinq-days { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; line-height: 1; }
+    .delinq-unit { font-size: 11px; color: var(--muted); }
+    .delinq-trend { font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 10px; }
     .trend-up   { background: rgba(255,77,106,0.15); color: var(--red); }
     .trend-down { background: rgba(0,229,160,0.15); color: var(--green); }
     .trend-flat { background: rgba(106,138,170,0.15); color: var(--muted); }
-    .delinq-bar-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; margin-top: 4px; }
+    .delinq-bar-track { height: 3px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; margin-top: 3px; }
     .delinq-bar-fill  { height: 100%; border-radius: 10px; }
 
     /* container inventory grid */
-    .inv-title { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .inv-title { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
     .inv-card {
       background: rgba(255,184,48,0.05);
       border: 1px solid rgba(255,184,48,0.12);
-      border-radius: 8px; padding: 9px 11px;
+      border-radius: 6px; padding: 6px 8px;
     }
-    .inv-card-type { font-size: 11px; font-weight: 700; color: var(--amber); letter-spacing: 0.5px; margin-bottom: 2px; }
-    .inv-card-desc { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
-    .inv-card-count { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); line-height: 1; }
-    .inv-card-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .inv-card-type { font-size: 10px; font-weight: 700; color: var(--amber); letter-spacing: 0.5px; margin-bottom: 1px; }
+    .inv-card-desc { font-size: 9px; color: var(--muted); margin-bottom: 4px; }
+    .inv-card-count { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); line-height: 1; }
+    .inv-card-label { font-size: 9px; color: var(--muted); margin-top: 1px; }
 
-    .port-divider { height: 1px; background: rgba(255,184,48,0.1); margin: 11px 0; }
-    .port-detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .port-detail-label { font-size: 11px; color: var(--muted); }
-    .port-detail-value { font-size: 11px; font-weight: 600; color: var(--text); }
+    .port-divider { height: 1px; background: rgba(255,184,48,0.1); margin: 7px 0; }
+    .port-detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .port-detail-label { font-size: 10px; color: var(--muted); }
+    .port-detail-value { font-size: 10px; font-weight: 600; color: var(--text); }
   </style>
 </head>
 <body>
@@ -531,7 +531,7 @@ function buildPopup(v) {
   <div class="vessel-popup">
     <div class="popup-header">
       <div>
-        <div class="popup-vessel-name">${v.flag} ${v.name}</div>
+        <div class="popup-vessel-name">${v.name}</div>
         <div style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;margin:2px 0 3px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</div>
         <div class="popup-route">${v.route}</div>
       </div>
@@ -791,7 +791,7 @@ const portLayers = { 1: L.layerGroup(), 2: L.layerGroup(), 3: L.layerGroup() };
 ports.forEach(p => {
   const marker = L.marker(p.position, { icon: portIcon(p.tier) });
   const popup = L.popup({
-    maxWidth: 280, minWidth: 270,
+    maxWidth: 240, minWidth: 235,
     className: 'vessel-popup-wrapper',
     offset: [0, -8], autoPan: true, closeOnClick: false
   }).setContent(buildPortPopup(p));
