@@ -821,11 +821,58 @@ function buildPopup(v) {
   </div>`;
 }
 
+// ── TRADE LANE COLOURS ───────────────────────────────────────
+const tradeLanes = {
+  'Africa':                      { color: '#f59e0b', services: ['WAF1','WAF2','EAF1','SAF1','AAS1'] },
+  'Central & Latin America':     { color: '#a78bfa', services: ['WCSA1','ECSA1'] },
+  'Intra Asia':                  { color: '#00b4ff', services: ['CCS','JCS','SEA1','SEA2','IAX'] },
+  'Middle East & W. Coast India':{ color: '#f97316', services: ['MEX1','MEX2','IMS1'] },
+  'Oceania':                     { color: '#00e5a0', services: ['AUS1','NZS','PNG1'] },
+  'Pacific Islands':             { color: '#ec4899', services: ['PAC1'] },
+};
+
+// Build a quick service → colour lookup
+const serviceColor = {};
+Object.values(tradeLanes).forEach(({ color, services }) =>
+  services.forEach(s => serviceColor[s] = color)
+);
+
+function vesselColor(service) {
+  return serviceColor[service] || '#cccccc';
+}
+
+// ── MAP LEGEND ───────────────────────────────────────────────
+const legendEl = L.control({ position: 'bottomright' });
+legendEl.onAdd = function () {
+  const div = L.DomUtil.create('div');
+  div.style.cssText = `
+    background: rgba(5,13,26,0.92); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 10px 14px; font-family: 'Inter', sans-serif;
+    backdrop-filter: blur(12px); min-width: 210px; margin-bottom: 8px;
+  `;
+  div.innerHTML = `
+    <div style="font-size:9px;font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Vessel Trade Lanes</div>
+    ${Object.entries(tradeLanes).map(([name, { color }]) => `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+        <svg width="14" height="14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+          <path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="${color}"/>
+          <rect x="13" y="14" width="10" height="9" rx="2" fill="${color}" opacity="0.9"/>
+          <rect x="15" y="11" width="6" height="5" rx="1.5" fill="${color}"/>
+          <rect x="17.5" y="8" width="2" height="5" rx="1" fill="${color}" opacity="0.8"/>
+          <path d="M28 22 L32 24 L25 27 Z" fill="${color}" opacity="0.7"/>
+        </svg>
+        <span style="font-size:11px;color:#e8f4ff;">${name}</span>
+      </div>`).join('')}
+  `;
+  return div;
+};
+legendEl.addTo(map);
+
 // ── RENDER VESSELS ───────────────────────────────────────────
-const colors = ['#00b4ff', '#00e5a0', '#ffb830', '#00b4ff', '#ff6b81', '#a78bfa', '#34d399', '#fb923c'];
 
 vessels.forEach((v, i) => {
-  const icon = shipIcon(colors[i]);
+  const color = vesselColor(v.service);
+  const icon = shipIcon(color);
   const marker = L.marker(v.position, { icon }).addTo(map);
 
   const popup = L.popup({
@@ -843,7 +890,7 @@ vessels.forEach((v, i) => {
   const size = 80;
   const pingIcon = L.divIcon({
     html: `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="40" cy="40" r="8" fill="none" stroke="${colors[i]}" stroke-width="1.5" opacity="0.7">
+      <circle cx="40" cy="40" r="8" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.7">
         <animate attributeName="r" from="8" to="34" dur="2.${i}s" repeatCount="indefinite"/>
         <animate attributeName="opacity" from="0.7" to="0" dur="2.${i}s" repeatCount="indefinite"/>
       </circle>
