@@ -403,8 +403,10 @@ const vessels = [
   {
     name: 'Kota Cantik',
     vvd: 'KCTK0041W',
+    service: 'SAF1',
     position: [-35.2, 20.8],
-    route: 'Shanghai → Cape Town → Hamburg',
+    route: 'Shanghai → Singapore → Port Klang → Durban → Cape Town',
+    nextPort: 'Cape Town',
     status: 'Transit',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
@@ -428,8 +430,10 @@ const vessels = [
   {
     name: 'Kota Cahaya',
     vvd: 'KCHY0005N',
+    service: 'AUS1',
     position: [-31.5, 153.8],
-    route: 'Singapore → Sydney → Auckland',
+    route: 'Singapore → Port Klang → Fremantle → Melbourne → Sydney',
+    nextPort: 'Sydney',
     status: 'Arrived',
     badgeClass: 'badge-arrived',
     flag: '🇸🇬',
@@ -453,8 +457,10 @@ const vessels = [
   {
     name: 'Kota Cempaka',
     vvd: 'KCPK0101S',
+    service: 'CCS',
     position: [30.8, 123.1],
-    route: 'Singapore → Shanghai → Busan',
+    route: 'Singapore → Ho Chi Minh → Manila → Shanghai → Ningbo',
+    nextPort: 'Ningbo',
     status: 'Loading',
     badgeClass: 'badge-loading',
     flag: '🇸🇬',
@@ -478,8 +484,10 @@ const vessels = [
   {
     name: 'Kota Cepat',
     vvd: 'KCPT0001E',
+    service: 'MEX1',
     position: [1.1, 104.2],
-    route: 'Shanghai → Singapore → Colombo',
+    route: 'Port Klang → Singapore → Colombo → Salalah → Jebel Ali',
+    nextPort: 'Colombo',
     status: 'Transit',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
@@ -505,7 +513,9 @@ const vessels = [
     name: 'Kota Eagle',
     vvd: 'KEGL0023W',
     position: [7.4, 67.2],
+    service: 'WAF1',
     route: 'Port Klang → Colombo → Salalah → Tema → Apapa',
+    nextPort: 'Salalah',
     status: 'Transit',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
@@ -531,7 +541,9 @@ const vessels = [
     name: 'Kota Gadang',
     vvd: 'KGDG0087N',
     position: [17.8, 57.4],
+    service: 'MEX1',
     route: 'Singapore → Colombo → Salalah → Sohar → Jebel Ali',
+    nextPort: 'Jebel Ali',
     status: 'Transit',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
@@ -557,7 +569,9 @@ const vessels = [
     name: 'Kota Ebony',
     vvd: 'KEBO0034S',
     position: [-4.6, 53.1],
+    service: 'EAF1',
     route: 'Singapore → Colombo → Mombasa → Dar es Salaam → Nacala',
+    nextPort: 'Mombasa',
     status: 'Transit',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
@@ -583,7 +597,9 @@ const vessels = [
     name: 'Kota Layang',
     vvd: 'KLYG0012E',
     position: [-11.3, -128.7],
+    service: 'WCSA1',
     route: 'Yantian → Singapore → Callao → San Antonio → Valparaíso',
+    nextPort: 'Callao',
     status: 'Transit',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
@@ -749,8 +765,11 @@ function buildPopup(v) {
           </svg>
           <div class="popup-vessel-name">${v.name}</div>
         </div>
-        <div style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;margin:2px 0 3px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</div>
-        <div class="popup-route">${v.route}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin:2px 0 3px;">
+          <span style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</span>
+          <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(0,180,255,0.15);color:var(--accent);border:1px solid rgba(0,180,255,0.3);letter-spacing:0.5px;">${v.service}</span>
+        </div>
+        <div class="popup-route">${v.route.replace(v.nextPort, `<strong style="color:#fff;font-weight:700;">${v.nextPort}</strong>`)}</div>
       </div>
       <span class="popup-badge ${v.badgeClass}">${v.status}</span>
     </div>
