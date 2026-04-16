@@ -516,6 +516,7 @@ const vessels = [
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9741023',
+    vesselClass: 'New Panamax',
     built: 2018,
     teu: 11200,
     teuLoaded: 9856,
@@ -543,6 +544,7 @@ const vessels = [
     badgeClass: 'badge-arrived',
     flag: '🇸🇬',
     imo: '9612874',
+    vesselClass: 'New Panamax',
     built: 2015,
     teu: 8500,
     teuLoaded: 7140,
@@ -570,6 +572,7 @@ const vessels = [
     badgeClass: 'badge-loading',
     flag: '🇸🇬',
     imo: '9803541',
+    vesselClass: 'Post-New Panamax',
     built: 2020,
     teu: 13400,
     teuLoaded: 11490,
@@ -597,6 +600,7 @@ const vessels = [
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9556789',
+    vesselClass: 'New Panamax',
     built: 2016,
     teu: 8700,
     teuLoaded: 7743,
@@ -625,6 +629,7 @@ const vessels = [
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9688412',
+    vesselClass: 'New Panamax',
     built: 2017,
     teu: 9600,
     teuLoaded: 8256,
@@ -653,6 +658,7 @@ const vessels = [
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9724561',
+    vesselClass: 'Post-Panamax',
     built: 2019,
     teu: 7800,
     teuLoaded: 6942,
@@ -681,6 +687,7 @@ const vessels = [
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9761835',
+    vesselClass: 'New Panamax',
     built: 2018,
     teu: 8200,
     teuLoaded: 6888,
@@ -709,6 +716,7 @@ const vessels = [
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9812347',
+    vesselClass: 'New Panamax',
     built: 2021,
     teu: 10400,
     teuLoaded: 9256,
@@ -737,6 +745,7 @@ const vessels = [
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9834206',
+    vesselClass: 'Panamax',
     built: 2019,
     teu: 4200,
     teuLoaded: 3444,
@@ -764,6 +773,7 @@ const vessels = [
     badgeClass: 'badge-drydock',
     flag: '🇸🇬',
     imo: '9612847',
+    vesselClass: 'Post-Panamax',
     built: 2014,
     drydockYard: 'Sembawang Shipyard, Singapore',
     drydockStart: '02 Mar 2026',
@@ -928,6 +938,7 @@ function buildPopup(v) {
       <div class="popup-divider"></div>
       <div class="popup-section-title">Vessel Details</div>
       <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
+      <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
       <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
       <div class="detail-row"><span class="detail-label">Capacity</span><span class="detail-value">${v.teu.toLocaleString()} TEU</span></div>
       <div class="detail-row"><span class="detail-label">Flag</span><span class="detail-value">${v.flag} Singapore</span></div>
@@ -989,6 +1000,7 @@ function buildPopup(v) {
 
       <div class="popup-section-title">Vessel Details</div>
       <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
+      <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
       <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
       <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
       <div class="detail-row"><span class="detail-label">Heading</span><span class="detail-value">${v.heading}</span></div>
