@@ -274,7 +274,14 @@
 <!-- NAV -->
 <nav>
   <div class="nav-left">
-    <div class="pil-logo">PIL</div>
+    <div class="pil-logo" style="background:white;padding:4px 8px;">
+      <svg width="48" height="26" viewBox="0 0 52 30" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 5 Q4.5 2 8 5 Q11.5 8 15 5 L15 8.5 Q11.5 11.5 8 8.5 Q4.5 5.5 1 8.5 Z" fill="#1a6abf"/>
+        <path d="M1 11.5 Q4.5 8.5 8 11.5 Q11.5 14.5 15 11.5 L15 15 Q11.5 18 8 15 Q4.5 12 1 15 Z" fill="#1a6abf"/>
+        <path d="M1 18 Q4.5 15 8 18 Q11.5 21 15 18 L15 21.5 Q11.5 24.5 8 21.5 Q4.5 18.5 1 21.5 Z" fill="#1a6abf"/>
+        <text x="18" y="23" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="19" fill="#cc1a1a" letter-spacing="0.5">PIL</text>
+      </svg>
+    </div>
     <div class="nav-title">Trade Management Tool</div>
   </div>
   <div class="nav-right">
@@ -581,7 +588,16 @@ function buildPopup(v) {
     <div class="popup-header">
       <div>
         <div style="display:flex;align-items:center;gap:7px;margin-bottom:1px;">
-          <span style="background:linear-gradient(135deg,#0055aa,#00aaff);color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.5px;padding:2px 6px;border-radius:4px;line-height:1.4;flex-shrink:0;">PIL</span>
+          <svg width="38" height="22" viewBox="0 0 52 30" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+            <!-- Wave 1 -->
+            <path d="M1 5 Q4.5 2 8 5 Q11.5 8 15 5 L15 8.5 Q11.5 11.5 8 8.5 Q4.5 5.5 1 8.5 Z" fill="#1a6abf"/>
+            <!-- Wave 2 -->
+            <path d="M1 11.5 Q4.5 8.5 8 11.5 Q11.5 14.5 15 11.5 L15 15 Q11.5 18 8 15 Q4.5 12 1 15 Z" fill="#1a6abf"/>
+            <!-- Wave 3 -->
+            <path d="M1 18 Q4.5 15 8 18 Q11.5 21 15 18 L15 21.5 Q11.5 24.5 8 21.5 Q4.5 18.5 1 21.5 Z" fill="#1a6abf"/>
+            <!-- PIL text -->
+            <text x="18" y="23" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="19" fill="#cc1a1a" letter-spacing="0.5">PIL</text>
+          </svg>
           <div class="popup-vessel-name">${v.name}</div>
         </div>
         <div style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;margin:2px 0 3px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</div>
