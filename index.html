@@ -1109,7 +1109,7 @@ legendEl.addTo(map);
 // ── RENDER VESSELS ───────────────────────────────────────────
 
 const vesselMarkers = []; // store refs for filter
-let pilActiveFilter = null;
+const pilActiveFilters = new Set(); // supports multi-select
 
 // Base KPI values (match the hardcoded HTML display values)
 const BASE_APR_REV = 18.4, BASE_APR_COST = 12.9, BASE_APR_PNL = 5.5, BASE_APR_FCST = 5.1;
@@ -1118,15 +1118,18 @@ const BASE_UTIL = 87.3, TOTAL_FLEET = 10;
 
 function pilUpdateKPIs() {
   const allActive = vessels.filter(v => !v.isDryDock);
-  const laneServices = pilActiveFilter ? (tradeLanes[pilActiveFilter]?.services || []) : null;
-  const filtered = laneServices
-    ? allActive.filter(v => laneServices.includes(v.service))
+  // Collect all services across selected lanes
+  const activeServices = pilActiveFilters.size > 0
+    ? [...pilActiveFilters].flatMap(lane => tradeLanes[lane]?.services || [])
+    : null;
+  const filtered = activeServices
+    ? allActive.filter(v => activeServices.includes(v.service))
     : allActive;
 
   function fmt(val) { return 'USD ' + val.toFixed(1) + 'M'; }
   function fmtPct(val) { return (val >= 0 ? '+' : '') + val.toFixed(1) + '%'; }
 
-  if (!pilActiveFilter) {
+  if (pilActiveFilters.size === 0) {
     // Restore originals
     document.getElementById('kpi-teu').textContent       = '82,000 TEU';
     document.getElementById('kpi-util').textContent      = BASE_UTIL.toFixed(1) + '%';
@@ -1206,15 +1209,22 @@ function pilUpdateKPIs() {
 }
 
 window.pilFilter = function(laneName) {
-  pilActiveFilter = (pilActiveFilter === laneName) ? null : laneName;
-  const laneServices = pilActiveFilter ? (tradeLanes[pilActiveFilter]?.services || []) : null;
+  // Toggle this lane in/out of the active set
+  if (pilActiveFilters.has(laneName)) {
+    pilActiveFilters.delete(laneName);
+  } else {
+    pilActiveFilters.add(laneName);
+  }
+
+  const activeServices = pilActiveFilters.size > 0
+    ? [...pilActiveFilters].flatMap(lane => tradeLanes[lane]?.services || [])
+    : null;
 
   vesselMarkers.forEach(({ marker, pingMarker, v, baseColor }) => {
     if (v.isDryDock) return;
-    const active = !laneServices || laneServices.includes(v.service);
+    const active = !activeServices || activeServices.includes(v.service);
     const displayColor = active ? baseColor : '#2e3a4a';
     marker.setIcon(shipIcon(displayColor));
-    // dim ping ring
     const pingEl = pingMarker.getElement();
     if (pingEl) pingEl.style.opacity = active ? '1' : '0.15';
   });
@@ -1222,9 +1232,10 @@ window.pilFilter = function(laneName) {
   // Update legend row styles
   document.querySelectorAll('.leg-lane-row').forEach(el => {
     const lane = el.dataset.lane;
-    const active = !pilActiveFilter || pilActiveFilter === lane;
-    el.style.opacity = active ? '1' : '0.35';
-    el.style.background = (pilActiveFilter === lane) ? 'rgba(255,255,255,0.08)' : '';
+    const selected = pilActiveFilters.has(lane);
+    const dimmed = pilActiveFilters.size > 0 && !selected;
+    el.style.opacity = dimmed ? '0.35' : '1';
+    el.style.background = selected ? 'rgba(255,255,255,0.08)' : '';
     el.style.borderRadius = '6px';
   });
 
@@ -1233,7 +1244,22 @@ window.pilFilter = function(laneName) {
 };
 
 map.on('click', function() {
-  if (pilActiveFilter) window.pilFilter(pilActiveFilter);
+  if (pilActiveFilters.size > 0) {
+    pilActiveFilters.clear();
+    window.pilFilter = window.pilFilter; // no-op, just trigger re-render below
+    // Reset markers and legend
+    vesselMarkers.forEach(({ marker, pingMarker, v, baseColor }) => {
+      if (v.isDryDock) return;
+      marker.setIcon(shipIcon(baseColor));
+      const pingEl = pingMarker.getElement();
+      if (pingEl) pingEl.style.opacity = '1';
+    });
+    document.querySelectorAll('.leg-lane-row').forEach(el => {
+      el.style.opacity = '1';
+      el.style.background = '';
+    });
+    pilUpdateKPIs();
+  }
 });
 
 vessels.forEach((v, i) => {
