@@ -445,7 +445,20 @@
   <div class="kpi-divider"></div>
   <div class="kpi">
     <div class="kpi-label">Voyages In Progress</div>
-    <div class="kpi-value blue">9</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:2px;">
+      <div style="display:flex;align-items:center;gap:5px;" title="On route">
+        <span style="width:8px;height:8px;border-radius:50%;background:#00b4ff;flex-shrink:0;display:inline-block;"></span>
+        <span class="kpi-value blue" style="margin:0;">7</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;" title="Arrived">
+        <span style="width:8px;height:8px;border-radius:50%;background:#00e5a0;flex-shrink:0;display:inline-block;"></span>
+        <span class="kpi-value green" style="margin:0;">1</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;" title="Loading">
+        <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0;display:inline-block;"></span>
+        <span class="kpi-value" style="margin:0;color:var(--amber);">1</span>
+      </div>
+    </div>
   </div>
 </div>
 
