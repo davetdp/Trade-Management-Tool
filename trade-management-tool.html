@@ -53,7 +53,18 @@
       border-left: 1px solid var(--border); padding-left: 14px; letter-spacing: 0.3px;
     }
     .nav-right { display: flex; align-items: center; gap: 20px; }
-    .nav-stat { text-align: right; }
+    .nav-stat { text-align: right; position: relative; }
+    .nav-stat .nav-tip {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: rgba(5,13,26,0.96); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px; padding: 8px 12px; min-width: 190px;
+      pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 999;
+      text-align: left;
+    }
+    .nav-stat:hover .nav-tip { opacity: 1; }
+    .nav-tip-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; font-size: 11px; color: #e8f4ff; }
+    .nav-tip-row:last-child { margin-bottom: 0; }
+    .nav-tip-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .nav-stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
     .nav-stat-value { font-size: 13px; font-weight: 600; }
     .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
@@ -333,6 +344,12 @@
     <div class="nav-stat">
       <div class="nav-stat-label">Fleet Active</div>
       <div class="nav-stat-value" style="color:var(--green)">9 / 10 Vessels</div>
+      <div class="nav-tip">
+        <div class="nav-tip-row"><span class="nav-tip-dot" style="background:#00b4ff;"></span><span>7 vessels on route</span></div>
+        <div class="nav-tip-row"><span class="nav-tip-dot" style="background:#00e5a0;"></span><span>1 vessel arrived in port</span></div>
+        <div class="nav-tip-row"><span class="nav-tip-dot" style="background:#f59e0b;"></span><span>1 vessel loading in port</span></div>
+        <div class="nav-tip-row"><span class="nav-tip-dot" style="background:#c0c8d8;"></span><span>1 vessel in dry dock</span></div>
+      </div>
     </div>
     <div class="nav-stat">
       <div class="nav-stat-label">Total Revenue (YTD)</div>
