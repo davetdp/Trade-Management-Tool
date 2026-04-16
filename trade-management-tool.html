@@ -360,6 +360,222 @@
     .port-detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .port-detail-label { font-size: 10px; color: var(--muted); }
     .port-detail-value { font-size: 10px; font-weight: 600; color: var(--text); }
+
+    /* ── P&L ANALYTICS PANEL ── */
+    #pnl-panel {
+      position: fixed;
+      top: 58px; left: 0; right: 0; bottom: 0;
+      z-index: 1100;
+      background: var(--bg);
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    #pnl-panel.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+    .pnl-panel-inner {
+      min-height: 100%;
+      padding: 0 0 40px;
+    }
+    .pnl-panel-header {
+      position: sticky; top: 0; z-index: 10;
+      background: linear-gradient(180deg, rgba(5,13,26,0.99) 0%, rgba(5,13,26,0.96) 100%);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,180,255,0.15);
+      padding: 18px 32px;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.5);
+    }
+    .pnl-panel-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px; font-weight: 700; color: var(--text);
+      letter-spacing: 0.2px;
+      margin-bottom: 4px;
+    }
+    .pnl-panel-subtitle {
+      font-size: 12px; color: var(--muted); letter-spacing: 0.3px;
+    }
+    .pnl-close-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 20px; line-height: 1;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .pnl-close-btn:hover {
+      background: rgba(255,77,106,0.15);
+      border-color: rgba(255,77,106,0.4);
+      color: var(--red);
+    }
+    .pnl-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 24px 32px 0;
+    }
+    @media (max-width: 900px) {
+      .pnl-columns { grid-template-columns: 1fr; }
+    }
+    .pnl-col-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pnl-col-title::before {
+      content: ''; display: inline-block;
+      width: 4px; height: 16px; border-radius: 2px;
+      background: var(--accent);
+    }
+    /* Summary Cards */
+    .pnl-summary-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .pnl-card {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-top: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .pnl-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .pnl-card.actual::before   { background: var(--green); }
+    .pnl-card.forecast::before { background: rgba(106,138,170,0.6); }
+    .pnl-card.variance-pos::before { background: var(--green); }
+    .pnl-card.variance-neg::before { background: var(--red); }
+    .pnl-card-label {
+      font-size: 9px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .pnl-card-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px; font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .pnl-card-sub {
+      font-size: 10px; font-weight: 600;
+      padding: 2px 6px; border-radius: 6px;
+      display: inline-block;
+    }
+    .pnl-card-sub.pos { background: rgba(0,229,160,0.12); color: var(--green); }
+    .pnl-card-sub.neg { background: rgba(255,77,106,0.12); color: var(--red); }
+    .pnl-card-sub.muted { background: rgba(106,138,170,0.1); color: var(--muted); }
+    /* Vessel table */
+    .pnl-table-wrap {
+      background: var(--surface);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 20px;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    .pnl-table-wrap::-webkit-scrollbar { width: 4px; }
+    .pnl-table-wrap::-webkit-scrollbar-track { background: transparent; }
+    .pnl-table-wrap::-webkit-scrollbar-thumb { background: rgba(0,180,255,0.2); border-radius: 2px; }
+    .pnl-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .pnl-table thead th {
+      position: sticky; top: 0; z-index: 2;
+      background: rgba(11,25,41,0.98);
+      font-size: 9px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 10px 12px 8px;
+      text-align: right;
+      white-space: nowrap;
+      border-bottom: 1px solid rgba(0,180,255,0.1);
+    }
+    .pnl-table thead th:first-child,
+    .pnl-table thead th:nth-child(2) { text-align: left; }
+    .pnl-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.12s;
+    }
+    .pnl-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    .pnl-table tbody tr:hover { background: rgba(0,180,255,0.06); }
+    .pnl-table tbody tr:last-child { border-bottom: none; }
+    .pnl-table td {
+      padding: 9px 12px;
+      text-align: right;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .pnl-table td:first-child { text-align: left; font-weight: 600; }
+    .pnl-table td:nth-child(2) {
+      text-align: left;
+      font-size: 10px; color: var(--muted);
+      white-space: nowrap;
+    }
+    .pnl-var-pos { color: var(--green); font-weight: 700; }
+    .pnl-var-neg { color: var(--red);   font-weight: 700; }
+    /* Bar chart */
+    .pnl-chart-section {
+      background: var(--surface);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 16px;
+    }
+    .pnl-chart-title {
+      font-size: 9px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .pnl-bar-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 7px;
+    }
+    .pnl-bar-row:last-child { margin-bottom: 0; }
+    .pnl-bar-label {
+      font-size: 10px; color: var(--muted);
+      width: 90px; flex-shrink: 0;
+      text-align: right; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pnl-bar-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .pnl-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #0066cc, #00e5a0);
+      transition: width 0.6s ease;
+    }
+    .pnl-bar-value {
+      font-size: 10px; font-weight: 700; color: var(--green);
+      font-family: 'Space Grotesk', sans-serif;
+      width: 46px; flex-shrink: 0;
+      text-align: right;
+    }
   </style>
 </head>
 <body>
@@ -431,7 +647,7 @@
     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
     Fleet Overview
   </div>
-  <div class="sidebar-item">
+  <div class="sidebar-item" onclick="window.openPnlPanel()">
     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     P&amp;L Analytics
   </div>
@@ -462,6 +678,157 @@
 <!-- MAP -->
 <div id="map"></div>
 <div id="map-glow"></div>
+
+<!-- P&L ANALYTICS PANEL -->
+<div id="pnl-panel" style="display:none">
+  <div class="pnl-panel-inner">
+    <div class="pnl-panel-header">
+      <div>
+        <div class="pnl-panel-title">P&amp;L Analytics</div>
+        <div class="pnl-panel-subtitle">April 2026 &mdash; Current Period vs Forecast</div>
+      </div>
+      <button class="pnl-close-btn" onclick="window.closePnlPanel()" title="Close">&times;</button>
+    </div>
+
+    <div class="pnl-columns">
+
+      <!-- LEFT COLUMN: Current Month (Apr) -->
+      <div class="pnl-col">
+        <div class="pnl-col-title">Current Month (Apr)</div>
+
+        <!-- Summary Cards -->
+        <div class="pnl-summary-cards">
+          <div class="pnl-card actual">
+            <div class="pnl-card-label">Actual P&amp;L</div>
+            <div class="pnl-card-value" style="color:var(--green)">USD 5.5M</div>
+            <span class="pnl-card-sub muted">Apr 2026</span>
+          </div>
+          <div class="pnl-card forecast">
+            <div class="pnl-card-label">Forecast P&amp;L</div>
+            <div class="pnl-card-value" style="color:var(--muted)">USD 5.1M</div>
+            <span class="pnl-card-sub muted">Apr 2026</span>
+          </div>
+          <div class="pnl-card variance-pos">
+            <div class="pnl-card-label">Variance</div>
+            <div class="pnl-card-value" style="color:var(--green)">+USD 0.4M</div>
+            <span class="pnl-card-sub pos">+7.8% vs forecast</span>
+          </div>
+        </div>
+
+        <!-- Vessel Breakdown Table -->
+        <div class="pnl-table-wrap">
+          <table class="pnl-table">
+            <thead>
+              <tr>
+                <th>Vessel</th>
+                <th>Trade Lane</th>
+                <th>Revenue</th>
+                <th>Costs</th>
+                <th>Actual P&amp;L</th>
+                <th>Fcst P&amp;L</th>
+                <th>Var</th>
+                <th>Var %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Kota Cantik</td><td>Africa</td><td>6.84</td><td>4.61</td><td>2.23</td><td>2.05</td><td class="pnl-var-pos">+0.18</td><td class="pnl-var-pos">+8.8%</td></tr>
+              <tr><td>Kota Ebony</td><td>Africa</td><td>5.46</td><td>3.74</td><td>1.72</td><td>1.60</td><td class="pnl-var-pos">+0.12</td><td class="pnl-var-pos">+7.5%</td></tr>
+              <tr><td>Kota Cempaka</td><td>Intra Asia</td><td>7.92</td><td>5.04</td><td>2.88</td><td>2.70</td><td class="pnl-var-pos">+0.18</td><td class="pnl-var-pos">+6.7%</td></tr>
+              <tr><td>Kota Cepat</td><td>Middle East</td><td>5.18</td><td>3.62</td><td>1.56</td><td>1.45</td><td class="pnl-var-pos">+0.11</td><td class="pnl-var-pos">+7.6%</td></tr>
+              <tr><td>Kota Eagle</td><td>Middle East</td><td>7.12</td><td>4.88</td><td>2.24</td><td>2.10</td><td class="pnl-var-pos">+0.14</td><td class="pnl-var-pos">+6.7%</td></tr>
+              <tr><td>Kota Gadang</td><td>Middle East</td><td>4.94</td><td>3.31</td><td>1.63</td><td>1.50</td><td class="pnl-var-pos">+0.13</td><td class="pnl-var-pos">+8.7%</td></tr>
+              <tr><td>Kota Cahaya</td><td>Oceania</td><td>4.21</td><td>3.18</td><td>1.03</td><td>0.95</td><td class="pnl-var-pos">+0.08</td><td class="pnl-var-pos">+8.4%</td></tr>
+              <tr><td>Kota Layang</td><td>ECSA &amp; WCSA</td><td>8.34</td><td>5.67</td><td>2.67</td><td>2.48</td><td class="pnl-var-pos">+0.19</td><td class="pnl-var-pos">+7.7%</td></tr>
+              <tr><td>Kota Oasis</td><td>Pacific Islands</td><td>2.86</td><td>1.94</td><td>0.92</td><td>0.85</td><td class="pnl-var-pos">+0.07</td><td class="pnl-var-pos">+8.2%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="pnl-chart-section">
+          <div class="pnl-chart-title">Vessel P&amp;L Contribution (USD M)</div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Cantik</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:78%"></div></div><span class="pnl-bar-value">2.23M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Ebony</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:60%"></div></div><span class="pnl-bar-value">1.72M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Cempaka</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:100%"></div></div><span class="pnl-bar-value">2.88M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Cepat</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:54%"></div></div><span class="pnl-bar-value">1.56M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Eagle</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:78%"></div></div><span class="pnl-bar-value">2.24M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Gadang</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:57%"></div></div><span class="pnl-bar-value">1.63M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Cahaya</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:36%"></div></div><span class="pnl-bar-value">1.03M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Layang</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:93%"></div></div><span class="pnl-bar-value">2.67M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Oasis</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:32%"></div></div><span class="pnl-bar-value">0.92M</span></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: YTD (Jan–Apr) -->
+      <div class="pnl-col">
+        <div class="pnl-col-title">YTD (Jan&ndash;Apr)</div>
+
+        <!-- Summary Cards -->
+        <div class="pnl-summary-cards">
+          <div class="pnl-card actual">
+            <div class="pnl-card-label">Actual P&amp;L</div>
+            <div class="pnl-card-value" style="color:var(--green)">USD 31.2M</div>
+            <span class="pnl-card-sub muted">Jan–Apr 2026</span>
+          </div>
+          <div class="pnl-card forecast">
+            <div class="pnl-card-label">Forecast P&amp;L</div>
+            <div class="pnl-card-value" style="color:var(--muted)">USD 29.8M</div>
+            <span class="pnl-card-sub muted">Jan–Apr 2026</span>
+          </div>
+          <div class="pnl-card variance-pos">
+            <div class="pnl-card-label">Variance</div>
+            <div class="pnl-card-value" style="color:var(--green)">+USD 1.4M</div>
+            <span class="pnl-card-sub pos">+4.7% vs forecast</span>
+          </div>
+        </div>
+
+        <!-- Vessel Breakdown Table -->
+        <div class="pnl-table-wrap">
+          <table class="pnl-table">
+            <thead>
+              <tr>
+                <th>Vessel</th>
+                <th>Trade Lane</th>
+                <th>Revenue</th>
+                <th>Costs</th>
+                <th>Actual P&amp;L</th>
+                <th>Fcst P&amp;L</th>
+                <th>Var</th>
+                <th>Var %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Kota Cantik</td><td>Africa</td><td>37.6</td><td>25.4</td><td>12.3</td><td>11.3</td><td class="pnl-var-pos">+1.0</td><td class="pnl-var-pos">+8.8%</td></tr>
+              <tr><td>Kota Ebony</td><td>Africa</td><td>30.0</td><td>20.6</td><td>9.5</td><td>8.8</td><td class="pnl-var-pos">+0.7</td><td class="pnl-var-pos">+7.5%</td></tr>
+              <tr><td>Kota Cempaka</td><td>Intra Asia</td><td>43.6</td><td>27.7</td><td>15.8</td><td>14.9</td><td class="pnl-var-pos">+1.0</td><td class="pnl-var-pos">+6.7%</td></tr>
+              <tr><td>Kota Cepat</td><td>Middle East</td><td>28.5</td><td>19.9</td><td>8.6</td><td>8.0</td><td class="pnl-var-pos">+0.6</td><td class="pnl-var-pos">+7.6%</td></tr>
+              <tr><td>Kota Eagle</td><td>Middle East</td><td>39.2</td><td>26.8</td><td>12.3</td><td>11.6</td><td class="pnl-var-pos">+0.8</td><td class="pnl-var-pos">+6.7%</td></tr>
+              <tr><td>Kota Gadang</td><td>Middle East</td><td>27.2</td><td>18.2</td><td>9.0</td><td>8.3</td><td class="pnl-var-pos">+0.7</td><td class="pnl-var-pos">+8.7%</td></tr>
+              <tr><td>Kota Cahaya</td><td>Oceania</td><td>23.2</td><td>17.5</td><td>5.7</td><td>5.2</td><td class="pnl-var-pos">+0.4</td><td class="pnl-var-pos">+8.4%</td></tr>
+              <tr><td>Kota Layang</td><td>ECSA &amp; WCSA</td><td>45.9</td><td>31.2</td><td>14.7</td><td>13.6</td><td class="pnl-var-pos">+1.0</td><td class="pnl-var-pos">+7.7%</td></tr>
+              <tr><td>Kota Oasis</td><td>Pacific Islands</td><td>15.7</td><td>10.7</td><td>5.1</td><td>4.7</td><td class="pnl-var-pos">+0.4</td><td class="pnl-var-pos">+8.2%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="pnl-chart-section">
+          <div class="pnl-chart-title">Vessel P&amp;L Contribution YTD (USD M)</div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Cantik</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:78%"></div></div><span class="pnl-bar-value">12.3M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Ebony</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:60%"></div></div><span class="pnl-bar-value">9.5M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Cempaka</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:100%"></div></div><span class="pnl-bar-value">15.8M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Cepat</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:54%"></div></div><span class="pnl-bar-value">8.6M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Eagle</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:78%"></div></div><span class="pnl-bar-value">12.3M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Gadang</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:57%"></div></div><span class="pnl-bar-value">9.0M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Cahaya</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:36%"></div></div><span class="pnl-bar-value">5.7M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Layang</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:93%"></div></div><span class="pnl-bar-value">14.7M</span></div>
+          <div class="pnl-bar-row"><span class="pnl-bar-label">Kota Oasis</span><div class="pnl-bar-track"><div class="pnl-bar-fill" style="width:32%"></div></div><span class="pnl-bar-value">5.1M</span></div>
+        </div>
+      </div>
+
+    </div><!-- /pnl-columns -->
+  </div><!-- /pnl-panel-inner -->
+</div><!-- /pnl-panel -->
 
 <!-- KPI STRIP -->
 <div class="kpi-strip">
@@ -1676,6 +2043,48 @@ function toggleSidebar() {
   // Let Leaflet know the map size changed
   setTimeout(() => map.invalidateSize(), 260);
 }
+
+// ── P&L ANALYTICS PANEL ─────────────────────────────────────
+window.openPnlPanel = function() {
+  const panel = document.getElementById('pnl-panel');
+  panel.style.display = 'block';
+  // Trigger transition on next frame
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      panel.classList.add('open');
+    });
+  });
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  const pnlItem = Array.from(document.querySelectorAll('.sidebar-item'))
+    .find(el => el.textContent.trim().startsWith('P&L Analytics'));
+  if (pnlItem) pnlItem.classList.add('active');
+};
+
+window.closePnlPanel = function() {
+  const panel = document.getElementById('pnl-panel');
+  panel.classList.remove('open');
+  setTimeout(() => {
+    if (!panel.classList.contains('open')) {
+      panel.style.display = 'none';
+    }
+  }, 320);
+  // Restore Live Map as active
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  const liveMapItem = Array.from(document.querySelectorAll('.sidebar-item'))
+    .find(el => el.textContent.trim().startsWith('Live Map'));
+  if (liveMapItem) liveMapItem.classList.add('active');
+};
+
+// Escape key closes the panel
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const panel = document.getElementById('pnl-panel');
+    if (panel && panel.classList.contains('open')) {
+      window.closePnlPanel();
+    }
+  }
+});
 </script>
 </body>
 </html>
