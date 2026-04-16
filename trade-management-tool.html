@@ -196,14 +196,14 @@
       background: linear-gradient(135deg, rgba(0,70,160,0.55), rgba(0,180,255,0.18));
       padding: 9px 12px 8px;
       border-bottom: 1px solid rgba(0,180,255,0.1);
-      display: flex; align-items: flex-start; justify-content: space-between;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
     }
     .popup-vessel-name { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 0.3px; }
     .popup-route { font-size: 10px; color: rgba(180,220,255,0.65); margin-top: 2px; }
     .popup-badge {
       font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: 0.5px; text-align: center; line-height: 1.3;
-      white-space: nowrap;
+      text-transform: uppercase; letter-spacing: 0.5px; text-align: center; line-height: 1.4;
+      flex-shrink: 0; max-width: 90px; word-break: break-word;
     }
     .badge-transit  { background: rgba(0,180,255,0.15); color: var(--accent); border: 1px solid rgba(0,180,255,0.25); }
     .badge-loading  { background: rgba(255,184,48,0.15); color: var(--amber); border: 1px solid rgba(255,184,48,0.25); }
@@ -979,7 +979,7 @@ function buildPopup(v) {
         </div>
         <div class="popup-route">${v.route.replace(v.nextPort, `<strong style="color:#fff;font-weight:700;">${v.nextPort}</strong>`)}</div>
       </div>
-      <span class="popup-badge ${v.badgeClass}">${v.status}</span>
+      <span class="popup-badge ${v.badgeClass}" style="flex-shrink:0;max-width:88px;">${v.status}</span>
     </div>
     <div class="popup-body">
       <div class="popup-section-title">Profit & Loss — Current Voyage</div>
