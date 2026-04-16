@@ -514,21 +514,28 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
   function calcOffset() {
     const pt      = map.latLngToContainerPoint(marker.getLatLng());
     const mapSize = map.getSize();
-    const pad     = 12;
+    const pad     = 14; // min gap from any screen edge
 
-    // Leaflet popup body always sits ABOVE its tip anchor.
-    // To open BELOW the marker: push the tip down by (popupH + gap),
-    // which brings the body to just below the marker.
-    // To open ABOVE (default): small negative offset so the tip clears the icon.
+    // ── Vertical ──────────────────────────────────────────────
+    // Popup body sits ABOVE its tip. To open below the marker, push
+    // the tip down far enough that the body clears the marker icon.
     const offsetY = (pt.y < popupH + 60)
-      ? popupH + 20    // open below — body spans from ~marker+20 downward
-      : -20;           // open above — body spans upward from marker
+      ? popupH + 20   // below: tip way down, body appears under marker
+      : -20;          // above: tip just above marker (default)
 
-    // Horizontal: clamp so card never clips left/right edge
+    // ── Horizontal ────────────────────────────────────────────
+    // Calculate where the popup's left and right edges would land,
+    // then shift inward exactly enough to keep both edges on screen.
     let offsetX = 0;
-    const halfW = popupW / 2 + pad;
-    if (pt.x < halfW)                  offsetX =  halfW - pt.x;
-    else if (pt.x > mapSize.x - halfW) offsetX = -(halfW - (mapSize.x - pt.x));
+    const half = popupW / 2;
+    const projRight = pt.x + half;          // where right edge lands
+    const projLeft  = pt.x - half;          // where left edge lands
+
+    if (projRight > mapSize.x - pad) {
+      offsetX = (mapSize.x - pad) - projRight;   // shift left
+    } else if (projLeft < pad) {
+      offsetX = pad - projLeft;                   // shift right
+    }
 
     popup.options.offset = L.point(offsetX, offsetY);
   }
