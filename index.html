@@ -947,18 +947,24 @@ legendEl.onAdd = function () {
     backdrop-filter: blur(12px); min-width: 210px; margin-bottom: 8px;
   `;
   div.innerHTML = `
-    <div style="font-size:9px;font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Vessel Trade Lanes</div>
-    ${Object.entries(tradeLanes).map(([name, { color }]) => `
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
-        <svg width="14" height="14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
-          <path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="${color}"/>
-          <rect x="13" y="14" width="10" height="9" rx="2" fill="${color}" opacity="0.9"/>
-          <rect x="15" y="11" width="6" height="5" rx="1.5" fill="${color}"/>
-          <rect x="17.5" y="8" width="2" height="5" rx="1" fill="${color}" opacity="0.8"/>
-          <path d="M28 22 L32 24 L25 27 Z" fill="${color}" opacity="0.7"/>
-        </svg>
-        <span style="font-size:11px;color:#e8f4ff;">${name}</span>
-      </div>`).join('')}
+    <div onclick="(function(el){var items=document.getElementById('legendItems');var chev=el.querySelector('.leg-chev');var collapsed=items.style.display==='none';items.style.display=collapsed?'block':'none';chev.style.transform=collapsed?'rotate(0deg)':'rotate(-90deg)';})(this)"
+         style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:8px;">
+      <span style="font-size:9px;font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;">Vessel Trade Lanes</span>
+      <span class="leg-chev" style="color:#6a8aaa;font-size:10px;transition:transform 0.2s;transform:rotate(0deg);margin-left:8px;">&#9650;</span>
+    </div>
+    <div id="legendItems">
+      ${Object.entries(tradeLanes).map(([name, { color }]) => `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+          <svg width="14" height="14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+            <path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="${color}"/>
+            <rect x="13" y="14" width="10" height="9" rx="2" fill="${color}" opacity="0.9"/>
+            <rect x="15" y="11" width="6" height="5" rx="1.5" fill="${color}"/>
+            <rect x="17.5" y="8" width="2" height="5" rx="1" fill="${color}" opacity="0.8"/>
+            <path d="M28 22 L32 24 L25 27 Z" fill="${color}" opacity="0.7"/>
+          </svg>
+          <span style="font-size:11px;color:#e8f4ff;">${name}</span>
+        </div>`).join('')}
+    </div>
   `;
   return div;
 };
