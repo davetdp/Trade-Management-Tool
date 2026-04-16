@@ -87,11 +87,18 @@
       backdrop-filter: blur(12px);
       border-top: 1px solid var(--border);
       display: flex; align-items: center;
-      padding: 0 24px; gap: 40px;
+      padding: 0 20px; gap: 24px;
     }
     .kpi { display: flex; flex-direction: column; gap: 2px; }
     .kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
     .kpi-value { font-size: 15px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+    .kpi-row { display: flex; align-items: baseline; gap: 7px; }
+    .kpi-variance {
+      font-size: 10px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;
+      padding: 1px 5px; border-radius: 4px; letter-spacing: 0.3px;
+    }
+    .kpi-variance.above { background: rgba(0,229,160,0.15); color: var(--green); }
+    .kpi-variance.below { background: rgba(255,77,106,0.15); color: var(--red); }
     .kpi-value.green { color: var(--green); }
     .kpi-value.red   { color: var(--red); }
     .kpi-value.blue  { color: var(--accent); }
@@ -367,6 +374,22 @@
   <div class="kpi">
     <div class="kpi-label">Net Profit (Apr)</div>
     <div class="kpi-value green">USD 5.5M</div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi">
+    <div class="kpi-label">Forecast Profit (Apr)</div>
+    <div class="kpi-row">
+      <div class="kpi-value" style="color:var(--muted)">USD 5.1M</div>
+      <div class="kpi-variance above">+7.8% vs forecast</div>
+    </div>
+  </div>
+  <div class="kpi-divider"></div>
+  <div class="kpi">
+    <div class="kpi-label">Forecast Profit (YTD)</div>
+    <div class="kpi-row">
+      <div class="kpi-value" style="color:var(--muted)">USD 29.8M</div>
+      <div class="kpi-variance above">+4.7% vs forecast</div>
+    </div>
   </div>
   <div class="kpi-divider"></div>
   <div class="kpi">
