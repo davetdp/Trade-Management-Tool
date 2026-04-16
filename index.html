@@ -605,14 +605,14 @@ const vessels = [
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
   },
   {
-    // MEX1 — Arabian Sea, northbound toward Jebel Ali
+    // MEX1 — Arabian Sea, northbound toward Port of Sohar
     name: 'Kota Gadang',
     vvd: 'KGDG0087N',
     position: [17.8, 57.4],
     service: 'MEX1',
     route: 'Singapore → Colombo → Salalah → Sohar → Jebel Ali',
-    nextPort: 'Jebel Ali',
-    status: 'On route to Jebel Ali',
+    nextPort: 'Port of Sohar',
+    status: 'On route to Port of Sohar',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9724561',
@@ -1106,12 +1106,10 @@ const ports = [
       [4.5, 100.5], [6.5, 99.3], [8.5, 93.5], [7.2, 83.5],
       [6.2, 82.0], [5.7, 81.0], [5.5, 80.4], [6.2, 79.9]
     ],
-    // Mid-Arabian Sea → Oman coast → NORTH through Strait of Hormuz → Persian Gulf → Jebel Ali
+    // Mid-Arabian Sea → north along Gulf of Oman coast → Port of Sohar (no strait crossing needed)
     'Kota Gadang': [
-      [17.8, 57.4], [20.5, 57.8], [22.8, 59.4],
-      [24.3, 58.6], [24.8, 57.5], [25.7, 57.0],
-      [26.2, 57.0], [26.7, 56.5], [26.5, 55.8],
-      [25.8, 55.4]
+      [17.8, 57.4], [20.0, 58.0], [22.5, 59.0],
+      [23.8, 58.5], [24.4, 57.5]
     ],
     // Arabian Sea westward toward Salalah (Oman coast) — open ocean, add gentle arc
     'Kota Eagle': [
