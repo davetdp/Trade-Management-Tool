@@ -147,7 +147,7 @@
     .popup-route { font-size: 10px; color: rgba(180,220,255,0.7); margin-top: 2px; }
     .popup-badge {
       font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+      text-transform: uppercase; letter-spacing: 0.5px; text-align: center; line-height: 1.3;
     }
     .badge-transit  { background: rgba(0,180,255,0.2); color: var(--accent); border: 1px solid rgba(0,180,255,0.3); }
     .badge-loading  { background: rgba(255,184,48,0.2); color: var(--amber); border: 1px solid rgba(255,184,48,0.3); }
@@ -407,7 +407,7 @@ const vessels = [
     position: [-35.2, 20.8],
     route: 'Shanghai → Singapore → Port Klang → Durban → Cape Town',
     nextPort: 'Cape Town',
-    status: 'Transit',
+    status: 'On route to Cape Town',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9741023',
@@ -488,7 +488,7 @@ const vessels = [
     position: [1.1, 104.2],
     route: 'Port Klang → Singapore → Colombo → Salalah → Jebel Ali',
     nextPort: 'Colombo',
-    status: 'Transit',
+    status: 'On route to Colombo',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9556789',
@@ -516,7 +516,7 @@ const vessels = [
     service: 'WAF1',
     route: 'Port Klang → Colombo → Salalah → Tema → Apapa',
     nextPort: 'Salalah',
-    status: 'Transit',
+    status: 'On route to Salalah',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9688412',
@@ -544,7 +544,7 @@ const vessels = [
     service: 'MEX1',
     route: 'Singapore → Colombo → Salalah → Sohar → Jebel Ali',
     nextPort: 'Jebel Ali',
-    status: 'Transit',
+    status: 'On route to Jebel Ali',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9724561',
@@ -572,7 +572,7 @@ const vessels = [
     service: 'EAF1',
     route: 'Singapore → Colombo → Mombasa → Dar es Salaam → Nacala',
     nextPort: 'Mombasa',
-    status: 'Transit',
+    status: 'On route to Mombasa',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9761835',
@@ -600,7 +600,7 @@ const vessels = [
     service: 'WCSA1',
     route: 'Yantian → Singapore → Callao → San Antonio → Valparaíso',
     nextPort: 'Callao',
-    status: 'Transit',
+    status: 'On route to Callao',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9812347',
@@ -628,7 +628,7 @@ const vessels = [
     position: [-18.4, 169.8],
     route: 'Singapore → Sydney → Noumea → Port Vila → Suva',
     nextPort: 'Suva',
-    status: 'Transit',
+    status: 'On route to Suva',
     badgeClass: 'badge-transit',
     flag: '🇸🇬',
     imo: '9834206',
