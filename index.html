@@ -495,6 +495,27 @@ const vessels = [
   }
 ];
 
+// ── SMART POPUP POSITIONING ──────────────────────────────────
+// Calculates the best offset so the popup always fits on screen
+// instead of always opening above the marker.
+function openSmartPopup(marker, popup, popupW, popupH) {
+  const pt      = map.latLngToContainerPoint(marker.getLatLng());
+  const mapSize = map.getSize();
+  const pad     = 16; // min gap from map edge
+
+  // Vertical: open above by default; switch to below if near top
+  const offsetY = (pt.y - popupH - pad > 0) ? -(popupH / 2 + 10) : (popupH / 2 + 10);
+
+  // Horizontal: centre on marker, then clamp to stay inside map
+  let offsetX = 0;
+  const halfW = popupW / 2 + pad;
+  if (pt.x < halfW)               offsetX =  halfW - pt.x;
+  else if (pt.x > mapSize.x - halfW) offsetX = -(halfW - (mapSize.x - pt.x));
+
+  popup.options.offset = L.point(offsetX, offsetY);
+  marker.openPopup();
+}
+
 // ── SHIP SVG ICON ────────────────────────────────────────────
 function shipIcon(color = '#00b4ff') {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
@@ -601,7 +622,7 @@ vessels.forEach((v, i) => {
     closeOnClick: false
   }).setContent(buildPopup(v));
 
-  marker.on('mouseover', function () { this.openPopup(); });
+  marker.on('mouseover', function () { openSmartPopup(this, popup, 255, 420); });
   marker.on('mouseout',  function () { this.closePopup(); });
   marker.bindPopup(popup);
 
@@ -795,7 +816,7 @@ ports.forEach(p => {
     className: 'vessel-popup-wrapper',
     offset: [0, -8], autoPan: true, closeOnClick: false
   }).setContent(buildPortPopup(p));
-  marker.on('mouseover', function () { this.openPopup(); });
+  marker.on('mouseover', function () { openSmartPopup(this, popup, 240, 380); });
   marker.on('mouseout',  function () { this.closePopup(); });
   marker.bindPopup(popup);
   portLayers[p.tier].addLayer(marker);
