@@ -499,6 +499,110 @@ const vessels = [
     crew: 'USD 0.26M',
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+  },
+  {
+    // WAF1 — mid-Indian Ocean, westbound toward Tema/Apapa
+    name: 'Kota Eagle',
+    vvd: 'KEGL0023W',
+    position: [7.4, 67.2],
+    route: 'Port Klang → Colombo → Salalah → Tema → Apapa',
+    status: 'Transit',
+    badgeClass: 'badge-transit',
+    flag: '🇸🇬',
+    imo: '9688412',
+    built: 2017,
+    teu: 9600,
+    teuLoaded: 8256,
+    speed: '13.6 kts',
+    heading: 'W',
+    eta: '05 May 2025',
+    revenue:   { label: 'Voyage Revenue',  value: 'USD 7.12M',  color: 'var(--green)' },
+    costs:     { label: 'Voyage Costs',    value: 'USD 4.88M',  color: 'var(--red)' },
+    profit:    { label: 'Net Profit',      value: 'USD 2.24M',  color: 'var(--green)' },
+    margin:    { label: 'Profit Margin',   value: '31.5%',      color: 'var(--accent)' },
+    fuel: 'USD 1.56M',
+    port: 'USD 0.42M',
+    crew: 'USD 0.28M',
+    util: 86,
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+  },
+  {
+    // MEX1 — Arabian Sea, northbound toward Jebel Ali
+    name: 'Kota Gadang',
+    vvd: 'KGDG0087N',
+    position: [17.8, 57.4],
+    route: 'Singapore → Colombo → Salalah → Sohar → Jebel Ali',
+    status: 'Transit',
+    badgeClass: 'badge-transit',
+    flag: '🇸🇬',
+    imo: '9724561',
+    built: 2019,
+    teu: 7800,
+    teuLoaded: 6942,
+    speed: '14.8 kts',
+    heading: 'N',
+    eta: '20 Apr 2025',
+    revenue:   { label: 'Voyage Revenue',  value: 'USD 4.94M',  color: 'var(--green)' },
+    costs:     { label: 'Voyage Costs',    value: 'USD 3.31M',  color: 'var(--red)' },
+    profit:    { label: 'Net Profit',      value: 'USD 1.63M',  color: 'var(--green)' },
+    margin:    { label: 'Profit Margin',   value: '33.0%',      color: 'var(--accent)' },
+    fuel: 'USD 1.02M',
+    port: 'USD 0.36M',
+    crew: 'USD 0.22M',
+    util: 89,
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+  },
+  {
+    // EAF1 — south Indian Ocean, southbound toward Mombasa / Dar es Salaam
+    name: 'Kota Ebony',
+    vvd: 'KEBO0034S',
+    position: [-4.6, 53.1],
+    route: 'Singapore → Colombo → Mombasa → Dar es Salaam → Nacala',
+    status: 'Transit',
+    badgeClass: 'badge-transit',
+    flag: '🇸🇬',
+    imo: '9761835',
+    built: 2018,
+    teu: 8200,
+    teuLoaded: 6888,
+    speed: '13.1 kts',
+    heading: 'SW',
+    eta: '24 Apr 2025',
+    revenue:   { label: 'Voyage Revenue',  value: 'USD 5.46M',  color: 'var(--green)' },
+    costs:     { label: 'Voyage Costs',    value: 'USD 3.74M',  color: 'var(--red)' },
+    profit:    { label: 'Net Profit',      value: 'USD 1.72M',  color: 'var(--green)' },
+    margin:    { label: 'Profit Margin',   value: '31.5%',      color: 'var(--accent)' },
+    fuel: 'USD 1.19M',
+    port: 'USD 0.40M',
+    crew: 'USD 0.25M',
+    util: 84,
+    utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)'
+  },
+  {
+    // WCSA1 — mid-Pacific Ocean, eastbound toward Callao / San Antonio
+    name: 'Kota Layang',
+    vvd: 'KLYG0012E',
+    position: [-11.3, -128.7],
+    route: 'Yantian → Singapore → Callao → San Antonio → Valparaíso',
+    status: 'Transit',
+    badgeClass: 'badge-transit',
+    flag: '🇸🇬',
+    imo: '9812347',
+    built: 2021,
+    teu: 10400,
+    teuLoaded: 9256,
+    speed: '15.2 kts',
+    heading: 'E',
+    eta: '29 Apr 2025',
+    revenue:   { label: 'Voyage Revenue',  value: 'USD 8.34M',  color: 'var(--green)' },
+    costs:     { label: 'Voyage Costs',    value: 'USD 5.67M',  color: 'var(--red)' },
+    profit:    { label: 'Net Profit',      value: 'USD 2.67M',  color: 'var(--green)' },
+    margin:    { label: 'Profit Margin',   value: '32.0%',      color: 'var(--accent)' },
+    fuel: 'USD 1.88M',
+    port: 'USD 0.48M',
+    crew: 'USD 0.31M',
+    util: 89,
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
   }
 ];
 
@@ -699,7 +803,7 @@ function buildPopup(v) {
 }
 
 // ── RENDER VESSELS ───────────────────────────────────────────
-const colors = ['#00b4ff', '#00e5a0', '#ffb830', '#00b4ff'];
+const colors = ['#00b4ff', '#00e5a0', '#ffb830', '#00b4ff', '#ff6b81', '#a78bfa', '#34d399', '#fb923c'];
 
 vessels.forEach((v, i) => {
   const icon = shipIcon(colors[i]);
