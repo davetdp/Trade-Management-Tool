@@ -1008,6 +1008,33 @@ const ports = [
   { tier:3, name:'Port of Montevideo',       country:'🇺🇾 Montevideo, Uruguay',        unlocode:'UY MVD', type:'Feeder Port',   position:[-34.91,-56.19], services:['ECSA1'],                                                  avgDelinquency:15.2, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:61, d2:{count:134}, d5:{count:76},  terminalOps:'Montecon / TCP',           dwell:'3.8 days avg', nextCall:'27 Apr 2025' },
 ];
 
+// ── VESSEL ROUTE LINES (dotted, transit vessels only) ─────────
+{
+  // Build a lookup: short port name → [lat, lng]
+  const portCoords = {};
+  ports.forEach(p => {
+    const short = p.name.replace(/^Port of\s+/i, '').replace(/^Port\s+/i, '');
+    portCoords[short]  = p.position;
+    portCoords[p.name] = p.position;
+  });
+  // Ports not yet in the main list
+  portCoords['Suva'] = [-18.14, 178.44];
+
+  vessels.forEach(v => {
+    if (!v.status.startsWith('On route to')) return;
+    const destPos = portCoords[v.nextPort];
+    if (!destPos) return;
+    const color = vesselColor(v.service);
+    L.polyline([v.position, destPos], {
+      color,
+      weight: 2,
+      dashArray: '8, 10',
+      opacity: 0.55,
+      interactive: false
+    }).addTo(map);
+  });
+}
+
 // ── PORT ICON (tier-aware) ────────────────────────────────────
 function portIcon(tier) {
   const sizes  = { 1: [22,9], 2: [16,6], 3: [12,4] };
