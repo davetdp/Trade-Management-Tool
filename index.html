@@ -160,6 +160,30 @@
     .kpi-value.blue  { color: var(--accent); }
     .kpi-divider { width: 1px; height: 28px; background: rgba(0,180,255,0.12); flex-shrink: 0; }
 
+    /* ── RADAR CANVAS ── */
+    #map-radar {
+      position: fixed;
+      top: 58px; left: 220px; right: 0; bottom: 62px;
+      pointer-events: none; z-index: 501;
+    }
+    body.sidebar-hidden #map-radar { left: 0 !important; }
+
+    /* ── LIVE CLOCK ── */
+    .nav-clock {
+      display: flex; flex-direction: column; align-items: flex-end;
+      padding: 4px 0 4px 18px;
+      border-left: 1px solid rgba(0,180,255,0.12);
+    }
+    .nav-clock-time {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px; font-weight: 700; color: var(--accent);
+      letter-spacing: 1px; line-height: 1;
+    }
+    .nav-clock-date {
+      font-size: 9px; color: var(--muted); letter-spacing: 0.7px;
+      text-transform: uppercase; margin-top: 2px;
+    }
+
     /* ── MAP ── */
     #map {
       position: fixed;
@@ -412,6 +436,10 @@
     </div>
     <div class="nav-divider"></div>
     <div class="nav-dot"></div>
+    <div class="nav-clock">
+      <div class="nav-clock-time" id="nav-clock-time">00:00:00</div>
+      <div class="nav-clock-date" id="nav-clock-date">—</div>
+    </div>
   </div>
 </nav>
 
@@ -461,6 +489,7 @@
 
 <!-- MAP -->
 <div id="map"></div>
+<canvas id="map-radar"></canvas>
 <div id="map-glow"></div>
 
 <!-- KPI STRIP -->
@@ -539,6 +568,96 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   subdomains: 'abcd',
   maxZoom: 19
 }).addTo(map);
+
+// ── LIVE CLOCK ──────────────────────────────────────────────
+(function() {
+  const days   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function tick() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('nav-clock-time').textContent = h + ':' + m + ':' + s;
+    document.getElementById('nav-clock-date').textContent =
+      days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+// ── RADAR SWEEP ──────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('map-radar');
+  const ctx    = canvas.getContext('2d');
+  let angle    = 0;
+  // Singapore in lat/lng — convert to canvas coords via map.latLngToContainerPoint
+  const origin = L.latLng(1.26, 103.82);
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width  = rect.width;
+    canvas.height = rect.height;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // Convert Singapore lat/lng to pixel position on canvas
+    const pt = map.latLngToContainerPoint(origin);
+    // Offset for sidebar (canvas starts at left:220px)
+    const sidebarW = document.querySelector('.sidebar.collapsed') === null &&
+                     !document.body.classList.contains('sidebar-hidden') ? 220 : 0;
+    const cx = pt.x - sidebarW;
+    const cy = pt.y - 58; // offset for nav height
+    const radius = Math.max(W, H) * 0.55;
+
+    // Draw radar rings
+    [0.25, 0.5, 0.75, 1.0].forEach(f => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius * f, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(0,220,180,0.04)';
+      ctx.lineWidth   = 1;
+      ctx.stroke();
+    });
+
+    // Draw sweep wedge
+    const sweepAngle = Math.PI / 5; // 36° sweep
+    const grad = ctx.createConicalGradient
+      ? null // fallback below
+      : null;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, angle - sweepAngle, angle, false);
+    ctx.closePath();
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    grd.addColorStop(0,   'rgba(0,220,180,0.0)');
+    grd.addColorStop(0.4, 'rgba(0,220,180,0.04)');
+    grd.addColorStop(1.0, 'rgba(0,220,180,0.0)');
+    ctx.fillStyle = grd;
+    ctx.fill();
+    ctx.restore();
+
+    // Draw sweep leading edge line
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+    ctx.strokeStyle = 'rgba(0,220,180,0.18)';
+    ctx.lineWidth   = 1.5;
+    ctx.stroke();
+    ctx.restore();
+
+    angle += 0.004; // rotation speed
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
 // ── VESSEL DATA ─────────────────────────────────────────────
 const vessels = [
