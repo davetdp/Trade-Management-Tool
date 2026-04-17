@@ -2068,6 +2068,52 @@ const ports = [
     }).addTo(map);
     routeLines.push({ line, service: v.service });
   });
+
+  // ── VESSEL WAKE TRAILS ───────────────────────────────────────
+  // heading vectors: lat/lng offset per unit (approx 3-4 degrees behind vessel)
+  const headingOffset = {
+    'N':  [ 3.5,  0   ], 'NE': [ 2.5, -2.5], 'E':  [ 0,   -3.5],
+    'SE': [-2.5, -2.5], 'S':  [-3.5,  0   ], 'SW': [-2.5,  2.5],
+    'W':  [ 0,    3.5], 'NW': [ 2.5,  2.5 ]
+  };
+
+  vessels.forEach(v => {
+    if (v.isDryDock) return;
+    const color = vesselColor(v.service);
+    const rgb = hexToRgb(color);
+    const pos = v.position;
+
+    // Determine tail point: use sea route last waypoint if available, else heading offset
+    const seaWay = seaRoutes[v.name];
+    let tailPts;
+    if (seaWay && seaWay.length >= 2) {
+      // trace back 1-2 waypoints for a curved tail
+      const pts = seaWay.slice(0, Math.min(3, seaWay.length)).reverse();
+      tailPts = [pos, ...pts];
+    } else {
+      const off = headingOffset[v.heading] || [0, 0];
+      const mid = [pos[0] + off[0] * 0.5, pos[1] + off[1] * 0.5];
+      const far = [pos[0] + off[0], pos[1] + off[1]];
+      tailPts = [pos, mid, far];
+    }
+
+    // Outer glow trail
+    L.polyline(tailPts, {
+      color: `rgba(${rgb},0.18)`,
+      weight: 7,
+      lineCap: 'round',
+      interactive: false
+    }).addTo(map);
+
+    // Inner bright trail with dash fade
+    L.polyline(tailPts, {
+      color: `rgba(${rgb},0.55)`,
+      weight: 2,
+      dashArray: '4, 7',
+      lineCap: 'round',
+      interactive: false
+    }).addTo(map);
+  });
 }
 
 // ── PORT ICON (tier-aware) ────────────────────────────────────
