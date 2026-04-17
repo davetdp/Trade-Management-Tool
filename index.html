@@ -2068,6 +2068,35 @@ const ports = [
     }).addTo(map);
     routeLines.push({ line, service: v.service });
   });
+
+  // ── VESSEL TRAVELLED-FROM TRAILS ─────────────────────────────
+  // Draw a grey dotted line from the vessel's last departed port to its current position
+  vessels.forEach(v => {
+    if (v.isDryDock) return;
+
+    // Parse route to find the port just before nextPort
+    const stops = v.route.split('→').map(s => s.trim());
+    const nextIdx = stops.indexOf(v.nextPort);
+    if (nextIdx <= 0) return; // can't determine previous port
+
+    const fromPortName = stops[nextIdx - 1];
+    const fromPos = portCoords[fromPortName];
+    if (!fromPos) return;
+
+    // Use sea route waypoints if available (reversed = from port → vessel pos)
+    const seaWay = seaRoutes[v.name];
+    const pts = seaWay && seaWay.length
+      ? [fromPos, ...seaWay, v.position]
+      : [fromPos, v.position];
+
+    L.polyline(pts, {
+      color: 'rgba(180,190,210,0.35)',
+      weight: 1.5,
+      dashArray: '3, 8',
+      lineCap: 'round',
+      interactive: false
+    }).addTo(map);
+  });
 }
 
 // ── PORT ICON (tier-aware) ────────────────────────────────────
