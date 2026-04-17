@@ -825,7 +825,7 @@
 
     <!-- ── VESSEL DEPLOYMENT COMPARISON ── -->
     <div style="padding: 0 28px 40px;">
-      <div style="border-top:1px solid rgba(255,255,255,0.08);margin:0 0 24px;"></div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:14px;padding:20px 22px;backdrop-filter:blur(6px);">
       <div style="margin-bottom:16px;">
         <div style="font-size:13px;font-weight:700;color:#fff;font-family:'Space Grotesk',sans-serif;margin-bottom:4px;">Vessel Deployment — April 2026</div>
         <div style="font-size:11px;color:var(--muted);">Comparison of forecasted vs actual vessel deployment schedule. Highlights vessels delayed into next month or brought forward from next month.</div>
@@ -969,6 +969,7 @@
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">vs original Apr forecast</div>
         </div>
       </div>
+      </div><!-- /vessel deployment card -->
     </div>
 
   </div><!-- /pnl-panel-inner -->
@@ -1036,7 +1037,7 @@
 <script>
 // ── MAP INIT ────────────────────────────────────────────────
 const map = L.map('map', {
-  center: [10, 30],
+  center: [8, 75],
   zoom: 2,
   minZoom: 2,
   maxZoom: 10,
