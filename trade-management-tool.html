@@ -1057,7 +1057,7 @@ const vessels = [
     route: 'Shanghai → Singapore → Port Klang → Durban → Cape Town',
     nextPort: 'Cape Town',
     status: 'On route to Cape Town',
-    badgeClass: 'badge-transit',
+    badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9741023',
     vesselClass: 'New Panamax',
@@ -1085,7 +1085,7 @@ const vessels = [
     route: 'Singapore → Port Klang → Fremantle → Melbourne → Sydney',
     nextPort: 'Sydney',
     status: 'Arrived at Sydney',
-    badgeClass: 'badge-arrived',
+    badgeClass: 'badge-arrived', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9612874',
     vesselClass: 'New Panamax',
@@ -1113,7 +1113,7 @@ const vessels = [
     route: 'Singapore → Ho Chi Minh → Manila → Shanghai → Ningbo',
     nextPort: 'Ningbo',
     status: 'Arrived at Ningbo',
-    badgeClass: 'badge-arrived',
+    badgeClass: 'badge-arrived', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9803541',
     vesselClass: 'Post-New Panamax',
@@ -1141,7 +1141,7 @@ const vessels = [
     route: 'Port Klang → Singapore → Colombo → Salalah → Jebel Ali',
     nextPort: 'Colombo',
     status: 'On route to Colombo',
-    badgeClass: 'badge-transit',
+    badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9556789',
     vesselClass: 'New Panamax',
@@ -1170,7 +1170,7 @@ const vessels = [
     route: 'Singapore → Colombo → Salalah → Muscat → Jebel Ali',
     nextPort: 'Salalah',
     status: 'On route to Salalah',
-    badgeClass: 'badge-transit',
+    badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9688412',
     vesselClass: 'New Panamax',
@@ -1199,7 +1199,7 @@ const vessels = [
     route: 'Singapore → Colombo → Salalah → Sohar → Jebel Ali',
     nextPort: 'Sohar',
     status: 'On route to Sohar',
-    badgeClass: 'badge-transit',
+    badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9724561',
     vesselClass: 'Post-Panamax',
@@ -1228,7 +1228,7 @@ const vessels = [
     route: 'Singapore → Colombo → Mombasa → Dar es Salaam → Nacala',
     nextPort: 'Mombasa',
     status: 'On route to Mombasa',
-    badgeClass: 'badge-transit',
+    badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9761835',
     vesselClass: 'New Panamax',
@@ -1257,7 +1257,7 @@ const vessels = [
     route: 'Yantian → Singapore → Callao → San Antonio → Valparaíso',
     nextPort: 'Callao',
     status: 'On route to Callao',
-    badgeClass: 'badge-transit',
+    badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9812347',
     vesselClass: 'New Panamax',
@@ -1286,7 +1286,7 @@ const vessels = [
     route: 'Singapore → Sydney → Noumea → Port Vila → Suva',
     nextPort: 'Suva',
     status: 'On route to Suva',
-    badgeClass: 'badge-transit',
+    badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9834206',
     vesselClass: 'Panamax',
@@ -1534,6 +1534,7 @@ function buildPopup(v, laneColor) {
         <div style="display:flex;align-items:center;gap:6px;margin:2px 0 3px;">
           <span style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</span>
           <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(0,180,255,0.15);color:var(--accent);border:1px solid rgba(0,180,255,0.3);letter-spacing:0.5px;">${v.service}</span>
+          ${!v.isDryDock ? `<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;letter-spacing:0.5px;${v.leg==='Backhaul'?'background:rgba(255,184,48,0.15);color:#ffb830;border:1px solid rgba(255,184,48,0.3);':'background:rgba(0,229,160,0.15);color:#00e5a0;border:1px solid rgba(0,229,160,0.3);'}">${v.leg||'Headhaul'}</span>` : ''}
         </div>
         <div class="popup-route">${v.route.replace(v.nextPort, `<strong style="color:#fff;font-weight:700;">${v.nextPort}</strong>`)}</div>
       </div>
