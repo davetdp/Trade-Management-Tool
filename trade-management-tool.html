@@ -272,41 +272,53 @@
     /* Glowing route lines */
     .route-path { stroke: rgba(0,180,255,0.25); stroke-width: 1.5; stroke-dasharray: 5,5; fill: none; }
     /* ── OCEAN SHIMMER OVERLAY ── */
-    @keyframes oceanShimmer {
-      0%   { background-position: 0% 0%; opacity: 0.07; }
-      25%  { opacity: 0.13; }
-      50%  { background-position: 100% 100%; opacity: 0.07; }
-      75%  { opacity: 0.11; }
-      100% { background-position: 0% 0%; opacity: 0.07; }
+    @keyframes shimmerDrift1 {
+      0%   { transform: translate(0%, 0%) scale(1);   opacity: 0.28; }
+      33%  { transform: translate(8%, -6%) scale(1.1); opacity: 0.38; }
+      66%  { transform: translate(-6%, 8%) scale(0.95); opacity: 0.22; }
+      100% { transform: translate(0%, 0%) scale(1);   opacity: 0.28; }
     }
-    @keyframes oceanShimmer2 {
-      0%   { background-position: 100% 0%; opacity: 0.05; }
-      50%  { background-position: 0% 100%; opacity: 0.10; }
-      100% { background-position: 100% 0%; opacity: 0.05; }
+    @keyframes shimmerDrift2 {
+      0%   { transform: translate(0%, 0%) scale(1);    opacity: 0.20; }
+      40%  { transform: translate(-10%, 6%) scale(1.15); opacity: 0.32; }
+      80%  { transform: translate(7%, -8%) scale(0.9);  opacity: 0.18; }
+      100% { transform: translate(0%, 0%) scale(1);    opacity: 0.20; }
+    }
+    @keyframes shimmerDrift3 {
+      0%   { transform: translate(0%, 0%) scale(1);   opacity: 0.15; }
+      50%  { transform: translate(12%, 10%) scale(1.2); opacity: 0.25; }
+      100% { transform: translate(0%, 0%) scale(1);   opacity: 0.15; }
     }
     #map-shimmer {
       position: fixed;
       top: 58px; left: 220px; right: 0; bottom: 62px;
-      z-index: 490;
+      z-index: 510;
       pointer-events: none;
+      overflow: hidden;
     }
     body.sidebar-hidden #map-shimmer { left: 0 !important; }
-    #map-shimmer::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 50% at 20% 65%, rgba(0,140,220,0.22) 0%, transparent 65%),
-                  radial-gradient(ellipse 60% 45% at 65% 35%, rgba(0,180,210,0.18) 0%, transparent 60%),
-                  radial-gradient(ellipse 55% 55% at 50% 70%, rgba(0,90,180,0.15) 0%, transparent 55%);
-      background-size: 200% 200%;
-      animation: oceanShimmer 18s ease-in-out infinite;
+    .shimmer-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
     }
-    #map-shimmer::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 45% at 55% 50%, rgba(0,160,200,0.14) 0%, transparent 60%),
-                  radial-gradient(ellipse 45% 60% at 30% 75%, rgba(0,100,190,0.12) 0%, transparent 55%);
-      background-size: 180% 180%;
-      animation: oceanShimmer2 24s ease-in-out infinite;
+    .shimmer-blob-1 {
+      width: 55%; height: 55%;
+      top: 30%; left: 15%;
+      background: radial-gradient(ellipse, rgba(0,160,230,0.45) 0%, rgba(0,100,200,0.15) 50%, transparent 75%);
+      animation: shimmerDrift1 20s ease-in-out infinite;
+    }
+    .shimmer-blob-2 {
+      width: 45%; height: 50%;
+      top: 15%; left: 50%;
+      background: radial-gradient(ellipse, rgba(0,200,220,0.35) 0%, rgba(0,140,210,0.12) 50%, transparent 75%);
+      animation: shimmerDrift2 26s ease-in-out infinite;
+    }
+    .shimmer-blob-3 {
+      width: 40%; height: 45%;
+      top: 45%; left: 40%;
+      background: radial-gradient(ellipse, rgba(0,120,200,0.30) 0%, rgba(0,80,180,0.10) 50%, transparent 75%);
+      animation: shimmerDrift3 32s ease-in-out infinite;
     }
 
     @keyframes routePulse {
@@ -716,7 +728,11 @@
 
 <!-- MAP -->
 <div id="map"></div>
-<div id="map-shimmer"></div>
+<div id="map-shimmer">
+  <div class="shimmer-blob shimmer-blob-1"></div>
+  <div class="shimmer-blob shimmer-blob-2"></div>
+  <div class="shimmer-blob shimmer-blob-3"></div>
+</div>
 <div id="map-glow"></div>
 
 <!-- P&L ANALYTICS PANEL -->
