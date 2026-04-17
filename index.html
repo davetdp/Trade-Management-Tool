@@ -1633,16 +1633,17 @@ legendEl.onAdd = function () {
   const div = L.DomUtil.create('div');
   div.style.cssText = `
     background: rgba(8,20,45,0.55); border: 1px solid rgba(0,180,255,0.18);
-    border-radius: 14px; padding: 10px 14px; font-family: 'Inter', sans-serif;
+    border-radius: clamp(10px,0.9vw,18px); padding: clamp(8px,0.6vw,14px) clamp(10px,0.8vw,18px);
+    font-family: 'Inter', sans-serif;
     backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%);
     box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
-    min-width: 220px; margin-bottom: 8px;
+    min-width: clamp(190px,15vw,300px); margin-bottom: 8px;
   `;
   div.innerHTML = `
     <div onclick="(function(el){var items=document.getElementById('legendItems');var chev=el.querySelector('.leg-chev');var collapsed=items.style.display==='none';items.style.display=collapsed?'block':'none';chev.style.transform=collapsed?'rotate(0deg)':'rotate(-90deg)';})(this)"
-         style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:8px;">
-      <span style="font-size:9px;font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;">Trade Lanes</span>
-      <span class="leg-chev" style="color:#6a8aaa;font-size:10px;transition:transform 0.2s;transform:rotate(0deg);margin-left:8px;">&#9650;</span>
+         style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:clamp(6px,0.5vw,10px);">
+      <span style="font-size:clamp(9px,0.55vw,12px);font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;">Trade Lanes</span>
+      <span class="leg-chev" style="color:#6a8aaa;font-size:clamp(9px,0.55vw,12px);transition:transform 0.2s;transform:rotate(0deg);margin-left:8px;">&#9650;</span>
     </div>
     <div id="legendItems">
       ${Object.entries(tradeLanes).map(([name, { color }]) => {
@@ -1652,16 +1653,16 @@ legendEl.onAdd = function () {
              onclick="window.pilFilter('${name}')"
              onmouseenter="legRowHover(this,true)"
              onmouseleave="legRowHover(this,false)"
-             style="display:flex;align-items:center;gap:8px;margin-bottom:3px;cursor:pointer;padding:3px 4px;border-radius:8px;transition:opacity 0.2s,background 0.2s,box-shadow 0.2s;">
-          <svg width="14" height="14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+             style="display:flex;align-items:center;gap:clamp(6px,0.45vw,10px);margin-bottom:clamp(2px,0.2vw,5px);cursor:pointer;padding:clamp(2px,0.2vw,5px) clamp(3px,0.25vw,6px);border-radius:8px;transition:opacity 0.2s,background 0.2s,box-shadow 0.2s;">
+          <svg width="clamp(12px,1vw,18px)" height="clamp(12px,1vw,18px)" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;width:clamp(12px,1vw,18px);height:clamp(12px,1vw,18px);">
             <path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="${color}"/>
             <rect x="13" y="14" width="10" height="9" rx="2" fill="${color}" opacity="0.9"/>
             <rect x="15" y="11" width="6" height="5" rx="1.5" fill="${color}"/>
             <rect x="17.5" y="8" width="2" height="5" rx="1" fill="${color}" opacity="0.8"/>
             <path d="M28 22 L32 24 L25 27 Z" fill="${color}" opacity="0.7"/>
           </svg>
-          <span style="font-size:11px;color:#e8f4ff;flex:1;">${name}</span>
-          <span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;background:${color}22;color:${color};border:1px solid ${color}55;min-width:18px;text-align:center;">${count}</span>
+          <span style="font-size:clamp(10px,0.7vw,14px);color:#e8f4ff;flex:1;">${name}</span>
+          <span style="font-size:clamp(9px,0.6vw,13px);font-weight:700;padding:1px clamp(4px,0.4vw,8px);border-radius:8px;background:${color}22;color:${color};border:1px solid ${color}55;min-width:clamp(16px,1.2vw,22px);text-align:center;">${count}</span>
         </div>`;
       }).join('')}
     </div>
