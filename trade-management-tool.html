@@ -1385,87 +1385,86 @@ vessels.forEach(v => {
 let _closeTimer = null;
 
 function bindSmartPopup(marker, popup, popupW, popupH) {
+  const pad   = 16;   // min gap from map edge (px)
+  const mHalf = 20;   // half of vessel icon height (px)
+  const gap   = 6;    // gap between icon edge and popup edge
 
-  function calcOffset() {
-    const pt      = map.latLngToContainerPoint(marker.getLatLng());
-    const mapSize = map.getSize();
-    const pad     = 14;   // min gap from screen edge
-    const mHalf   = 18;   // half of marker icon size
-    const gap     = 8;    // gap between marker edge and popup
+  // ── Step 1: choose best direction & set offset BEFORE opening ──
+  function applyOffset(h) {
+    const H  = h || popupH;
+    const pt = map.latLngToContainerPoint(marker.getLatLng());
+    const sz = map.getSize();
 
-    // Space available in each direction (from marker to screen edge)
-    const spaceAbove = pt.y - pad;
-    const spaceBelow = mapSize.y - pt.y - pad;
-    const spaceLeft  = pt.x - pad;
-    const spaceRight = mapSize.x - pt.x - pad;
+    // Space available above / below the icon edges (not the marker centre)
+    const spaceAbove = pt.y - mHalf - gap - pad;
+    const spaceBelow = sz.y - pt.y - mHalf - gap - pad;
 
-    // Surplus space = available − what the popup needs in that direction
-    const scores = {
-      above: spaceAbove - (popupH + mHalf + gap),
-      below: spaceBelow - (popupH + mHalf + gap),
-      left:  spaceLeft  - (popupW + mHalf + gap),
-      right: spaceRight - (popupW + mHalf + gap),
-    };
-
-    // Pick the direction with the most surplus space
-    const dir = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
-
-    let offsetX = 0, offsetY = 0;
-
-    if (dir === 'above') {
-      // Popup body floats above — tip clears the marker icon
-      offsetY = -(mHalf + gap);
-      const rEdge = pt.x + popupW / 2;
-      const lEdge = pt.x - popupW / 2;
-      if (rEdge > mapSize.x - pad) offsetX = (mapSize.x - pad) - rEdge;
-      else if (lEdge < pad)        offsetX = pad - lEdge;
-
-    } else if (dir === 'below') {
-      // Tip pushed far down so popup body sits below the marker
-      offsetY = popupH + mHalf + gap;
-      const rEdge = pt.x + popupW / 2;
-      const lEdge = pt.x - popupW / 2;
-      if (rEdge > mapSize.x - pad) offsetX = (mapSize.x - pad) - rEdge;
-      else if (lEdge < pad)        offsetX = pad - lEdge;
-
-    } else if (dir === 'right') {
-      // Tip pushed right; popup body appears to the right of the marker
-      offsetX = mHalf + gap + popupW / 2;
-      offsetY = popupH / 2;   // vertically centred on marker
-      // Clamp vertically so popup doesn't clip top/bottom
-      const tipY = pt.y + offsetY;
-      if (tipY > mapSize.y - pad)        offsetY = mapSize.y - pad - pt.y;
-      else if (tipY - popupH < pad)      offsetY = pad + popupH - pt.y;
-
+    // Pick vertical direction: prefer above; fall back to below
+    let oy;
+    if (spaceAbove >= H) {
+      oy = -(mHalf + gap);                // popup floats above
+    } else if (spaceBelow >= H) {
+      oy = H + mHalf + gap;               // popup floats below
+    } else if (spaceAbove >= spaceBelow) {
+      oy = -(mHalf + gap);                // not ideal but more room above
     } else {
-      // left — tip pushed left; popup body appears to the left of the marker
-      offsetX = -(mHalf + gap + popupW / 2);
-      offsetY = popupH / 2;
-      const tipY = pt.y + offsetY;
-      if (tipY > mapSize.y - pad)        offsetY = mapSize.y - pad - pt.y;
-      else if (tipY - popupH < pad)      offsetY = pad + popupH - pt.y;
+      oy = H + mHalf + gap;               // more room below
     }
 
-    popup.options.offset = L.point(offsetX, offsetY);
+    // Horizontal nudge so popup stays inside the map
+    let ox = 0;
+    const rEdge = pt.x + popupW / 2;
+    const lEdge = pt.x - popupW / 2;
+    if      (rEdge > sz.x - pad) ox = (sz.x - pad) - rEdge;
+    else if (lEdge < pad)        ox = pad - lEdge;
+
+    popup.options.offset = L.point(ox, oy);
   }
 
   function scheduleClose() {
     _closeTimer = setTimeout(() => marker.closePopup(), 200);
   }
-
   function cancelClose() {
     clearTimeout(_closeTimer);
   }
 
-  marker.on('mouseover', () => { cancelClose(); calcOffset(); marker.openPopup(); });
+  marker.on('mouseover', () => { cancelClose(); applyOffset(); marker.openPopup(); });
   marker.on('mouseout',  () => scheduleClose());
 
-  // Once the popup DOM element exists, keep it open while the mouse is over it
+  // ── Step 2: after popup is in the DOM, measure real height and
+  //    nudge via CSS transform if it still clips the map edges ──
   popup.on('add', function () {
     const el = this.getElement();
     if (!el) return;
     el.addEventListener('mouseenter', cancelClose);
     el.addEventListener('mouseleave', scheduleClose);
+
+    requestAnimationFrame(() => {
+      if (!el || !el.isConnected) return;
+
+      // Re-run offset calculation with the actual rendered height
+      const actualH = el.offsetHeight;
+      if (actualH && Math.abs(actualH - popupH) > 30) {
+        applyOffset(actualH);  // recalc with true height
+        marker.openPopup();    // re-open with corrected offset
+        return;
+      }
+
+      // Safety net: if popup still clips any edge, nudge it with CSS
+      const mapRect = map.getContainer().getBoundingClientRect();
+      const rect    = el.getBoundingClientRect();
+      let dy = 0, dx = 0;
+
+      if (rect.top    < mapRect.top    + pad) dy = (mapRect.top    + pad) - rect.top;
+      if (rect.bottom > mapRect.bottom - pad) dy = (mapRect.bottom - pad) - rect.bottom;
+      if (rect.left   < mapRect.left   + pad) dx = (mapRect.left   + pad) - rect.left;
+      if (rect.right  > mapRect.right  - pad) dx = (mapRect.right  - pad) - rect.right;
+
+      if (dx !== 0 || dy !== 0) {
+        const wrapper = el.querySelector('.leaflet-popup-content-wrapper');
+        if (wrapper) wrapper.style.transform = `translate(${dx}px,${dy}px)`;
+      }
+    });
   });
 
   marker.bindPopup(popup);
