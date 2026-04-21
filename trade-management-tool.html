@@ -650,6 +650,22 @@
     </div>
     <div class="nav-divider"></div>
     <div class="nav-stat">
+      <div class="nav-stat-label">Voyages In Progress</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:1px;">
+        <div class="voyage-dot-wrap">
+          <span style="width:7px;height:7px;border-radius:50%;background:#00b4ff;flex-shrink:0;display:inline-block;"></span>
+          <span class="nav-stat-value" id="kpi-voy-blue" style="color:#00b4ff;margin:0;">8</span>
+          <span class="vdot-tip">On route</span>
+        </div>
+        <div class="voyage-dot-wrap">
+          <span style="width:7px;height:7px;border-radius:50%;background:#00e5a0;flex-shrink:0;display:inline-block;"></span>
+          <span class="nav-stat-value" id="kpi-voy-green" style="color:#00e5a0;margin:0;">2</span>
+          <span class="vdot-tip">Arrived</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-stat">
       <div class="nav-stat-label">Total Revenue (YTD)</div>
       <div class="nav-stat-value" id="kpi-rev-ytd" style="color:var(--accent)">USD 313.6M</div>
     </div>
@@ -1067,22 +1083,6 @@
   <div class="kpi">
     <div class="kpi-label">Forecast vs Actual (Apr)</div>
     <div class="kpi-value green" id="kpi-var-apr">+7.7%</div>
-  </div>
-  <div class="kpi-divider"></div>
-  <div class="kpi">
-    <div class="kpi-label">Voyages In Progress</div>
-    <div style="display:flex;align-items:center;gap:10px;margin-top:2px;">
-      <div class="voyage-dot-wrap">
-        <span style="width:8px;height:8px;border-radius:50%;background:#00b4ff;flex-shrink:0;display:inline-block;"></span>
-        <span class="kpi-value blue" id="kpi-voy-blue" style="margin:0;">8</span>
-        <span class="vdot-tip">On route</span>
-      </div>
-      <div class="voyage-dot-wrap">
-        <span style="width:8px;height:8px;border-radius:50%;background:#00e5a0;flex-shrink:0;display:inline-block;"></span>
-        <span class="kpi-value green" id="kpi-voy-green" style="margin:0;">2</span>
-        <span class="vdot-tip">Arrived</span>
-      </div>
-    </div>
   </div>
 </div>
 
