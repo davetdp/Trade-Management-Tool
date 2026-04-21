@@ -179,6 +179,46 @@
     body.sidebar-hidden #map-glow { left: 0 !important; }
     .leaflet-container { background: #020d1e !important; }
     .leaflet-tile-pane { filter: brightness(1.7); }
+
+    /* ── MAP MODE TOGGLE ── */
+    .map-mode-toggle {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: rgba(8, 20, 40, 0.82);
+      border: 1px solid rgba(0, 180, 255, 0.25);
+      border-radius: 22px;
+      padding: 4px;
+      display: flex;
+      gap: 2px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+    .map-mode-btn {
+      padding: 5px 16px;
+      border-radius: 18px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.45);
+      transition: all 0.2s ease;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+    .map-mode-btn.active {
+      background: rgba(0, 180, 255, 0.18);
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(0,180,255,0.2);
+    }
+    .map-mode-btn:hover:not(.active) { color: rgba(255,255,255,0.7); }
+
+    /* Light mode map overrides */
+    body.map-light .leaflet-container { background: #a8d4f0 !important; }
+    body.map-light .leaflet-tile-pane { filter: none; }
     .leaflet-control-zoom {
       border: 1px solid var(--border) !important;
       border-radius: 8px !important;
@@ -677,7 +717,12 @@
 </div>
 
 <!-- MAP -->
-<div id="map"></div>
+<div id="map">
+  <div class="map-mode-toggle">
+    <button class="map-mode-btn active" id="btnDark"  onclick="setMapMode('dark')">🌙 Dark</button>
+    <button class="map-mode-btn"        id="btnLight" onclick="setMapMode('light')">☀️ Light</button>
+  </div>
+</div>
 <div id="map-glow"></div>
 
 <!-- P&L ANALYTICS PANEL -->
@@ -1052,11 +1097,25 @@ const map = L.map('map', {
 });
 L.control.zoom({ position: 'topright' }).addTo(map);
 
-// Dark maritime tile layer
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  subdomains: 'abcd',
-  maxZoom: 19
-}).addTo(map);
+// Tile layer URLs
+const TILE_DARK  = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+const TILE_LIGHT = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}';
+
+// Default: dark mode
+let activeTileLayer = L.tileLayer(TILE_DARK, { subdomains: 'abcd', maxZoom: 19 }).addTo(map);
+
+function setMapMode(mode) {
+  const isDark = mode === 'dark';
+  document.getElementById('btnDark').classList.toggle('active', isDark);
+  document.getElementById('btnLight').classList.toggle('active', !isDark);
+  document.body.classList.toggle('map-light', !isDark);
+  map.removeLayer(activeTileLayer);
+  activeTileLayer = isDark
+    ? L.tileLayer(TILE_DARK,  { subdomains: 'abcd', maxZoom: 19 }).addTo(map)
+    : L.tileLayer(TILE_LIGHT, { maxZoom: 19 }).addTo(map);
+  // Push tile layer behind vessel markers
+  activeTileLayer.bringToBack();
+}
 
 // ── VESSEL DATA ─────────────────────────────────────────────
 const vessels = [
