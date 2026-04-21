@@ -1100,7 +1100,7 @@ L.control.zoom({ position: 'topright' }).addTo(map);
 
 // Tile layer URLs
 const TILE_DARK  = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+const TILE_LIGHT = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
 
 // Default: dark mode
 let activeTileLayer = L.tileLayer(TILE_DARK, { subdomains: 'abcd', maxZoom: 19 }).addTo(map);
@@ -1113,7 +1113,7 @@ function setMapMode(mode) {
   map.removeLayer(activeTileLayer);
   activeTileLayer = isDark
     ? L.tileLayer(TILE_DARK,  { subdomains: 'abcd', maxZoom: 19 }).addTo(map)
-    : L.tileLayer(TILE_LIGHT, { subdomains: 'abcd', maxZoom: 19 }).addTo(map);
+    : L.tileLayer(TILE_LIGHT, { subdomains: 'abc', maxZoom: 17 }).addTo(map);
   // Push tile layer behind vessel markers
   activeTileLayer.bringToBack();
 }
