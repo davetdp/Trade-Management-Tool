@@ -731,7 +731,7 @@
     </div>
     <div class="nav-title">
       <div class="nav-title-main">Trade Management Tool</div>
-      <div class="nav-title-sub">Profit &amp; Loss</div>
+      <div class="nav-title-sub">Cargoflow</div>
     </div>
   </div>
   <div class="nav-right">
@@ -838,8 +838,8 @@
     <button class="map-mode-btn"        id="btnLight" onclick="setMapMode('light')">☀️ Light</button>
   </div>
   <div class="usecase-toggle">
-    <button class="uc-btn active" id="ucPnl"       onclick="setUseCase('pnl')">P&amp;L</button>
-    <button class="uc-btn"        id="ucCargoflow"  onclick="setUseCase('cargoflow')">Cargoflow</button>
+    <button class="uc-btn"        id="ucPnl"       onclick="setUseCase('pnl')">P&amp;L</button>
+    <button class="uc-btn active" id="ucCargoflow"  onclick="setUseCase('cargoflow')">Cargoflow</button>
     <button class="uc-btn"        id="ucPricing"    onclick="setUseCase('pricing')">Pricing</button>
   </div>
 </div>
@@ -1222,8 +1222,8 @@ function setMapMode(mode) {
 }
 
 // ── USE-CASE TOGGLE ──────────────────────────────────────────
-let currentMode = 'pnl';
-document.body.classList.add('mode-pnl');
+let currentMode = 'cargoflow';
+document.body.classList.add('mode-cargoflow');
 
 function setUseCase(mode) {
   currentMode = mode;
@@ -2725,7 +2725,7 @@ function buildPortPopup(p) {
             <span class="dwell-dir-pill dwell-dir-${d.dir.toLowerCase()}">${d.dir}</span>
             <span class="dwell-dir-port">→ ${d.nextPort}</span>
             <div class="dwell-dir-counts">
-              <span style="font-size:8px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;">Dwelling:</span>
+              <span style="font-size:8px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;">Dwell:</span>
               <span class="dwell-cnt"><span>${d.teu20}</span> x 20'</span>
               <span class="dwell-cnt"><span>${d.teu40}</span> x 40'</span>
               <span class="dwell-total-teu">${totalTeu} TEU</span>
