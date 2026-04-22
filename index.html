@@ -466,9 +466,9 @@
     .dwell-dir-pill { font-size: 8px; font-weight: 700; padding: 1px 6px; border-radius: 8px; }
     .dwell-dir-hh { background: rgba(0,229,160,0.12); color: #00e5a0; }
     .dwell-dir-bh { background: rgba(255,159,67,0.12); color: #ff9f43; }
-    .dwell-pod-list { margin: 0 0 5px 0; }
-    .dwell-pod-row { display: flex; justify-content: space-between; align-items: center; padding: 1px 0; }
-    .dwell-pod-name { font-size: 9px; color: rgba(255,255,255,0.55); }
+    .dwell-pod-list { display: flex; gap: 4px; margin: 2px 0 6px 0; }
+    .dwell-pod-col { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+    .dwell-pod-name { font-size: 8.5px; color: rgba(255,255,255,0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .dwell-pod-teu { font-family: 'Space Grotesk', sans-serif; font-size: 9.5px; font-weight: 700; color: var(--amber); }
     .dwell-dir-counts { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
     .dwell-cnt { font-size: 10px; color: var(--muted); }
@@ -2763,7 +2763,7 @@ function buildPortPopup(p) {
           </div>`;
         }).join('');
         const podsHtml = (d.pods || []).map(pod =>
-          `<div class="dwell-pod-row">
+          `<div class="dwell-pod-col">
             <span class="dwell-pod-name">${pod.port}</span>
             <span class="dwell-pod-teu">${pod.teu} TEU</span>
           </div>`
