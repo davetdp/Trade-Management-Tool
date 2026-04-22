@@ -467,13 +467,14 @@
     .dwell-cnt span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--text); font-size: 11px; }
     .dwell-total-teu { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: var(--amber); }
 
-    .vsl-cards { display: flex; gap: 4px; margin-top: 2px; }
-    .vsl-card { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 5px 3px 4px; text-align: center; position: relative; overflow: hidden; }
-    .vsl-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background: var(--vc); }
-    .vsl-ship-svg { display: block; margin: 0 auto 3px; }
-    .vsl-name { font-size: 7px; color: rgba(255,255,255,0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 1px; padding: 0 2px; }
-    .vsl-eta  { font-size: 7px; color: var(--muted); margin-bottom: 2px; }
-    .vsl-load { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700; color: var(--vc); }
+    .vsl-cards { display: flex; gap: 3px; margin-top: 2px; }
+    .vsl-card { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; padding: 4px 2px 3px; text-align: center; position: relative; overflow: hidden; }
+    .vsl-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background: var(--vc); }
+    .vsl-ship-svg { display: block; margin: 0 auto 2px; }
+    .vsl-name { font-size: 6.5px; color: rgba(255,255,255,0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 1px; padding: 0 2px; }
+    .vsl-eta  { font-size: 6.5px; color: var(--muted); margin-bottom: 1px; }
+    .vsl-load { font-family: 'Space Grotesk', sans-serif; font-size: 8.5px; font-weight: 700; color: var(--vc); margin-bottom: 1px; }
+    .vsl-alloc { font-size: 6px; color: var(--muted); }
 
     /* ── CARGOFLOW / PRICING POPUP SECTIONS ── */
     .cf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px; }
@@ -2694,7 +2695,7 @@ function buildPortPopup(p) {
     }
 
     function shipSvg(color) {
-      return `<svg class="vsl-ship-svg" width="30" height="19" viewBox="0 0 30 19" xmlns="http://www.w3.org/2000/svg">
+      return `<svg class="vsl-ship-svg" width="22" height="14" viewBox="0 0 30 19" xmlns="http://www.w3.org/2000/svg">
         <rect x="9" y="2" width="9" height="5" rx="1" fill="${color}" opacity="0.9"/>
         <rect x="15" y="0" width="2.5" height="3" rx="0.5" fill="${color}" opacity="0.7"/>
         <path d="M2 8 L5 7 L25 7 L28 8 L24 16 L6 16 Z" fill="${color}"/>
@@ -2717,6 +2718,7 @@ function buildPortPopup(p) {
             <div class="vsl-name">${v.name}</div>
             <div class="vsl-eta">${v.eta}</div>
             <div class="vsl-load">${loadLabel}</div>
+            <div class="vsl-alloc">Cap: ${v.alloc} TEU</div>
           </div>`;
         }).join('');
         return `<div class="dwell-dir-block">
@@ -2805,10 +2807,6 @@ function buildPortPopup(p) {
         <div class="dwell-scroll">
           ${buildDwellingHtml(p.dwellingLaden)}
         </div>
-        <div class="port-divider"></div>
-        <div class="port-detail-row"><span class="port-detail-label">Terminal Operator</span><span class="port-detail-value">${p.terminalOps}</span></div>
-        <div class="port-detail-row"><span class="port-detail-label">Avg. Dwell Time</span><span class="port-detail-value">${p.dwell}</span></div>
-        <div class="port-detail-row"><span class="port-detail-label">Next PIL Call</span><span class="port-detail-value">${p.nextCall}</span></div>
       </div>
 
       <!-- ── PRICING MODE ── -->
