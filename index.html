@@ -500,7 +500,7 @@
     .vsl-cap  { font-family: 'Space Grotesk', sans-serif; font-size: 8.5px; font-weight: 500; color: #3d4f5e; }
 
     /* ── CARGOFLOW / PRICING POPUP SECTIONS ── */
-    .cf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 8px; }
+    .cf-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-bottom: 8px; }
     .cf-card { background: rgba(0,180,255,0.06); border: 1px solid rgba(0,180,255,0.15); border-radius: 6px; padding: 5px 6px; text-align: center; }
     .cf-card-label { font-size: 8px; color: var(--muted); margin-bottom: 2px; }
     .cf-card-val { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
@@ -509,13 +509,17 @@
     .cf-card-reefer .cf-card-val { color: #00e5a0 !important; }
     .cf-card-empty { background: rgba(255,255,255,0.03) !important; border-color: rgba(255,255,255,0.08) !important; }
     .cf-card-empty .cf-card-val { color: var(--muted) !important; }
-    .flow-tbl { margin-bottom: 8px; }
-    .flow-tbl-hdr, .flow-tbl-row { display: grid; grid-template-columns: 1.8fr 0.7fr 0.7fr 0.7fr 0.6fr 0.6fr; align-items: center; gap: 3px; padding: 2px 3px; }
-    .flow-tbl-hdr { font-size: 7px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.07); padding-bottom: 3px; margin-bottom: 2px; }
-    .flow-tbl-alt { background: rgba(255,255,255,0.025); border-radius: 3px; }
-    .flow-route-cell { font-size: 8.5px; color: rgba(255,255,255,0.75); }
-    .flow-teu-cell { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700; color: var(--amber); }
-    .flow-val-cell { font-size: 8.5px; color: rgba(255,255,255,0.65); font-family: 'Space Grotesk', sans-serif; }
+    .flow-tbl { margin-bottom: 8px; display: flex; flex-direction: column; gap: 5px; }
+    .flow-entry { padding: 5px 7px; border-radius: 6px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+    .flow-entry-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+    .flow-route-cell { font-size: 9.5px; color: rgba(255,255,255,0.82); font-weight: 500; }
+    .flow-teu-cell { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: var(--amber); }
+    .flow-entry-metrics { display: flex; gap: 0; }
+    .flow-metric { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 4px; border-right: 1px solid rgba(255,255,255,0.06); }
+    .flow-metric:first-child { align-items: flex-start; padding-left: 0; }
+    .flow-metric:last-child  { border-right: none; }
+    .flow-metric-label { font-size: 7px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 1px; }
+    .flow-metric-val   { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.75); }
     .pr-rate-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .pr-route { font-size: 9px; color: rgba(255,255,255,0.75); }
     .pr-rate { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--text); }
@@ -2069,19 +2073,32 @@ function buildPopup(v, laneColor) {
             </div>
           </div>`;
         })()}
-        <div class="popup-section-title">Port-to-Port Flows On This Vessel</div>
+        <div class="popup-section-title">Pricing Breakdown</div>
         <div class="flow-tbl">
-          <div class="flow-tbl-hdr">
-            <span>Route</span><span>TEU</span><span>Avg/20'</span><span>Avg/40'</span><span>Wt/TEU</span><span>R/Ton</span>
-          </div>
-          ${v.topFlows.map((f,i) => `
-          <div class="flow-tbl-row ${i%2===1?'flow-tbl-alt':''}">
-            <span class="flow-route-cell">${f.pol} → ${f.pod}</span>
-            <span class="flow-teu-cell">${f.teu.toLocaleString()}</span>
-            <span class="flow-val-cell">${f.rate20}</span>
-            <span class="flow-val-cell">${f.rate40}</span>
-            <span class="flow-val-cell">${f.avgWt}</span>
-            <span class="flow-val-cell">${f.ratePerTon}</span>
+          ${v.topFlows.map(f => `
+          <div class="flow-entry">
+            <div class="flow-entry-top">
+              <span class="flow-route-cell">${f.pol} → ${f.pod}</span>
+              <span class="flow-teu-cell">${f.teu.toLocaleString()} TEU</span>
+            </div>
+            <div class="flow-entry-metrics">
+              <div class="flow-metric">
+                <span class="flow-metric-label">Avg/20'</span>
+                <span class="flow-metric-val">${f.rate20}</span>
+              </div>
+              <div class="flow-metric">
+                <span class="flow-metric-label">Avg/40'</span>
+                <span class="flow-metric-val">${f.rate40}</span>
+              </div>
+              <div class="flow-metric">
+                <span class="flow-metric-label">Wt/TEU</span>
+                <span class="flow-metric-val">${f.avgWt}</span>
+              </div>
+              <div class="flow-metric">
+                <span class="flow-metric-label">Rate/Ton</span>
+                <span class="flow-metric-val">${f.ratePerTon}</span>
+              </div>
+            </div>
           </div>`).join('')}
         </div>
         <div class="utilization-bar-wrap">
