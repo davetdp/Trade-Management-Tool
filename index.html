@@ -466,11 +466,15 @@
     .dwell-expand-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.65); font-size: 15px; font-weight: 500; width: 22px; height: 22px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; line-height: 1; padding: 0; }
     .dwell-expand-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
     .dwell-summary { margin-bottom: 6px; }
-    .dwell-tbl-hdr, .dwell-tbl-row { display: grid; grid-template-columns: 38px 28px 1fr 1fr 1fr; align-items: center; gap: 4px; padding: 3px 4px; }
-    .dwell-tbl-hdr { font-size: 7.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 2px; }
+    .dwell-svc-summary { margin-bottom: 8px; }
+    .dwell-svc-summary:last-child { margin-bottom: 0; }
+    .dwell-svc-summary-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .dwell-tbl-hdr, .dwell-tbl-row { display: grid; grid-template-columns: 30px 1fr 1fr 1fr; align-items: center; gap: 4px; padding: 2px 4px; }
+    .dwell-tbl-hdr { font-size: 7.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; padding-bottom: 3px; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 2px; }
     .dwell-tbl-alt { background: rgba(255,255,255,0.03); border-radius: 4px; }
     .dwell-tbl-teu { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--amber); }
     .dwell-tbl-val { font-size: 9.5px; color: rgba(255,255,255,0.75); font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+    .dwell-svc-detail { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); }
     .dwell-dir-block { margin-bottom: 8px; padding-left: 8px; border-left: 2px solid rgba(255,255,255,0.07); }
     .dwell-dir-row { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
     .dwell-dir-pill { font-size: 8px; font-weight: 700; padding: 1px 6px; border-radius: 8px; }
@@ -1712,10 +1716,11 @@ vessels.forEach(v => {
 let _closeTimer = null;
 let _moveGuard  = null;
 
-function toggleDwell(btn) {
-  const scroll = btn.closest('.popup-mode-cargoflow').querySelector('.dwell-scroll');
-  const opening = scroll.style.display === 'none';
-  scroll.style.display = opening ? 'block' : 'none';
+function toggleDwellSvc(btn) {
+  const block = btn.closest('.dwell-svc-summary');
+  const detail = block.querySelector('.dwell-svc-detail');
+  const opening = detail.style.display === 'none';
+  detail.style.display = opening ? 'block' : 'none';
   btn.textContent = opening ? '−' : '+';
 }
 
@@ -2879,10 +2884,9 @@ function buildPortPopup(p) {
           function etaToDate(eta) { const [d,m] = eta.split(' '); return new Date(2026, MONTHS[m], parseInt(d)); }
           function fmtDate(dt) { return dt.getDate() + ' ' + MON_NAMES[dt.getMonth()]; }
 
-          // build per-direction rows
-          const dirRows = [];
-          p.dwellingLaden.forEach(svc => {
-            svc.directions.forEach(d => {
+          // build per-service blocks, each with per-direction summary rows
+          const svcBlocksHtml = p.dwellingLaden.map(svc => {
+            const dirRowsHtml = svc.directions.map((d, i) => {
               const teu = d.teu20 + d.teu40 * 2;
               let rem = teu, sailings = 0, clearDate = null;
               for (const v of d.vessels) {
@@ -2892,43 +2896,32 @@ function buildPortPopup(p) {
                 const vd = etaToDate(v.eta);
                 if (!clearDate || vd > clearDate) clearDate = vd;
               }
-              dirRows.push({
-                svc: svc.service,
-                dir: d.dir,
-                teu,
-                sailings,
-                clearBy: clearDate ? fmtDate(clearDate) : '—'
-              });
-            });
-          });
+              return `<div class="dwell-tbl-row ${i % 2 === 1 ? 'dwell-tbl-alt' : ''}">
+                <span class="dwell-dir-pill dwell-dir-${d.dir.toLowerCase()}">${d.dir}</span>
+                <span class="dwell-tbl-teu">${teu} TEU</span>
+                <span class="dwell-tbl-val">${sailings}</span>
+                <span class="dwell-tbl-val">${clearDate ? fmtDate(clearDate) : '—'}</span>
+              </div>`;
+            }).join('');
 
-          const rowsHtml = dirRows.map((r, i) => `
-            <div class="dwell-tbl-row ${i % 2 === 1 ? 'dwell-tbl-alt' : ''}">
-              <span class="dwell-svc-badge">${r.svc}</span>
-              <span class="dwell-dir-pill dwell-dir-${r.dir.toLowerCase()}">${r.dir}</span>
-              <span class="dwell-tbl-teu">${r.teu} TEU</span>
-              <span class="dwell-tbl-val">${r.sailings}</span>
-              <span class="dwell-tbl-val">${r.clearBy}</span>
-            </div>`).join('');
+            return `<div class="dwell-svc-summary">
+              <div class="dwell-svc-summary-hdr">
+                <span class="dwell-svc-badge">${svc.service}</span>
+                <button class="dwell-expand-btn" onclick="toggleDwellSvc(this)" title="Show detail">+</button>
+              </div>
+              <div class="dwell-tbl-hdr">
+                <span>Dir</span><span>TEU</span><span>Sailings</span><span>Clear By</span>
+              </div>
+              ${dirRowsHtml}
+              <div class="dwell-svc-detail" style="display:none;">
+                ${buildDwellingHtml([svc])}
+              </div>
+            </div>`;
+          }).join('');
           // ──────────────────────────────────────────────────────
           return `
-          <div class="dwell-section-hdr">
-            <div class="delinq-title" style="margin:0;">Laden Containers Dwelling</div>
-            <button class="dwell-expand-btn" onclick="toggleDwell(this)" title="Show breakdown">+</button>
-          </div>
-          <div class="dwell-summary">
-            <div class="dwell-tbl-hdr">
-              <span>Service</span>
-              <span>Dir</span>
-              <span>TEU</span>
-              <span>Sailings</span>
-              <span>Clear By</span>
-            </div>
-            ${rowsHtml}
-          </div>
-          <div class="dwell-scroll" style="display:none;">
-            ${buildDwellingHtml(p.dwellingLaden)}
-          </div>`;
+          <div class="delinq-title" style="margin-bottom:8px;">Laden Containers Dwelling</div>
+          <div class="dwell-summary">${svcBlocksHtml}</div>`;
         })()}
       </div>
 
