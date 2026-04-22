@@ -1692,9 +1692,11 @@ vessels.forEach(v => {
 // ── SMART POPUP POSITIONING ──────────────────────────────────
 // Fixes the Leaflet mouseover/mouseout blinking bug:
 // When the popup opens over the marker it triggers mouseout → close → reopen loop.
-// Solution: delay the close by 200ms, and cancel it if the mouse re-enters
-// the marker OR moves over the popup card itself.
+// Solution: delay the close, and cancel it if the mouse re-enters the marker
+// OR stays near the popup. We use a document mousemove proximity guard so that
+// the tiny gap between marker edge and popup edge never causes a surprise close.
 let _closeTimer = null;
+let _moveGuard  = null;
 
 function bindSmartPopup(marker, popup, popupW, popupH) {
   const pad   = 16;   // min gap from map edge (px)
@@ -1751,16 +1753,38 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
     popup.options.offset = L.point(ox, oy);
   }
 
-  function scheduleClose() { _closeTimer = setTimeout(() => marker.closePopup(), 600); }
-  function cancelClose()   { clearTimeout(_closeTimer); }
+  function cancelClose() { clearTimeout(_closeTimer); }
+  function scheduleClose() { _closeTimer = setTimeout(() => marker.closePopup(), 700); }
 
-  marker.on('mouseover', () => { cancelClose(); applyOffset(); marker.openPopup(); });
-  marker.on('mouseout',  () => scheduleClose());
+  // While the mouse might be crossing the gap between marker and popup,
+  // keep watching cursor position; cancel close whenever it's within 28px of
+  // the popup bounding box. Cleaned up when popup closes or new hover starts.
+  function startMoveGuard() {
+    if (_moveGuard) document.removeEventListener('mousemove', _moveGuard);
+    _moveGuard = function(e) {
+      const popEl = popup.getElement();
+      if (!popEl || !popEl.isConnected) { stopMoveGuard(); return; }
+      const r = popEl.getBoundingClientRect();
+      const M = 28;  // margin px — generously covers any gap or scrollbar edge
+      if (e.clientX >= r.left - M && e.clientX <= r.right  + M &&
+          e.clientY >= r.top  - M && e.clientY <= r.bottom + M) {
+        cancelClose();
+      }
+    };
+    document.addEventListener('mousemove', _moveGuard);
+  }
+  function stopMoveGuard() {
+    if (_moveGuard) { document.removeEventListener('mousemove', _moveGuard); _moveGuard = null; }
+  }
+
+  marker.on('mouseover', () => { cancelClose(); stopMoveGuard(); applyOffset(); marker.openPopup(); });
+  marker.on('mouseout',  () => { scheduleClose(); startMoveGuard(); });
 
   // ── Step 2: after render, re-measure actual height and CSS-nudge any clipping ──
   popup.on('add', function () {
     const el = this.getElement();
     if (!el) return;
+    // Keep direct hover listeners as primary path (they fire instantly)
     el.addEventListener('mouseenter', cancelClose);
     el.addEventListener('mouseleave', scheduleClose);
 
@@ -1789,6 +1813,9 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
       }
     });
   });
+
+  // Clean up the move guard when popup is removed from DOM
+  popup.on('remove', stopMoveGuard);
 
   marker.bindPopup(popup);
 }
