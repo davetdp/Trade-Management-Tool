@@ -466,14 +466,11 @@
     .dwell-expand-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.65); font-size: 15px; font-weight: 500; width: 22px; height: 22px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; line-height: 1; padding: 0; }
     .dwell-expand-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
     .dwell-summary { margin-bottom: 6px; }
-    .dwell-total-row { display: flex; align-items: baseline; gap: 7px; margin-bottom: 6px; }
-    .dwell-total-big { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800; color: var(--amber); line-height: 1; }
-    .dwell-total-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .dwell-svc-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 7px; }
-    .dwell-svc-chip { background: rgba(255,184,48,0.08); border: 1px solid rgba(255,184,48,0.18); border-radius: 8px; padding: 2px 8px; font-size: 9px; color: var(--muted); }
-    .dwell-svc-chip strong { color: var(--amber); font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-left: 3px; }
-    .dwell-clear-row { display: flex; align-items: center; gap: 7px; font-size: 9px; color: var(--muted); flex-wrap: wrap; }
-    .dwell-clear-row strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+    .dwell-tbl-hdr, .dwell-tbl-row { display: grid; grid-template-columns: 38px 28px 1fr 1fr 1fr; align-items: center; gap: 4px; padding: 3px 4px; }
+    .dwell-tbl-hdr { font-size: 7.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 2px; }
+    .dwell-tbl-alt { background: rgba(255,255,255,0.03); border-radius: 4px; }
+    .dwell-tbl-teu { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--amber); }
+    .dwell-tbl-val { font-size: 9.5px; color: rgba(255,255,255,0.75); font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
     .dwell-dir-block { margin-bottom: 8px; padding-left: 8px; border-left: 2px solid rgba(255,255,255,0.07); }
     .dwell-dir-row { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
     .dwell-dir-pill { font-size: 8px; font-weight: 700; padding: 1px 6px; border-radius: 8px; }
@@ -2882,28 +2879,37 @@ function buildPortPopup(p) {
           function etaToDate(eta) { const [d,m] = eta.split(' '); return new Date(2026, MONTHS[m], parseInt(d)); }
           function fmtDate(dt) { return dt.getDate() + ' ' + MON_NAMES[dt.getMonth()]; }
 
-          let totalTeu = 0, totalSailings = 0;
-          let latestDate = null;
-          const svcTotals = {};
+          // build per-direction rows
+          const dirRows = [];
           p.dwellingLaden.forEach(svc => {
             svc.directions.forEach(d => {
               const teu = d.teu20 + d.teu40 * 2;
-              totalTeu += teu;
-              svcTotals[svc.service] = (svcTotals[svc.service] || 0) + teu;
-              let rem = teu;
+              let rem = teu, sailings = 0, clearDate = null;
               for (const v of d.vessels) {
                 if (rem <= 0) break;
                 rem -= Math.min(rem, v.alloc);
-                totalSailings++;
+                sailings++;
                 const vd = etaToDate(v.eta);
-                if (!latestDate || vd > latestDate) latestDate = vd;
+                if (!clearDate || vd > clearDate) clearDate = vd;
               }
+              dirRows.push({
+                svc: svc.service,
+                dir: d.dir,
+                teu,
+                sailings,
+                clearBy: clearDate ? fmtDate(clearDate) : '—'
+              });
             });
           });
-          const clearByStr = latestDate ? fmtDate(latestDate) : '—';
-          const svcChips = Object.entries(svcTotals)
-            .map(([s,t]) => `<span class="dwell-svc-chip">${s}<strong>${t}</strong></span>`)
-            .join('');
+
+          const rowsHtml = dirRows.map((r, i) => `
+            <div class="dwell-tbl-row ${i % 2 === 1 ? 'dwell-tbl-alt' : ''}">
+              <span class="dwell-svc-badge">${r.svc}</span>
+              <span class="dwell-dir-pill dwell-dir-${r.dir.toLowerCase()}">${r.dir}</span>
+              <span class="dwell-tbl-teu">${r.teu} TEU</span>
+              <span class="dwell-tbl-val">${r.sailings}</span>
+              <span class="dwell-tbl-val">${r.clearBy}</span>
+            </div>`).join('');
           // ──────────────────────────────────────────────────────
           return `
           <div class="dwell-section-hdr">
@@ -2911,16 +2917,14 @@ function buildPortPopup(p) {
             <button class="dwell-expand-btn" onclick="toggleDwell(this)" title="Show breakdown">+</button>
           </div>
           <div class="dwell-summary">
-            <div class="dwell-total-row">
-              <span class="dwell-total-big">${totalTeu}</span>
-              <span class="dwell-total-label">TEU dwelling</span>
+            <div class="dwell-tbl-hdr">
+              <span>Service</span>
+              <span>Dir</span>
+              <span>TEU</span>
+              <span>Sailings</span>
+              <span>Clear By</span>
             </div>
-            <div class="dwell-svc-chips">${svcChips}</div>
-            <div class="dwell-clear-row">
-              <span>All cleared by <strong>${clearByStr}</strong></span>
-              <span style="opacity:0.2">·</span>
-              <span><strong>${totalSailings}</strong> sailings needed</span>
-            </div>
+            ${rowsHtml}
           </div>
           <div class="dwell-scroll" style="display:none;">
             ${buildDwellingHtml(p.dwellingLaden)}
