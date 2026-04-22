@@ -462,12 +462,15 @@
     .dwell-svc-total { font-size: 8px; color: var(--muted); margin-left: auto; }
 
     .dwell-dir-block { margin-bottom: 8px; padding-left: 8px; border-left: 2px solid rgba(255,255,255,0.07); }
-    .dwell-dir-row { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; flex-wrap: wrap; }
+    .dwell-dir-row { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
     .dwell-dir-pill { font-size: 8px; font-weight: 700; padding: 1px 6px; border-radius: 8px; }
     .dwell-dir-hh { background: rgba(0,229,160,0.12); color: #00e5a0; }
     .dwell-dir-bh { background: rgba(255,159,67,0.12); color: #ff9f43; }
-    .dwell-dir-port { font-size: 9px; color: rgba(255,255,255,0.7); }
-    .dwell-dir-counts { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+    .dwell-pod-list { margin: 0 0 5px 0; }
+    .dwell-pod-row { display: flex; justify-content: space-between; align-items: center; padding: 1px 0; }
+    .dwell-pod-name { font-size: 9px; color: rgba(255,255,255,0.55); }
+    .dwell-pod-teu { font-family: 'Space Grotesk', sans-serif; font-size: 9.5px; font-weight: 700; color: var(--amber); }
+    .dwell-dir-counts { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
     .dwell-cnt { font-size: 10px; color: var(--muted); }
     .dwell-cnt span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--text); font-size: 11px; }
     .dwell-total-teu { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: var(--amber); }
@@ -2431,74 +2434,74 @@ const ports = [
   // ── TIER 1: MAJOR HUBS ───────────────────────────────────
   { tier:1, name:'Port of Singapore',       country:'🇸🇬 Singapore',              unlocode:'SG SIN', type:'Hub Port',      position:[1.26,103.82],   services:['SEA1','SEA2','SWS','EAS','ASA','GCS','AA2','WSA'], avgDelinquency:5.2,  delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:21, d2:{count:892}, d5:{count:634}, terminalOps:'PSA International',        dwell:'1.8 days avg', nextCall:'17 Apr 2025', pricing:{ thc20:'$185', thc40:'$285', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$48/day' }, dwellingLaden:[
     { service: 'SWS', directions: [
-      { dir:'HH', nextPort:'Tema',      teu20:142, teu40:87,
+      { dir:'HH', pods:[{port:'Tema',teu:148},{port:'Abidjan',teu:78},{port:'Apapa',teu:52},{port:'Colombo',teu:38}], teu20:142, teu40:87,
         vessels:[{ name:'Kota Layang', eta:'19 Apr', alloc:150 },{ name:'Kota Damai', eta:'24 Apr', alloc:150 },{ name:'Kota Gadang', eta:'29 Apr', alloc:150 }] },
-      { dir:'BH', nextPort:'Qingdao',   teu20:78,  teu40:53,
+      { dir:'BH', pods:[{port:'Qingdao',teu:98},{port:'Shanghai',teu:86}], teu20:78, teu40:53,
         vessels:[{ name:'Kota Ebony',  eta:'21 Apr', alloc:120 },{ name:'Kota Cempaka', eta:'26 Apr', alloc:120 },{ name:'Kota Oasis', eta:'30 Apr', alloc:120 }] },
     ]},
     { service: 'SEA1', directions: [
-      { dir:'HH', nextPort:'Durban',    teu20:94,  teu40:61,
+      { dir:'HH', pods:[{port:'Durban',teu:96},{port:'Cape Town',teu:60},{port:'Colombo',teu:38},{port:'Port Klang',teu:22}], teu20:94, teu40:61,
         vessels:[{ name:'Kota Cantik', eta:'22 Apr', alloc:120 },{ name:'Kota Cahaya', eta:'27 Apr', alloc:120 },{ name:'Kota Cepat', eta:'01 May', alloc:120 }] },
-      { dir:'BH', nextPort:'Shanghai',  teu20:112, teu40:74,
+      { dir:'BH', pods:[{port:'Shanghai',teu:176},{port:'Hong Kong',teu:84}], teu20:112, teu40:74,
         vessels:[{ name:'Kota Frontier', eta:'20 Apr', alloc:140 },{ name:'Kota Horizon', eta:'25 Apr', alloc:140 },{ name:'Kota Tenang', eta:'30 Apr', alloc:140 }] },
     ]},
     { service: 'EAS', directions: [
-      { dir:'HH', nextPort:'Mombasa',   teu20:67,  teu40:43,
+      { dir:'HH', pods:[{port:'Mombasa',teu:78},{port:'Colombo',teu:43},{port:'Dar es Salaam',teu:32}], teu20:67, teu40:43,
         vessels:[{ name:'Kota Impian', eta:'21 Apr', alloc:100 },{ name:'Kota Layang', eta:'27 Apr', alloc:100 },{ name:'Kota Setia', eta:'02 May', alloc:100 }] },
-      { dir:'BH', nextPort:'Port Klang',teu20:58,  teu40:39,
+      { dir:'BH', pods:[{port:'Port Klang',teu:136}], teu20:58, teu40:39,
         vessels:[{ name:'Kota Ebony',  eta:'23 Apr', alloc:100 },{ name:'Kota Gadang', eta:'28 Apr', alloc:100 },{ name:'Kota Damai', eta:'03 May', alloc:100 }] },
     ]},
     { service: 'GCS', directions: [
-      { dir:'HH', nextPort:'Jebel Ali', teu20:83,  teu40:52,
+      { dir:'HH', pods:[{port:'Jebel Ali',teu:72},{port:'Salalah',teu:48},{port:'Ad Dammam',teu:35},{port:'Colombo',teu:32}], teu20:83, teu40:52,
         vessels:[{ name:'Kota Eagle',  eta:'20 Apr', alloc:110 },{ name:'Kota Cepat', eta:'26 Apr', alloc:110 },{ name:'Kota Setia', eta:'01 May', alloc:110 }] },
-      { dir:'BH', nextPort:'Colombo',   teu20:71,  teu40:48,
+      { dir:'BH', pods:[{port:'Shanghai',teu:89},{port:'Qingdao',teu:78}], teu20:71, teu40:48,
         vessels:[{ name:'Kota Cantik', eta:'22 Apr', alloc:110 },{ name:'Kota Cahaya', eta:'28 Apr', alloc:110 },{ name:'Kota Cepat', eta:'03 May', alloc:110 }] },
     ]},
   ] },
   { tier:1, name:'Port of Shanghai',         country:'🇨🇳 Shanghai, China',         unlocode:'CN SHA', type:'Hub Port',      position:[31.23,121.47],  services:['CCS','JCS','AAS1','SEA1','WSA'],                        avgDelinquency:7.1,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:29, d2:{count:1140},d5:{count:820}, terminalOps:'SIPG / Yangshan',          dwell:'2.1 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$175', thc40:'$270', freeTime:'7 days', storage:'$18/TEU/day', reefer:'$42/day' } },
   { tier:1, name:'Port Klang',               country:'🇲🇾 Selangor, Malaysia',       unlocode:'MY PKG', type:'Hub Port',      position:[3.00,101.37],   services:['SEA1','SWS','EAS','GCS','AA2'],                       avgDelinquency:9.3,  delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:37, d2:{count:674}, d5:{count:412}, terminalOps:'Westports / Northport',    dwell:'2.4 days avg', nextCall:'19 Apr 2025', pricing:{ thc20:'$120', thc40:'$185', freeTime:'7 days', storage:'$14/TEU/day', reefer:'$38/day' }, dwellingLaden:[
     { service: 'SWS', directions: [
-      { dir:'HH', nextPort:'Tema',      teu20:108, teu40:64,
+      { dir:'HH', pods:[{port:'Tema',teu:124},{port:'Abidjan',teu:54},{port:'Apapa',teu:32},{port:'Colombo',teu:26}], teu20:108, teu40:64,
         vessels:[{ name:'Kota Layang', eta:'20 Apr', alloc:130 },{ name:'Kota Damai', eta:'25 Apr', alloc:130 },{ name:'Kota Gadang', eta:'30 Apr', alloc:130 }] },
-      { dir:'BH', nextPort:'Singapore', teu20:61,  teu40:38,
+      { dir:'BH', pods:[{port:'Singapore',teu:137}], teu20:61, teu40:38,
         vessels:[{ name:'Kota Ebony',  eta:'22 Apr', alloc:110 },{ name:'Kota Cempaka', eta:'27 Apr', alloc:110 },{ name:'Kota Oasis', eta:'01 May', alloc:110 }] },
     ]},
     { service: 'SEA1', directions: [
-      { dir:'HH', nextPort:'Colombo',   teu20:87,  teu40:56,
+      { dir:'HH', pods:[{port:'Durban',teu:98},{port:'Cape Town',teu:59},{port:'Colombo',teu:42}], teu20:87, teu40:56,
         vessels:[{ name:'Kota Cantik', eta:'23 Apr', alloc:120 },{ name:'Kota Cahaya', eta:'28 Apr', alloc:120 },{ name:'Kota Cepat', eta:'02 May', alloc:120 }] },
-      { dir:'BH', nextPort:'Singapore', teu20:93,  teu40:62,
+      { dir:'BH', pods:[{port:'Singapore',teu:98},{port:'Shanghai',teu:119}], teu20:93, teu40:62,
         vessels:[{ name:'Kota Frontier', eta:'21 Apr', alloc:130 },{ name:'Kota Horizon', eta:'26 Apr', alloc:130 },{ name:'Kota Tenang', eta:'01 May', alloc:130 }] },
     ]},
     { service: 'GCS', directions: [
-      { dir:'HH', nextPort:'Colombo',   teu20:72,  teu40:44,
+      { dir:'HH', pods:[{port:'Jebel Ali',teu:76},{port:'Colombo',teu:48},{port:'Salalah',teu:36}], teu20:72, teu40:44,
         vessels:[{ name:'Kota Eagle',  eta:'21 Apr', alloc:100 },{ name:'Kota Cepat', eta:'27 Apr', alloc:100 },{ name:'Kota Setia', eta:'02 May', alloc:100 }] },
     ]},
   ] },
   { tier:1, name:'Port of Colombo',          country:'🇱🇰 Colombo, Sri Lanka',       unlocode:'LK CMB', type:'Hub Port',      position:[6.95,79.85],    services:['SWS','EAS','GCS','RGS'],                              avgDelinquency:12.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:50, d2:{count:503}, d5:{count:291}, terminalOps:'JCT / SAGT',               dwell:'2.8 days avg', nextCall:'20 Apr 2025', pricing:{ thc20:'$130', thc40:'$200', freeTime:'5 days', storage:'$16/TEU/day', reefer:'$40/day' }, dwellingLaden:[
     { service: 'SWS', directions: [
-      { dir:'HH', nextPort:'Salalah',   teu20:96,  teu40:58,
+      { dir:'HH', pods:[{port:'Tema',teu:96},{port:'Abidjan',teu:48},{port:'Apapa',teu:26},{port:'Salalah',teu:42}], teu20:96, teu40:58,
         vessels:[{ name:'Kota Layang', eta:'21 Apr', alloc:120 },{ name:'Kota Damai', eta:'26 Apr', alloc:120 },{ name:'Kota Gadang', eta:'01 May', alloc:120 }] },
-      { dir:'BH', nextPort:'Port Klang',teu20:74,  teu40:46,
+      { dir:'BH', pods:[{port:'Port Klang',teu:86},{port:'Singapore',teu:80}], teu20:74, teu40:46,
         vessels:[{ name:'Kota Ebony',  eta:'23 Apr', alloc:110 },{ name:'Kota Cempaka', eta:'28 Apr', alloc:110 },{ name:'Kota Oasis', eta:'02 May', alloc:110 }] },
     ]},
     { service: 'GCS', directions: [
-      { dir:'HH', nextPort:'Salalah',   teu20:78,  teu40:49,
+      { dir:'HH', pods:[{port:'Jebel Ali',teu:70},{port:'Salalah',teu:62},{port:'Sohar',teu:44}], teu20:78, teu40:49,
         vessels:[{ name:'Kota Eagle',  eta:'22 Apr', alloc:110 },{ name:'Kota Cepat', eta:'27 Apr', alloc:110 },{ name:'Kota Setia', eta:'01 May', alloc:110 }] },
-      { dir:'BH', nextPort:'Singapore', teu20:52,  teu40:33,
+      { dir:'BH', pods:[{port:'Singapore',teu:118}], teu20:52, teu40:33,
         vessels:[{ name:'Kota Cantik', eta:'24 Apr', alloc:100 },{ name:'Kota Cahaya', eta:'29 Apr', alloc:100 },{ name:'Kota Cepat', eta:'03 May', alloc:100 }] },
     ]},
   ] },
   { tier:1, name:'Port of Jebel Ali',        country:'🇦🇪 Dubai, UAE',               unlocode:'AE JEA', type:'Hub Port',      position:[24.99,55.07],   services:['GCS','CSE','RGS'],                                     avgDelinquency:8.7,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:35, d2:{count:448}, d5:{count:326}, terminalOps:'DP World',                 dwell:'2.2 days avg', nextCall:'21 Apr 2025', pricing:{ thc20:'$210', thc40:'$320', freeTime:'7 days', storage:'$20/TEU/day', reefer:'$52/day' }, dwellingLaden:[
     { service: 'GCS', directions: [
-      { dir:'HH', nextPort:'Karachi',   teu20:88,  teu40:54,
+      { dir:'HH', pods:[{port:'Karachi',teu:88},{port:'Nhava Sheva',teu:62},{port:'Mundra',teu:46}], teu20:88, teu40:54,
         vessels:[{ name:'Kota Eagle',  eta:'22 Apr', alloc:120 },{ name:'Kota Cepat', eta:'27 Apr', alloc:120 },{ name:'Kota Setia', eta:'01 May', alloc:120 }] },
-      { dir:'BH', nextPort:'Colombo',   teu20:63,  teu40:41,
+      { dir:'BH', pods:[{port:'Colombo',teu:88},{port:'Singapore',teu:57}], teu20:63, teu40:41,
         vessels:[{ name:'Kota Cantik', eta:'24 Apr', alloc:110 },{ name:'Kota Cahaya', eta:'29 Apr', alloc:110 },{ name:'Kota Cepat', eta:'03 May', alloc:110 }] },
     ]},
     { service: 'CSE', directions: [
-      { dir:'HH', nextPort:'Karachi',   teu20:71,  teu40:44,
+      { dir:'HH', pods:[{port:'Karachi',teu:82},{port:'Nhava Sheva',teu:48},{port:'Mundra',teu:29}], teu20:71, teu40:44,
         vessels:[{ name:'Kota Impian', eta:'23 Apr', alloc:100 },{ name:'Kota Layang', eta:'28 Apr', alloc:100 },{ name:'Kota Setia', eta:'02 May', alloc:100 }] },
-      { dir:'BH', nextPort:'Salalah',   teu20:48,  teu40:29,
+      { dir:'BH', pods:[{port:'Salalah',teu:106}], teu20:48, teu40:29,
         vessels:[{ name:'Kota Ebony',  eta:'25 Apr', alloc:90  },{ name:'Kota Gadang', eta:'30 Apr', alloc:90  },{ name:'Kota Damai', eta:'04 May', alloc:90  }] },
     ]},
   ] },
@@ -2759,16 +2762,22 @@ function buildPortPopup(p) {
             <div class="vsl-load">${loadNum}<span class="vsl-cap">/${v.alloc} TEU</span></div>
           </div>`;
         }).join('');
+        const podsHtml = (d.pods || []).map(pod =>
+          `<div class="dwell-pod-row">
+            <span class="dwell-pod-name">${pod.port}</span>
+            <span class="dwell-pod-teu">${pod.teu} TEU</span>
+          </div>`
+        ).join('');
         return `<div class="dwell-dir-block">
           <div class="dwell-dir-row">
             <span class="dwell-dir-pill dwell-dir-${d.dir.toLowerCase()}">${d.dir === 'HH' ? 'Headhaul' : 'Backhaul'}</span>
-            <span class="dwell-dir-port">→ ${d.nextPort}</span>
-            <div class="dwell-dir-counts">
-              <span style="font-size:8px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;">Dwell:</span>
-              <span class="dwell-cnt"><span>${d.teu20}</span> x 20'</span>
-              <span class="dwell-cnt"><span>${d.teu40}</span> x 40'</span>
-              <span class="dwell-total-teu">${totalTeu} TEU</span>
-            </div>
+          </div>
+          <div class="dwell-pod-list">${podsHtml}</div>
+          <div class="dwell-dir-counts">
+            <span style="font-size:8px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;">Dwell:</span>
+            <span class="dwell-cnt"><span>${d.teu20}</span> x 20'</span>
+            <span class="dwell-cnt"><span>${d.teu40}</span> x 40'</span>
+            <span class="dwell-total-teu">${totalTeu} TEU</span>
           </div>
           <div class="vsl-cards">${vesselCards}</div>
         </div>`;
