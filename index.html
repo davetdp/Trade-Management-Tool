@@ -469,7 +469,7 @@
     .dwell-svc-summary { margin-bottom: 8px; }
     .dwell-svc-summary:last-child { margin-bottom: 0; }
     .dwell-svc-summary-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-    .dwell-tbl-hdr, .dwell-tbl-row { display: grid; grid-template-columns: 30px 1fr 1fr 1fr; align-items: center; gap: 4px; padding: 2px 4px; }
+    .dwell-tbl-hdr, .dwell-tbl-row { display: grid; grid-template-columns: 30px 1fr 1.1fr 1fr; align-items: center; gap: 4px; padding: 2px 4px; }
     .dwell-tbl-hdr { font-size: 7.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; padding-bottom: 3px; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 2px; }
     .dwell-tbl-alt { background: rgba(255,255,255,0.03); border-radius: 4px; }
     .dwell-tbl-teu { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--amber); }
@@ -2910,7 +2910,7 @@ function buildPortPopup(p) {
                 <button class="dwell-expand-btn" onclick="toggleDwellSvc(this)" title="Show detail">+</button>
               </div>
               <div class="dwell-tbl-hdr">
-                <span>Dir</span><span>TEU</span><span>Sailings</span><span>Clear By</span>
+                <span>Dir</span><span>Dwell (TEU)</span><span>Req. Sailings</span><span>Clear By</span>
               </div>
               ${dirRowsHtml}
               <div class="dwell-svc-detail" style="display:none;">
