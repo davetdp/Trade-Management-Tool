@@ -1786,16 +1786,26 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
   // single survivor is then cancelled by cancelClose() / the move guard.
   function scheduleClose() { clearTimeout(_closeTimer); _closeTimer = setTimeout(() => marker.closePopup(), 700); }
 
-  // While the mouse might be crossing the gap between marker and popup,
-  // keep watching cursor position; cancel close whenever it's within 28px of
-  // the popup bounding box. Cleaned up when popup closes or new hover starts.
+  // Bridge the gap between marker and popup: while the mouse is in transit
+  // (within 28px of the popup), keep cancelling the close timer.
+  // As soon as the mouse actually enters the popup, stop the guard and let
+  // the popup's own mouseenter/mouseleave take over — otherwise the 28px
+  // margin keeps the popup alive even when the user moves far away.
   function startMoveGuard() {
     if (_moveGuard) document.removeEventListener('mousemove', _moveGuard);
     _moveGuard = function(e) {
       const popEl = popup.getElement();
       if (!popEl || !popEl.isConnected) { stopMoveGuard(); return; }
       const r = popEl.getBoundingClientRect();
-      const M = 28;  // margin px — generously covers any gap or scrollbar edge
+      // Mouse is strictly inside the popup — hand off to mouseenter/mouseleave
+      if (e.clientX >= r.left && e.clientX <= r.right &&
+          e.clientY >= r.top  && e.clientY <= r.bottom) {
+        cancelClose();
+        stopMoveGuard();
+        return;
+      }
+      // Mouse is in the gap between marker and popup edge — keep alive
+      const M = 28;
       if (e.clientX >= r.left - M && e.clientX <= r.right  + M &&
           e.clientY >= r.top  - M && e.clientY <= r.bottom + M) {
         cancelClose();
