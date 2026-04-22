@@ -1521,12 +1521,12 @@ const vessels = [
     },
   },
   {
-    // EAS — south Indian Ocean, southbound toward Mombasa / Dar es Salaam
+    // EAS — Indian Ocean, westbound toward Mombasa
     name: 'Kota Ebony',
     vvd: 'KEBO0034S',
     position: [-4.6, 53.1],
     service: 'EAS',
-    route: 'Singapore → Colombo → Mombasa → Dar es Salaam → Nacala',
+    route: 'Qingdao → Shanghai → Ningbo → Nansha → Singapore → Port Kelang → Mombasa',
     nextPort: 'Mombasa',
     status: 'On route to Mombasa',
     badgeClass: 'badge-transit', leg: 'Headhaul',
@@ -1549,15 +1549,15 @@ const vessels = [
     util: 84,
     utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)',
     topFlows: [
-      { pol:'Singapore',  pod:'Mombasa',        teu: 2540, rate20:'$1,280', rate40:'$2,220', avgWt:'11.6t', ratePerTon:'$110' },
-      { pol:'Colombo',    pod:'Dar es Salaam',  teu: 1980, rate20:'$1,140', rate40:'$1,980', avgWt:'10.8t', ratePerTon:'$106' },
-      { pol:'Colombo',    pod:'Mombasa',        teu: 1620, rate20:'$1,320', rate40:'$2,280', avgWt:'12.0t', ratePerTon:'$110' },
+      { pol:'Singapore',   pod:'Mombasa', teu: 2540, rate20:'$1,280', rate40:'$2,220', avgWt:'11.6t', ratePerTon:'$110' },
+      { pol:'Nansha',      pod:'Mombasa', teu: 1980, rate20:'$1,140', rate40:'$1,980', avgWt:'10.8t', ratePerTon:'$106' },
+      { pol:'Port Kelang', pod:'Mombasa', teu: 1620, rate20:'$1,320', rate40:'$2,280', avgWt:'12.0t', ratePerTon:'$110' },
     ],
     pr: {
       rates: [
-        { pol:'Singapore',  pod:'Mombasa',        rate:'$1,540', vs:'+7% mkt',  vsClass:'pr-vs-up'   },
-        { pol:'Colombo',    pod:'Dar es Salaam',  rate:'$1,320', vs:'At mkt',   vsClass:'pr-vs-flat' },
-        { pol:'Port Klang', pod:'Mombasa',        rate:'$1,480', vs:'+4% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Singapore',   pod:'Mombasa', rate:'$1,540', vs:'+7% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Nansha',      pod:'Mombasa', rate:'$1,320', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Port Kelang', pod:'Mombasa', rate:'$1,480', vs:'+4% mkt',  vsClass:'pr-vs-up'   },
       ],
       thc20:'$190', thc40:'$290', freeTime:'5 days', storage:'$20/TEU/day'
     },
@@ -2517,9 +2517,9 @@ const ports = [
         vessels:[{ name:'Kota Frontier', eta:'20 Apr', alloc:140 },{ name:'Kota Horizon', eta:'25 Apr', alloc:140 },{ name:'Kota Tenang', eta:'30 Apr', alloc:140 }] },
     ]},
     { service: 'EAS', directions: [
-      { dir:'HH', pods:[{port:'Mombasa',teu:78},{port:'Colombo',teu:43},{port:'Dar es Salaam',teu:32}], teu20:67, teu40:43,
+      { dir:'HH', pods:[{port:'Mombasa',teu:153}], teu20:67, teu40:43,
         vessels:[{ name:'Kota Impian', eta:'21 Apr', alloc:100 },{ name:'Kota Layang', eta:'27 Apr', alloc:100 },{ name:'Kota Setia', eta:'02 May', alloc:100 }] },
-      { dir:'BH', pods:[{port:'Port Klang',teu:136}], teu20:58, teu40:39,
+      { dir:'BH', pods:[{port:'Singapore',teu:82},{port:'Nansha',teu:54}], teu20:58, teu40:39,
         vessels:[{ name:'Kota Ebony',  eta:'23 Apr', alloc:100 },{ name:'Kota Gadang', eta:'28 Apr', alloc:100 },{ name:'Kota Damai', eta:'03 May', alloc:100 }] },
     ]},
     { service: 'GCS', directions: [
