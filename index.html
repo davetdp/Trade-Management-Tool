@@ -1699,7 +1699,7 @@ let _closeTimer = null;
 function bindSmartPopup(marker, popup, popupW, popupH) {
   const pad   = 16;   // min gap from map edge (px)
   const mHalf = 20;   // half of vessel icon size (px)
-  const gap   = 8;    // gap between icon edge and popup
+  const gap   = 2;    // gap between icon edge and popup
 
   // ── Step 1: score all 4 directions, pick the one with most surplus space ──
   function applyOffset(h) {
@@ -1751,7 +1751,7 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
     popup.options.offset = L.point(ox, oy);
   }
 
-  function scheduleClose() { _closeTimer = setTimeout(() => marker.closePopup(), 200); }
+  function scheduleClose() { _closeTimer = setTimeout(() => marker.closePopup(), 600); }
   function cancelClose()   { clearTimeout(_closeTimer); }
 
   marker.on('mouseover', () => { cancelClose(); applyOffset(); marker.openPopup(); });
