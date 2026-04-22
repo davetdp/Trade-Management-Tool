@@ -473,8 +473,8 @@
     .vsl-ship-svg { display: block; margin: 0 auto 2px; }
     .vsl-name { font-size: 6.5px; color: rgba(255,255,255,0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 1px; padding: 0 2px; }
     .vsl-eta  { font-size: 6.5px; color: var(--muted); margin-bottom: 1px; }
-    .vsl-load { font-family: 'Space Grotesk', sans-serif; font-size: 8.5px; font-weight: 700; color: var(--vc); margin-bottom: 1px; }
-    .vsl-alloc { font-size: 6px; color: var(--muted); }
+    .vsl-load { font-family: 'Space Grotesk', sans-serif; font-size: 8.5px; font-weight: 700; color: var(--vc); }
+    .vsl-cap  { font-family: 'Space Grotesk', sans-serif; font-size: 8.5px; font-weight: 500; color: #3d4f5e; }
 
     /* ── CARGOFLOW / PRICING POPUP SECTIONS ── */
     .cf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px; }
@@ -2712,13 +2712,12 @@ function buildPortPopup(p) {
           const pct  = v.alloc > 0 ? load / v.alloc : 0;
           const color = pct > 0.70 ? '#ff4d6a' : pct > 0.30 ? '#ffb830' : '#00e5a0';
           remaining -= load;
-          const loadLabel = load > 0 ? load + ' TEU' : '— TEU';
+          const loadNum = load > 0 ? load : '—';
           return `<div class="vsl-card" style="--vc:${color}">
             ${shipSvg(color)}
             <div class="vsl-name">${v.name}</div>
             <div class="vsl-eta">${v.eta}</div>
-            <div class="vsl-load">${loadLabel}</div>
-            <div class="vsl-alloc">Cap: ${v.alloc} TEU</div>
+            <div class="vsl-load">${loadNum}<span class="vsl-cap">/${v.alloc} TEU</span></div>
           </div>`;
         }).join('');
         return `<div class="dwell-dir-block">
