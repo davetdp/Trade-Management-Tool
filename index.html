@@ -353,7 +353,7 @@
 
     /* ── PORT POPUP CARD ── */
     .port-popup {
-      width: 235px;
+      width: 270px;
       background: rgba(20, 12, 3, 0.94);
       border: 1px solid rgba(255,184,48,0.25);
       border-radius: 11px;
@@ -408,6 +408,78 @@
     .port-detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .port-detail-label { font-size: 10px; color: var(--muted); }
     .port-detail-value { font-size: 10px; font-weight: 600; color: var(--text); }
+
+    /* ── USE-CASE TOGGLE ── */
+    .usecase-toggle {
+      position: absolute;
+      top: 10px;
+      right: 48px;
+      z-index: 1000;
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+    .uc-btn {
+      padding: 6px 13px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.4px;
+      transition: all 0.18s;
+      font-family: 'Inter', sans-serif;
+    }
+    .uc-btn:not(:last-child) { border-right: 1px solid var(--border); }
+    .uc-btn.active { background: rgba(0,180,255,0.15); color: var(--accent); }
+    .uc-btn:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
+
+    /* ── MODE VISIBILITY ── */
+    .popup-mode-pnl, .popup-mode-cargoflow, .popup-mode-pricing { display: none; }
+    body.mode-pnl .popup-mode-pnl { display: block; }
+    body.mode-cargoflow .popup-mode-cargoflow { display: block; }
+    body.mode-pricing .popup-mode-pricing { display: block; }
+
+    /* ── LADEN DWELLING TABLE ── */
+    .dwell-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+    .dwell-th { font-size: 8px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; padding-bottom: 4px; }
+    .dwell-th:nth-child(4), .dwell-th:nth-child(5) { text-align: right; }
+    .dwell-th:nth-child(3) { padding-left: 4px; }
+    .dwell-td { font-size: 9px; padding: 3px 0; border-top: 1px solid rgba(255,184,48,0.06); vertical-align: middle; }
+    .dwell-td:nth-child(3) { padding-left: 4px; }
+    .dwell-td:nth-child(4), .dwell-td:nth-child(5) { text-align: right; }
+    .dwell-svc { display: inline-block; background: rgba(0,180,255,0.12); border: 1px solid rgba(0,180,255,0.22); color: #00b4ff; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 8px; letter-spacing: 0.3px; }
+    .dwell-dir { font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 8px; }
+    .dwell-dir-hh { background: rgba(0,229,160,0.12); color: #00e5a0; }
+    .dwell-dir-bh { background: rgba(255,159,67,0.12); color: #ff9f43; }
+    .dwell-port { font-size: 9px; color: rgba(255,255,255,0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; }
+    .dwell-num  { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--text); }
+
+    /* ── CARGOFLOW / PRICING POPUP SECTIONS ── */
+    .cf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px; }
+    .cf-card { background: rgba(0,180,255,0.06); border: 1px solid rgba(0,180,255,0.15); border-radius: 6px; padding: 5px 6px; text-align: center; }
+    .cf-card-label { font-size: 8px; color: var(--muted); margin-bottom: 2px; }
+    .cf-card-val { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
+    .cf-card-sub { font-size: 8px; color: var(--muted); margin-top: 1px; }
+    .flow-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .flow-route { font-size: 9px; color: rgba(255,255,255,0.75); }
+    .flow-teu { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--accent); }
+    .pr-rate-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .pr-route { font-size: 9px; color: rgba(255,255,255,0.75); }
+    .pr-rate { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--text); }
+    .pr-vs { font-size: 8px; font-weight: 600; padding: 1px 5px; border-radius: 8px; }
+    .pr-vs-up   { background: rgba(0,229,160,0.12); color: #00e5a0; }
+    .pr-vs-down { background: rgba(255,77,106,0.12); color: #ff4d6a; }
+    .pr-vs-flat { background: rgba(255,184,48,0.12); color: #ffb830; }
+    .pr-cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px; }
+    .pr-cost-card { background: rgba(255,184,48,0.05); border: 1px solid rgba(255,184,48,0.12); border-radius: 6px; padding: 5px 7px; }
+    .pr-cost-label { font-size: 8px; color: var(--muted); margin-bottom: 2px; }
+    .pr-cost-val { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700; color: var(--amber); }
+    .pr-cost-sub { font-size: 8px; color: var(--muted); margin-top: 1px; }
 
     /* ── P&L ANALYTICS PANEL ── */
     #pnl-panel {
@@ -747,6 +819,11 @@
   <div class="map-mode-toggle">
     <button class="map-mode-btn active" id="btnDark"  onclick="setMapMode('dark')">🌙 Dark</button>
     <button class="map-mode-btn"        id="btnLight" onclick="setMapMode('light')">☀️ Light</button>
+  </div>
+  <div class="usecase-toggle">
+    <button class="uc-btn active" id="ucPnl"       onclick="setUseCase('pnl')">P&amp;L</button>
+    <button class="uc-btn"        id="ucCargoflow"  onclick="setUseCase('cargoflow')">Cargoflow</button>
+    <button class="uc-btn"        id="ucPricing"    onclick="setUseCase('pricing')">Pricing</button>
   </div>
 </div>
 <div id="map-glow"></div>
@@ -1127,6 +1204,20 @@ function setMapMode(mode) {
   activeTileLayer.bringToBack();
 }
 
+// ── USE-CASE TOGGLE ──────────────────────────────────────────
+let currentMode = 'pnl';
+document.body.classList.add('mode-pnl');
+
+function setUseCase(mode) {
+  currentMode = mode;
+  document.body.classList.remove('mode-pnl','mode-cargoflow','mode-pricing');
+  document.body.classList.add('mode-' + mode);
+  document.querySelectorAll('.uc-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('uc' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
+  const labels = { pnl: 'Profit \u0026 Loss', cargoflow: 'Cargoflow', pricing: 'Pricing' };
+  document.querySelector('.nav-title-sub').textContent = labels[mode];
+}
+
 // ── VESSEL DATA ─────────────────────────────────────────────
 const vessels = [
   {
@@ -1155,7 +1246,20 @@ const vessels = [
     port: 'USD 0.38M',
     crew: 'USD 0.27M',
     util: 88,
-    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
+    topFlows: [
+      { pol:'Shanghai',   pod:'Cape Town',  teu: 3240 },
+      { pol:'Singapore',  pod:'Durban',     teu: 2180 },
+      { pol:'Port Klang', pod:'Cape Town',  teu: 1840 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Shanghai',   pod:'Cape Town',  rate:'$1,650', vs:'+8% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Singapore',  pod:'Durban',     rate:'$1,420', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Port Klang', pod:'Cape Town',  rate:'$1,380', vs:'−3% mkt',  vsClass:'pr-vs-down' },
+      ],
+      thc20:'$185', thc40:'$285', freeTime:'7 days', storage:'$18/TEU/day'
+    },
   },
   {
     name: 'Kota Cahaya',
@@ -1183,7 +1287,20 @@ const vessels = [
     port: 'USD 0.52M',
     crew: 'USD 0.24M',
     util: 84,
-    utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)',
+    topFlows: [
+      { pol:'Singapore',  pod:'Fremantle', teu: 2640 },
+      { pol:'Port Klang', pod:'Sydney',    teu: 1980 },
+      { pol:'Singapore',  pod:'Melbourne', teu: 1840 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Singapore',  pod:'Fremantle', rate:'$1,120', vs:'+5% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Port Klang', pod:'Sydney',    rate:'$1,280', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Singapore',  pod:'Melbourne', rate:'$1,210', vs:'−2% mkt',  vsClass:'pr-vs-down' },
+      ],
+      thc20:'$210', thc40:'$310', freeTime:'5 days', storage:'$22/TEU/day'
+    },
   },
   {
     name: 'Kota Cempaka',
@@ -1211,7 +1328,20 @@ const vessels = [
     port: 'USD 0.61M',
     crew: 'USD 0.29M',
     util: 86,
-    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
+    topFlows: [
+      { pol:'Singapore',  pod:'Shanghai',  teu: 3840 },
+      { pol:'Ho Chi Minh',pod:'Ningbo',    teu: 2960 },
+      { pol:'Manila',     pod:'Shanghai',  teu: 2190 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Singapore',  pod:'Shanghai',  rate:'$880',  vs:'+12% mkt', vsClass:'pr-vs-up'   },
+        { pol:'Ho Chi Minh',pod:'Ningbo',    rate:'$760',  vs:'+4% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Manila',     pod:'Shanghai',  rate:'$820',  vs:'At mkt',   vsClass:'pr-vs-flat' },
+      ],
+      thc20:'$165', thc40:'$250', freeTime:'7 days', storage:'$15/TEU/day'
+    },
   },
   {
     name: 'Kota Cepat',
@@ -1239,7 +1369,20 @@ const vessels = [
     port: 'USD 0.44M',
     crew: 'USD 0.26M',
     util: 89,
-    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
+    topFlows: [
+      { pol:'Port Klang', pod:'Jebel Ali', teu: 2980 },
+      { pol:'Singapore',  pod:'Salalah',   teu: 2140 },
+      { pol:'Port Klang', pod:'Colombo',   teu: 1620 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Port Klang', pod:'Jebel Ali', rate:'$1,340', vs:'+6% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Singapore',  pod:'Salalah',   rate:'$1,180', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Port Klang', pod:'Colombo',   rate:'$920',   vs:'−4% mkt',  vsClass:'pr-vs-down' },
+      ],
+      thc20:'$170', thc40:'$260', freeTime:'7 days', storage:'$16/TEU/day'
+    },
   },
   {
     // CSE — mid-Arabian Sea, northbound toward Salalah → Muscat → Jebel Ali
@@ -1268,7 +1411,20 @@ const vessels = [
     port: 'USD 0.42M',
     crew: 'USD 0.28M',
     util: 86,
-    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
+    topFlows: [
+      { pol:'Singapore',  pod:'Jebel Ali', teu: 3120 },
+      { pol:'Colombo',    pod:'Salalah',   teu: 2480 },
+      { pol:'Singapore',  pod:'Muscat',    teu: 1960 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Singapore',  pod:'Jebel Ali', rate:'$1,480', vs:'+9% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Colombo',    pod:'Salalah',   rate:'$1,220', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Singapore',  pod:'Muscat',    rate:'$1,310', vs:'+3% mkt',  vsClass:'pr-vs-up'   },
+      ],
+      thc20:'$175', thc40:'$265', freeTime:'7 days', storage:'$17/TEU/day'
+    },
   },
   {
     // GCS — Arabian Sea, northbound toward Port of Sohar
@@ -1297,7 +1453,20 @@ const vessels = [
     port: 'USD 0.36M',
     crew: 'USD 0.22M',
     util: 89,
-    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
+    topFlows: [
+      { pol:'Singapore',  pod:'Sohar',     teu: 2740 },
+      { pol:'Port Klang', pod:'Jebel Ali', teu: 2180 },
+      { pol:'Colombo',    pod:'Sohar',     teu: 1620 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Singapore',  pod:'Sohar',     rate:'$1,260', vs:'+5% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Port Klang', pod:'Jebel Ali', rate:'$1,320', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Colombo',    pod:'Sohar',     rate:'$1,080', vs:'−2% mkt',  vsClass:'pr-vs-down' },
+      ],
+      thc20:'$160', thc40:'$245', freeTime:'7 days', storage:'$15/TEU/day'
+    },
   },
   {
     // EAS — south Indian Ocean, southbound toward Mombasa / Dar es Salaam
@@ -1326,7 +1495,20 @@ const vessels = [
     port: 'USD 0.40M',
     crew: 'USD 0.25M',
     util: 84,
-    utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)',
+    topFlows: [
+      { pol:'Singapore',  pod:'Mombasa',        teu: 2540 },
+      { pol:'Colombo',    pod:'Dar es Salaam',  teu: 1980 },
+      { pol:'Port Klang', pod:'Mombasa',        teu: 1620 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Singapore',  pod:'Mombasa',        rate:'$1,540', vs:'+7% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Colombo',    pod:'Dar es Salaam',  rate:'$1,320', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Port Klang', pod:'Mombasa',        rate:'$1,480', vs:'+4% mkt',  vsClass:'pr-vs-up'   },
+      ],
+      thc20:'$190', thc40:'$290', freeTime:'5 days', storage:'$20/TEU/day'
+    },
   },
   {
     // WSA — mid-Pacific Ocean, eastbound toward Callao / San Antonio
@@ -1355,7 +1537,20 @@ const vessels = [
     port: 'USD 0.48M',
     crew: 'USD 0.31M',
     util: 89,
-    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
+    topFlows: [
+      { pol:'Yantian',    pod:'Callao',      teu: 3480 },
+      { pol:'Singapore',  pod:'San Antonio', teu: 2760 },
+      { pol:'Yantian',    pod:'Valparaíso',  teu: 2210 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Yantian',    pod:'Callao',      rate:'$1,920', vs:'+6% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Singapore',  pod:'San Antonio', rate:'$2,080', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Yantian',    pod:'Valparaíso',  rate:'$1,980', vs:'−1% mkt',  vsClass:'pr-vs-down' },
+      ],
+      thc20:'$195', thc40:'$295', freeTime:'7 days', storage:'$19/TEU/day'
+    },
   },
   {
     // MSP — mid-Pacific, eastbound between Noumea and Suva
@@ -1384,7 +1579,20 @@ const vessels = [
     port: 'USD 0.22M',
     crew: 'USD 0.18M',
     util: 82,
-    utilColor: 'linear-gradient(90deg,#0066cc,#ec4899)'
+    utilColor: 'linear-gradient(90deg,#0066cc,#ec4899)',
+    topFlows: [
+      { pol:'Singapore',  pod:'Noumea', teu: 1240 },
+      { pol:'Sydney',     pod:'Suva',   teu: 980  },
+      { pol:'Singapore',  pod:'Suva',   teu: 860  },
+    ],
+    pr: {
+      rates: [
+        { pol:'Singapore',  pod:'Noumea', rate:'$1,640', vs:'+4% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Sydney',     pod:'Suva',   rate:'$1,480', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Singapore',  pod:'Suva',   rate:'$1,560', vs:'+2% mkt',  vsClass:'pr-vs-up'   },
+      ],
+      thc20:'$200', thc40:'$305', freeTime:'5 days', storage:'$21/TEU/day'
+    },
   },
   {
     // ES1 — mid-South Atlantic, backhaul northbound Santos → Singapore
@@ -1413,7 +1621,20 @@ const vessels = [
     port: 'USD 0.42M',
     crew: 'USD 0.31M',
     util: 58,
-    utilColor: 'linear-gradient(90deg,#a78bfa,#6d28d9)'
+    utilColor: 'linear-gradient(90deg,#a78bfa,#6d28d9)',
+    topFlows: [
+      { pol:'Santos',     pod:'Singapore',  teu: 2180 },
+      { pol:'Montevideo', pod:'Port Klang', teu: 1640 },
+      { pol:'Navegantes', pod:'Singapore',  teu: 1420 },
+    ],
+    pr: {
+      rates: [
+        { pol:'Santos',     pod:'Singapore',  rate:'$1,280', vs:'+3% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Montevideo', pod:'Port Klang', rate:'$1,180', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Navegantes', pod:'Singapore',  rate:'$1,240', vs:'−2% mkt',  vsClass:'pr-vs-down' },
+      ],
+      thc20:'$185', thc40:'$280', freeTime:'7 days', storage:'$18/TEU/day'
+    },
   },
   {
     // Dry Dock — Sembawang Shipyard, Singapore
@@ -1660,54 +1881,161 @@ function buildPopup(v, laneColor) {
       <span class="popup-badge ${v.badgeClass}">${v.status}</span>
     </div>
     <div class="popup-body">
-      <div class="popup-section-title">Profit & Loss — Current Voyage</div>
-      <div class="pnl-grid">
-        <div class="pnl-item">
-          <div class="pnl-item-label">${v.revenue.label}</div>
-          <div class="pnl-item-value" style="color:${v.revenue.color}">${v.revenue.value}</div>
+
+      <!-- ── P&L MODE ── -->
+      <div class="popup-mode-pnl">
+        <div class="popup-section-title">Profit &amp; Loss — Current Voyage</div>
+        <div class="pnl-grid">
+          <div class="pnl-item">
+            <div class="pnl-item-label">${v.revenue.label}</div>
+            <div class="pnl-item-value" style="color:${v.revenue.color}">${v.revenue.value}</div>
+          </div>
+          <div class="pnl-item">
+            <div class="pnl-item-label">${v.costs.label}</div>
+            <div class="pnl-item-value" style="color:${v.costs.color}">${v.costs.value}</div>
+          </div>
+          <div class="pnl-item">
+            <div class="pnl-item-label">${v.profit.label}</div>
+            <div class="pnl-item-value" style="color:${v.profit.color}">${v.profit.value}</div>
+          </div>
+          <div class="pnl-item">
+            <div class="pnl-item-label">${v.margin.label}</div>
+            <div class="pnl-item-value" style="color:${v.margin.color}">${v.margin.value}</div>
+          </div>
         </div>
-        <div class="pnl-item">
-          <div class="pnl-item-label">${v.costs.label}</div>
-          <div class="pnl-item-value" style="color:${v.costs.color}">${v.costs.value}</div>
+        <div class="popup-section-title">Cost Breakdown</div>
+        <div class="detail-table">
+          <div class="detail-row"><span class="detail-label">Fuel &amp; Bunker</span><span class="detail-value">${v.fuel}</span></div>
+          <div class="detail-row"><span class="detail-label">Port Charges</span><span class="detail-value">${v.port}</span></div>
+          <div class="detail-row"><span class="detail-label">Crew &amp; Operations</span><span class="detail-value">${v.crew}</span></div>
         </div>
-        <div class="pnl-item">
-          <div class="pnl-item-label">${v.profit.label}</div>
-          <div class="pnl-item-value" style="color:${v.profit.color}">${v.profit.value}</div>
+        <div class="popup-divider"></div>
+        <div class="popup-section-title">Vessel Details</div>
+        <div class="detail-table">
+          <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
+          <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
+          <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
+          <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
+          <div class="detail-row"><span class="detail-label">Heading</span><span class="detail-value">${v.heading}</span></div>
+          <div class="detail-row"><span class="detail-label">ETA / Status</span><span class="detail-value">${v.eta}</span></div>
         </div>
-        <div class="pnl-item">
-          <div class="pnl-item-label">${v.margin.label}</div>
-          <div class="pnl-item-value" style="color:${v.margin.color}">${v.margin.value}</div>
+        <div class="utilization-bar-wrap">
+          <div class="util-label-row">
+            <span class="util-label">Container Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
+            <span class="util-pct">${v.util}%</span>
+          </div>
+          <div class="util-track">
+            <div class="util-fill" style="width:${v.util}%; background:${v.utilColor}"></div>
+          </div>
         </div>
       </div>
 
-      <div class="popup-section-title">Cost Breakdown</div>
-      <div class="detail-table">
-        <div class="detail-row"><span class="detail-label">Fuel &amp; Bunker</span><span class="detail-value">${v.fuel}</span></div>
-        <div class="detail-row"><span class="detail-label">Port Charges</span><span class="detail-value">${v.port}</span></div>
-        <div class="detail-row"><span class="detail-label">Crew &amp; Operations</span><span class="detail-value">${v.crew}</span></div>
-      </div>
-
-      <div class="popup-divider"></div>
-
-      <div class="popup-section-title">Vessel Details</div>
-      <div class="detail-table">
-        <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
-        <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
-        <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
-        <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
-        <div class="detail-row"><span class="detail-label">Heading</span><span class="detail-value">${v.heading}</span></div>
-        <div class="detail-row"><span class="detail-label">ETA / Status</span><span class="detail-value">${v.eta}</span></div>
-      </div>
-
-      <div class="utilization-bar-wrap">
-        <div class="util-label-row">
-          <span class="util-label">Container Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
-          <span class="util-pct">${v.util}%</span>
+      <!-- ── CARGOFLOW MODE ── -->
+      <div class="popup-mode-cargoflow">
+        <div class="popup-section-title">Cargo Manifest</div>
+        <div class="cf-grid">
+          <div class="cf-card">
+            <div class="cf-card-label">20' Laden</div>
+            <div class="cf-card-val">${Math.round(v.teuLoaded*0.40).toLocaleString()}</div>
+            <div class="cf-card-sub">boxes</div>
+          </div>
+          <div class="cf-card">
+            <div class="cf-card-label">40' Laden</div>
+            <div class="cf-card-val">${Math.round(v.teuLoaded*0.30).toLocaleString()}</div>
+            <div class="cf-card-sub">boxes</div>
+          </div>
+          <div class="cf-card">
+            <div class="cf-card-label">20' Empty</div>
+            <div class="cf-card-val">${Math.round((v.teu-v.teuLoaded)*0.50).toLocaleString()}</div>
+            <div class="cf-card-sub">boxes</div>
+          </div>
+          <div class="cf-card">
+            <div class="cf-card-label">40' Empty</div>
+            <div class="cf-card-val">${Math.round((v.teu-v.teuLoaded)*0.25).toLocaleString()}</div>
+            <div class="cf-card-sub">boxes</div>
+          </div>
         </div>
-        <div class="util-track">
-          <div class="util-fill" style="width:${v.util}%; background:${v.utilColor}"></div>
+        <div class="popup-section-title">Top Port-to-Port Flows</div>
+        ${v.topFlows.map(f => `
+        <div class="flow-row">
+          <span class="flow-route">${f.pol} → ${f.pod}</span>
+          <span class="flow-teu">${f.teu.toLocaleString()} TEU</span>
+        </div>`).join('')}
+        <div class="popup-divider"></div>
+        <div class="popup-section-title">Vessel Details</div>
+        <div class="detail-table">
+          <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
+          <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
+          <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
+          <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
+          <div class="detail-row"><span class="detail-label">Heading</span><span class="detail-value">${v.heading}</span></div>
+          <div class="detail-row"><span class="detail-label">ETA / Status</span><span class="detail-value">${v.eta}</span></div>
+        </div>
+        <div class="utilization-bar-wrap">
+          <div class="util-label-row">
+            <span class="util-label">Container Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
+            <span class="util-pct">${v.util}%</span>
+          </div>
+          <div class="util-track">
+            <div class="util-fill" style="width:${v.util}%; background:${v.utilColor}"></div>
+          </div>
         </div>
       </div>
+
+      <!-- ── PRICING MODE ── -->
+      <div class="popup-mode-pricing">
+        <div class="popup-section-title">Freight Rates — This Voyage</div>
+        ${v.pr.rates.map(r => `
+        <div class="pr-rate-row">
+          <span class="pr-route">${r.pol} → ${r.pod}</span>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span class="pr-rate">${r.rate}</span>
+            <span class="pr-vs ${r.vsClass}">${r.vs}</span>
+          </div>
+        </div>`).join('')}
+        <div class="popup-section-title" style="margin-top:8px;">Port Cost Indicators</div>
+        <div class="pr-cost-grid">
+          <div class="pr-cost-card">
+            <div class="pr-cost-label">THC 20'</div>
+            <div class="pr-cost-val">${v.pr.thc20}</div>
+            <div class="pr-cost-sub">Next port</div>
+          </div>
+          <div class="pr-cost-card">
+            <div class="pr-cost-label">THC 40'</div>
+            <div class="pr-cost-val">${v.pr.thc40}</div>
+            <div class="pr-cost-sub">Next port</div>
+          </div>
+          <div class="pr-cost-card">
+            <div class="pr-cost-label">Free Time</div>
+            <div class="pr-cost-val">${v.pr.freeTime}</div>
+            <div class="pr-cost-sub">Storage free</div>
+          </div>
+          <div class="pr-cost-card">
+            <div class="pr-cost-label">Storage</div>
+            <div class="pr-cost-val" style="font-size:10px;">${v.pr.storage}</div>
+            <div class="pr-cost-sub">After free days</div>
+          </div>
+        </div>
+        <div class="popup-divider"></div>
+        <div class="popup-section-title">Vessel Details</div>
+        <div class="detail-table">
+          <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
+          <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
+          <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
+          <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
+          <div class="detail-row"><span class="detail-label">ETA / Status</span><span class="detail-value">${v.eta}</span></div>
+        </div>
+        <div class="utilization-bar-wrap">
+          <div class="util-label-row">
+            <span class="util-label">Container Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
+            <span class="util-pct">${v.util}%</span>
+          </div>
+          <div class="util-track">
+            <div class="util-fill" style="width:${v.util}%; background:${v.utilColor}"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>`;
 }
@@ -2045,124 +2373,151 @@ vessels.forEach((v, i) => {
 // tier 3 = local/feeder (visible zoom 6+)
 const ports = [
   // ── TIER 1: MAJOR HUBS ───────────────────────────────────
-  { tier:1, name:'Port of Singapore',       country:'🇸🇬 Singapore',              unlocode:'SG SIN', type:'Hub Port',      position:[1.26,103.82],   services:['SEA1','SEA2','SWS','EAS','ASA','GCS','AA2','WSA'], avgDelinquency:5.2,  delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:21, d2:{count:892}, d5:{count:634}, terminalOps:'PSA International',        dwell:'1.8 days avg', nextCall:'17 Apr 2025' },
-  { tier:1, name:'Port of Shanghai',         country:'🇨🇳 Shanghai, China',         unlocode:'CN SHA', type:'Hub Port',      position:[31.23,121.47],  services:['CCS','JCS','AAS1','SEA1','WSA'],                        avgDelinquency:7.1,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:29, d2:{count:1140},d5:{count:820}, terminalOps:'SIPG / Yangshan',          dwell:'2.1 days avg', nextCall:'18 Apr 2025' },
-  { tier:1, name:'Port Klang',               country:'🇲🇾 Selangor, Malaysia',       unlocode:'MY PKG', type:'Hub Port',      position:[3.00,101.37],   services:['SEA1','SWS','EAS','GCS','AA2'],                       avgDelinquency:9.3,  delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:37, d2:{count:674}, d5:{count:412}, terminalOps:'Westports / Northport',    dwell:'2.4 days avg', nextCall:'19 Apr 2025' },
-  { tier:1, name:'Port of Colombo',          country:'🇱🇰 Colombo, Sri Lanka',       unlocode:'LK CMB', type:'Hub Port',      position:[6.95,79.85],    services:['SWS','EAS','GCS','RGS'],                              avgDelinquency:12.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:50, d2:{count:503}, d5:{count:291}, terminalOps:'JCT / SAGT',               dwell:'2.8 days avg', nextCall:'20 Apr 2025' },
-  { tier:1, name:'Port of Jebel Ali',        country:'🇦🇪 Dubai, UAE',               unlocode:'AE JEA', type:'Hub Port',      position:[24.99,55.07],   services:['GCS','CSE','RGS'],                                     avgDelinquency:8.7,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:35, d2:{count:448}, d5:{count:326}, terminalOps:'DP World',                 dwell:'2.2 days avg', nextCall:'21 Apr 2025' },
-  { tier:1, name:'Port of Durban',           country:'🇿🇦 Durban, South Africa',     unlocode:'ZA DUR', type:'Hub Port',      position:[-29.87,31.03],  services:['ASA','EAS'],                                            avgDelinquency:16.2, delinqTrend:'+2.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:65, d2:{count:387}, d5:{count:198}, terminalOps:'Transnet Port Terminals',  dwell:'4.8 days avg', nextCall:'23 Apr 2025' },
-  { tier:1, name:'Port of Cape Town',        country:'🇿🇦 Cape Town, South Africa',  unlocode:'ZA CPT', type:'Gateway Port',  position:[-33.92,18.43],  services:['ASA','ES1'],                                           avgDelinquency:13.5, delinqTrend:'−0.6 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:54, d2:{count:261}, d5:{count:144}, terminalOps:'Transnet Port Terminals',  dwell:'3.9 days avg', nextCall:'25 Apr 2025' },
-  { tier:1, name:'Port of Tema',             country:'🇬🇭 Tema, Ghana',              unlocode:'GH TEM', type:'Hub Port',      position:[5.62,-0.00],    services:['SWS','WA3'],                                            avgDelinquency:21.3, delinqTrend:'+3.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:85, d2:{count:318}, d5:{count:162}, terminalOps:'MPS / Meridian Port',      dwell:'5.6 days avg', nextCall:'29 Apr 2025' },
-  { tier:1, name:'Port of Apapa',            country:'🇳🇬 Lagos, Nigeria',           unlocode:'NG APL', type:'Hub Port',      position:[6.45,3.39],     services:['SWS','WA3'],                                            avgDelinquency:24.7, delinqTrend:'+1.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:99, d2:{count:429}, d5:{count:203}, terminalOps:'ENL / APM Terminals',      dwell:'6.2 days avg', nextCall:'01 May 2025' },
-  { tier:1, name:'Port of Hong Kong',        country:'🇭🇰 Hong Kong',                unlocode:'HK HKG', type:'Hub Port',      position:[22.30,114.17],  services:['CCS','JCS','AAS1'],                                       avgDelinquency:6.4,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:26, d2:{count:528}, d5:{count:374}, terminalOps:'HPH / Modern Terminals',   dwell:'1.9 days avg', nextCall:'18 Apr 2025' },
-  { tier:1, name:'Port of Fremantle',        country:'🇦🇺 Perth, Australia',         unlocode:'AU FRE', type:'Gateway Port',  position:[-32.05,115.74], services:['AA2'],                                                   avgDelinquency:8.2,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:33, d2:{count:224}, d5:{count:139}, terminalOps:'Patrick Terminals',        dwell:'2.9 days avg', nextCall:'19 Apr 2025' },
-  { tier:1, name:'Port of Sydney',           country:'🇦🇺 Sydney, Australia',        unlocode:'AU SYD', type:'Gateway Port',  position:[-33.87,151.21], services:['AA2','NZS'],                                             avgDelinquency:7.6,  delinqTrend:'−0.4 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:30, d2:{count:302}, d5:{count:181}, terminalOps:'Patrick Terminals',        dwell:'2.6 days avg', nextCall:'24 Apr 2025' },
-  { tier:1, name:'Port of Santos',           country:'🇧🇷 Santos, Brazil',           unlocode:'BR STS', type:'Hub Port',      position:[-23.95,-46.33], services:['ES1'],                                                  avgDelinquency:18.4, delinqTrend:'+2.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:74, d2:{count:312}, d5:{count:187}, terminalOps:'Santos Brasil Terminais',  dwell:'4.2 days avg', nextCall:'24 Apr 2025' },
-  { tier:1, name:'Port of Callao',           country:'🇵🇪 Lima, Peru',               unlocode:'PE CLO', type:'Hub Port',      position:[-12.06,-77.15], services:['WSA'],                                                  avgDelinquency:14.8, delinqTrend:'+0.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:59, d2:{count:276}, d5:{count:154}, terminalOps:'APM Terminals Callao',     dwell:'3.7 days avg', nextCall:'06 May 2025' },
-  { tier:1, name:'Port of Mombasa',          country:'🇰🇪 Mombasa, Kenya',           unlocode:'KE MBA', type:'Hub Port',      position:[-4.05,39.66],   services:['EAS'],                                                   avgDelinquency:17.9, delinqTrend:'+2.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:72, d2:{count:341}, d5:{count:178}, terminalOps:'Kenya Ports Authority',    dwell:'5.1 days avg', nextCall:'27 Apr 2025' },
+  { tier:1, name:'Port of Singapore',       country:'🇸🇬 Singapore',              unlocode:'SG SIN', type:'Hub Port',      position:[1.26,103.82],   services:['SEA1','SEA2','SWS','EAS','ASA','GCS','AA2','WSA'], avgDelinquency:5.2,  delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:21, d2:{count:892}, d5:{count:634}, terminalOps:'PSA International',        dwell:'1.8 days avg', nextCall:'17 Apr 2025', pricing:{ thc20:'$185', thc40:'$285', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$48/day' }, dwellingLaden:[
+    { service:'SWS',  dir:'HH', nextPort:'Tema',       teu20:142, teu40:87  },
+    { service:'SWS',  dir:'BH', nextPort:'Qingdao',    teu20:78,  teu40:53  },
+    { service:'SEA1', dir:'HH', nextPort:'Durban',     teu20:94,  teu40:61  },
+    { service:'SEA1', dir:'BH', nextPort:'Shanghai',   teu20:112, teu40:74  },
+    { service:'EAS',  dir:'HH', nextPort:'Mombasa',    teu20:67,  teu40:43  },
+    { service:'EAS',  dir:'BH', nextPort:'Port Klang', teu20:58,  teu40:39  },
+    { service:'GCS',  dir:'HH', nextPort:'Jebel Ali',  teu20:83,  teu40:52  },
+    { service:'GCS',  dir:'BH', nextPort:'Colombo',    teu20:71,  teu40:48  },
+  ] },
+  { tier:1, name:'Port of Shanghai',         country:'🇨🇳 Shanghai, China',         unlocode:'CN SHA', type:'Hub Port',      position:[31.23,121.47],  services:['CCS','JCS','AAS1','SEA1','WSA'],                        avgDelinquency:7.1,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:29, d2:{count:1140},d5:{count:820}, terminalOps:'SIPG / Yangshan',          dwell:'2.1 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$175', thc40:'$270', freeTime:'7 days', storage:'$18/TEU/day', reefer:'$42/day' } },
+  { tier:1, name:'Port Klang',               country:'🇲🇾 Selangor, Malaysia',       unlocode:'MY PKG', type:'Hub Port',      position:[3.00,101.37],   services:['SEA1','SWS','EAS','GCS','AA2'],                       avgDelinquency:9.3,  delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:37, d2:{count:674}, d5:{count:412}, terminalOps:'Westports / Northport',    dwell:'2.4 days avg', nextCall:'19 Apr 2025', pricing:{ thc20:'$120', thc40:'$185', freeTime:'7 days', storage:'$14/TEU/day', reefer:'$38/day' }, dwellingLaden:[
+    { service:'SWS',  dir:'HH', nextPort:'Tema',       teu20:108, teu40:64 },
+    { service:'SWS',  dir:'BH', nextPort:'Singapore',  teu20:61,  teu40:38 },
+    { service:'SEA1', dir:'HH', nextPort:'Colombo',    teu20:87,  teu40:56 },
+    { service:'SEA1', dir:'BH', nextPort:'Singapore',  teu20:93,  teu40:62 },
+    { service:'EAS',  dir:'HH', nextPort:'Colombo',    teu20:54,  teu40:34 },
+    { service:'GCS',  dir:'HH', nextPort:'Colombo',    teu20:72,  teu40:44 },
+  ] },
+  { tier:1, name:'Port of Colombo',          country:'🇱🇰 Colombo, Sri Lanka',       unlocode:'LK CMB', type:'Hub Port',      position:[6.95,79.85],    services:['SWS','EAS','GCS','RGS'],                              avgDelinquency:12.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:50, d2:{count:503}, d5:{count:291}, terminalOps:'JCT / SAGT',               dwell:'2.8 days avg', nextCall:'20 Apr 2025', pricing:{ thc20:'$130', thc40:'$200', freeTime:'5 days', storage:'$16/TEU/day', reefer:'$40/day' }, dwellingLaden:[
+    { service:'SWS',  dir:'HH', nextPort:'Salalah',    teu20:96,  teu40:58 },
+    { service:'SWS',  dir:'BH', nextPort:'Port Klang', teu20:74,  teu40:46 },
+    { service:'EAS',  dir:'HH', nextPort:'Mombasa',    teu20:61,  teu40:39 },
+    { service:'GCS',  dir:'HH', nextPort:'Salalah',    teu20:78,  teu40:49 },
+    { service:'GCS',  dir:'BH', nextPort:'Singapore',  teu20:52,  teu40:33 },
+  ] },
+  { tier:1, name:'Port of Jebel Ali',        country:'🇦🇪 Dubai, UAE',               unlocode:'AE JEA', type:'Hub Port',      position:[24.99,55.07],   services:['GCS','CSE','RGS'],                                     avgDelinquency:8.7,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:35, d2:{count:448}, d5:{count:326}, terminalOps:'DP World',                 dwell:'2.2 days avg', nextCall:'21 Apr 2025', pricing:{ thc20:'$210', thc40:'$320', freeTime:'7 days', storage:'$20/TEU/day', reefer:'$52/day' }, dwellingLaden:[
+    { service:'GCS',  dir:'HH', nextPort:'Salalah',   teu20:88, teu40:54 },
+    { service:'GCS',  dir:'BH', nextPort:'Colombo',   teu20:63, teu40:41 },
+    { service:'CSE',  dir:'HH', nextPort:'Karachi',   teu20:71, teu40:44 },
+    { service:'CSE',  dir:'BH', nextPort:'Salalah',   teu20:48, teu40:29 },
+  ] },
+  { tier:1, name:'Port of Durban',           country:'🇿🇦 Durban, South Africa',     unlocode:'ZA DUR', type:'Hub Port',      position:[-29.87,31.03],  services:['ASA','EAS'],                                            avgDelinquency:16.2, delinqTrend:'+2.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:65, d2:{count:387}, d5:{count:198}, terminalOps:'Transnet Port Terminals',  dwell:'4.8 days avg', nextCall:'23 Apr 2025', pricing:{ thc20:'$195', thc40:'$295', freeTime:'4 days', storage:'$24/TEU/day', reefer:'$55/day' } },
+  { tier:1, name:'Port of Cape Town',        country:'🇿🇦 Cape Town, South Africa',  unlocode:'ZA CPT', type:'Gateway Port',  position:[-33.92,18.43],  services:['ASA','ES1'],                                           avgDelinquency:13.5, delinqTrend:'−0.6 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:54, d2:{count:261}, d5:{count:144}, terminalOps:'Transnet Port Terminals',  dwell:'3.9 days avg', nextCall:'25 Apr 2025', pricing:{ thc20:'$190', thc40:'$290', freeTime:'4 days', storage:'$23/TEU/day', reefer:'$53/day' } },
+  { tier:1, name:'Port of Tema',             country:'🇬🇭 Tema, Ghana',              unlocode:'GH TEM', type:'Hub Port',      position:[5.62,-0.00],    services:['SWS','WA3'],                                            avgDelinquency:21.3, delinqTrend:'+3.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:85, d2:{count:318}, d5:{count:162}, terminalOps:'MPS / Meridian Port',      dwell:'5.6 days avg', nextCall:'29 Apr 2025', pricing:{ thc20:'$245', thc40:'$380', freeTime:'3 days', storage:'$28/TEU/day', reefer:'$62/day' } },
+  { tier:1, name:'Port of Apapa',            country:'🇳🇬 Lagos, Nigeria',           unlocode:'NG APL', type:'Hub Port',      position:[6.45,3.39],     services:['SWS','WA3'],                                            avgDelinquency:24.7, delinqTrend:'+1.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:99, d2:{count:429}, d5:{count:203}, terminalOps:'ENL / APM Terminals',      dwell:'6.2 days avg', nextCall:'01 May 2025', pricing:{ thc20:'$260', thc40:'$400', freeTime:'3 days', storage:'$30/TEU/day', reefer:'$65/day' } },
+  { tier:1, name:'Port of Hong Kong',        country:'🇭🇰 Hong Kong',                unlocode:'HK HKG', type:'Hub Port',      position:[22.30,114.17],  services:['CCS','JCS','AAS1'],                                       avgDelinquency:6.4,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:26, d2:{count:528}, d5:{count:374}, terminalOps:'HPH / Modern Terminals',   dwell:'1.9 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$170', thc40:'$260', freeTime:'7 days', storage:'$17/TEU/day', reefer:'$43/day' } },
+  { tier:1, name:'Port of Fremantle',        country:'🇦🇺 Perth, Australia',         unlocode:'AU FRE', type:'Gateway Port',  position:[-32.05,115.74], services:['AA2'],                                                   avgDelinquency:8.2,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:33, d2:{count:224}, d5:{count:139}, terminalOps:'Patrick Terminals',        dwell:'2.9 days avg', nextCall:'19 Apr 2025', pricing:{ thc20:'$215', thc40:'$325', freeTime:'5 days', storage:'$23/TEU/day', reefer:'$50/day' } },
+  { tier:1, name:'Port of Sydney',           country:'🇦🇺 Sydney, Australia',        unlocode:'AU SYD', type:'Gateway Port',  position:[-33.87,151.21], services:['AA2','NZS'],                                             avgDelinquency:7.6,  delinqTrend:'−0.4 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:30, d2:{count:302}, d5:{count:181}, terminalOps:'Patrick Terminals',        dwell:'2.6 days avg', nextCall:'24 Apr 2025', pricing:{ thc20:'$220', thc40:'$335', freeTime:'5 days', storage:'$24/TEU/day', reefer:'$52/day' } },
+  { tier:1, name:'Port of Santos',           country:'🇧🇷 Santos, Brazil',           unlocode:'BR STS', type:'Hub Port',      position:[-23.95,-46.33], services:['ES1'],                                                  avgDelinquency:18.4, delinqTrend:'+2.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:74, d2:{count:312}, d5:{count:187}, terminalOps:'Santos Brasil Terminais',  dwell:'4.2 days avg', nextCall:'24 Apr 2025', pricing:{ thc20:'$230', thc40:'$350', freeTime:'4 days', storage:'$26/TEU/day', reefer:'$58/day' } },
+  { tier:1, name:'Port of Callao',           country:'🇵🇪 Lima, Peru',               unlocode:'PE CLO', type:'Hub Port',      position:[-12.06,-77.15], services:['WSA'],                                                  avgDelinquency:14.8, delinqTrend:'+0.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:59, d2:{count:276}, d5:{count:154}, terminalOps:'APM Terminals Callao',     dwell:'3.7 days avg', nextCall:'06 May 2025', pricing:{ thc20:'$205', thc40:'$315', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$48/day' } },
+  { tier:1, name:'Port of Mombasa',          country:'🇰🇪 Mombasa, Kenya',           unlocode:'KE MBA', type:'Hub Port',      position:[-4.05,39.66],   services:['EAS'],                                                   avgDelinquency:17.9, delinqTrend:'+2.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:72, d2:{count:341}, d5:{count:178}, terminalOps:'Kenya Ports Authority',    dwell:'5.1 days avg', nextCall:'27 Apr 2025', pricing:{ thc20:'$235', thc40:'$360', freeTime:'3 days', storage:'$27/TEU/day', reefer:'$60/day' } },
 
   // ── TIER 2: REGIONAL ─────────────────────────────────────
-  { tier:2, name:'Port of Ningbo',           country:'🇨🇳 Ningbo, China',            unlocode:'CN NGB', type:'Regional Port', position:[29.92,122.10],  services:['CCS','AAS1'],                                             avgDelinquency:7.8,  delinqTrend:'+0.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:31, d2:{count:876}, d5:{count:612}, terminalOps:'Ningbo Zhoushan Port',     dwell:'2.0 days avg', nextCall:'18 Apr 2025' },
-  { tier:2, name:'Port of Qingdao',          country:'🇨🇳 Qingdao, China',           unlocode:'CN TAO', type:'Regional Port', position:[36.07,120.38],  services:['CCS','JCS'],                                              avgDelinquency:6.9,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:28, d2:{count:694}, d5:{count:483}, terminalOps:'Qingdao Port Int\'l',      dwell:'2.0 days avg', nextCall:'19 Apr 2025' },
-  { tier:2, name:'Port of Yantian',          country:'🇨🇳 Shenzhen, China',          unlocode:'CN YTN', type:'Regional Port', position:[22.56,114.25],  services:['AAS1','SEA1'],                                            avgDelinquency:6.2,  delinqTrend:'−0.5 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:25, d2:{count:742}, d5:{count:531}, terminalOps:'YICT (Hutchison)',         dwell:'1.9 days avg', nextCall:'17 Apr 2025' },
-  { tier:2, name:'Laem Chabang Port',        country:'🇹🇭 Chonburi, Thailand',       unlocode:'TH LCB', type:'Regional Port', position:[13.08,100.88],  services:['SEA1','SEA2'],                                            avgDelinquency:10.4, delinqTrend:'−0.7 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:42, d2:{count:387}, d5:{count:223}, terminalOps:'Laem Chabang Int\'l',      dwell:'2.7 days avg', nextCall:'20 Apr 2025' },
-  { tier:2, name:'Port of Ho Chi Minh City', country:'🇻🇳 Ho Chi Minh, Vietnam',     unlocode:'VN SGN', type:'Regional Port', position:[10.77,106.72],  services:['SEA1','SEA2'],                                            avgDelinquency:11.6, delinqTrend:'+0.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:46, d2:{count:412}, d5:{count:247}, terminalOps:'CMIT / Tan Cang-Cai Mep', dwell:'2.9 days avg', nextCall:'21 Apr 2025' },
-  { tier:2, name:'Port of Manila',           country:'🇵🇭 Manila, Philippines',      unlocode:'PH MNL', type:'Regional Port', position:[14.52,120.97],  services:['SEA2'],                                                   avgDelinquency:13.2, delinqTrend:'+1.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:53, d2:{count:298}, d5:{count:167}, terminalOps:'ICTSI',                    dwell:'3.2 days avg', nextCall:'22 Apr 2025' },
-  { tier:2, name:'Port of Jakarta',          country:'🇮🇩 Jakarta, Indonesia',        unlocode:'ID JKT', type:'Regional Port', position:[-6.10,106.88],  services:['SEA2'],                                                   avgDelinquency:14.1, delinqTrend:'+1.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:56, d2:{count:334}, d5:{count:189}, terminalOps:'NPCT / Pelindo II',        dwell:'3.4 days avg', nextCall:'23 Apr 2025' },
-  { tier:2, name:'Port of Chennai',          country:'🇮🇳 Chennai, India',            unlocode:'IN MAA', type:'Regional Port', position:[13.08,80.29],   services:['RGS','EAS'],                                            avgDelinquency:15.3, delinqTrend:'+0.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:61, d2:{count:267}, d5:{count:148}, terminalOps:'Chennai Port Trust',       dwell:'3.6 days avg', nextCall:'25 Apr 2025' },
-  { tier:2, name:'Nhava Sheva (JNPT)',       country:'🇮🇳 Mumbai, India',             unlocode:'IN BOM', type:'Hub Port',      position:[18.95,72.95],   services:['RGS','GCS'],                                            avgDelinquency:16.8, delinqTrend:'+2.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:67, d2:{count:489}, d5:{count:278}, terminalOps:'JNPCT / APM Terminals',    dwell:'4.1 days avg', nextCall:'24 Apr 2025' },
-  { tier:2, name:'Port of Mundra',           country:'🇮🇳 Gujarat, India',            unlocode:'IN MUN', type:'Regional Port', position:[22.84,69.71],   services:['RGS','CSE'],                                            avgDelinquency:13.9, delinqTrend:'−0.9 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:56, d2:{count:321}, d5:{count:186}, terminalOps:'Adani Ports',              dwell:'3.3 days avg', nextCall:'23 Apr 2025' },
-  { tier:2, name:'Port of Salalah',          country:'🇴🇲 Salalah, Oman',            unlocode:'OM SAL', type:'Regional Port', position:[16.94,54.00],   services:['GCS','SWS'],                                            avgDelinquency:9.1,  delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:36, d2:{count:198}, d5:{count:112}, terminalOps:'APM Terminals Salalah',    dwell:'2.3 days avg', nextCall:'22 Apr 2025' },
-  { tier:2, name:'Port of Sohar',            country:'🇴🇲 Sohar, Oman',              unlocode:'OM OHS', type:'Regional Port', position:[24.34,56.62],   services:['GCS','CSE'],                                            avgDelinquency:8.4,  delinqTrend:'−0.3 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:34, d2:{count:156}, d5:{count:89},  terminalOps:'Sohar Port & Freezone',    dwell:'2.1 days avg', nextCall:'22 Apr 2025' },
-  { tier:2, name:'Port of Dar es Salaam',    country:'🇹🇿 Dar es Salaam, Tanzania',  unlocode:'TZ DAR', type:'Regional Port', position:[-6.82,39.29],   services:['EAS'],                                                   avgDelinquency:19.6, delinqTrend:'+2.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:78, d2:{count:224}, d5:{count:108}, terminalOps:'TPA / TICTS',              dwell:'5.4 days avg', nextCall:'28 Apr 2025' },
-  { tier:2, name:'Port of Abidjan',          country:'🇨🇮 Abidjan, Côte d\'Ivoire',  unlocode:'CI ABJ', type:'Regional Port', position:[5.28,-4.02],    services:['SWS','WA3'],                                            avgDelinquency:20.1, delinqTrend:'+1.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:80, d2:{count:196}, d5:{count:91},  terminalOps:'APM Terminals Abidjan',    dwell:'5.1 days avg', nextCall:'30 Apr 2025' },
-  { tier:2, name:'Port of Lomé',             country:'🇹🇬 Lomé, Togo',               unlocode:'TG LFW', type:'Regional Port', position:[6.14,1.22],     services:['SWS'],                                                   avgDelinquency:17.8, delinqTrend:'Stable (±0.5 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:71, d2:{count:178}, d5:{count:84},  terminalOps:'Bolloré / LCT',            dwell:'4.7 days avg', nextCall:'29 Apr 2025' },
-  { tier:2, name:'Port of Cotonou',          country:'🇧🇯 Cotonou, Benin',           unlocode:'BJ COO', type:'Regional Port', position:[6.37,2.43],     services:['WA3'],                                                   avgDelinquency:22.4, delinqTrend:'+3.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:90, d2:{count:143}, d5:{count:69},  terminalOps:'Bénin Terminal',           dwell:'5.8 days avg', nextCall:'30 Apr 2025' },
-  { tier:2, name:'Port of Luanda',           country:'🇦🇴 Luanda, Angola',            unlocode:'AO LAD', type:'Regional Port', position:[-8.78,13.24],   services:['WA3'],                                                   avgDelinquency:23.1, delinqTrend:'+2.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:92, d2:{count:167}, d5:{count:78},  terminalOps:'Unicargas / TIL',          dwell:'6.0 days avg', nextCall:'03 May 2025' },
-  { tier:2, name:'Port of Pointe-Noire',     country:'🇨🇬 Pointe-Noire, Congo',      unlocode:'CG PNR', type:'Regional Port', position:[-4.77,11.86],   services:['WA3'],                                                   avgDelinquency:21.7, delinqTrend:'+1.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:87, d2:{count:131}, d5:{count:62},  terminalOps:'CMA Terminals',            dwell:'5.7 days avg', nextCall:'02 May 2025' },
-  { tier:2, name:'Port of Melbourne',        country:'🇦🇺 Melbourne, Australia',      unlocode:'AU MEL', type:'Regional Port', position:[-37.82,144.90], services:['AA2','NZS'],                                             avgDelinquency:7.4,  delinqTrend:'−0.2 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:30, d2:{count:278}, d5:{count:163}, terminalOps:'Patrick Terminals',        dwell:'2.5 days avg', nextCall:'25 Apr 2025' },
-  { tier:2, name:'Port of Brisbane',         country:'🇦🇺 Brisbane, Australia',       unlocode:'AU BNE', type:'Regional Port', position:[-27.38,153.17], services:['AA2'],                                                   avgDelinquency:6.9,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:28, d2:{count:214}, d5:{count:127}, terminalOps:'Patrick / DP World',       dwell:'2.4 days avg', nextCall:'26 Apr 2025' },
-  { tier:2, name:'Port of Auckland',         country:'🇳🇿 Auckland, New Zealand',     unlocode:'NZ AKL', type:'Regional Port', position:[-36.84,174.76], services:['NZS'],                                                    avgDelinquency:8.8,  delinqTrend:'+0.5 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:35, d2:{count:187}, d5:{count:112}, terminalOps:'Ports of Auckland',        dwell:'2.7 days avg', nextCall:'28 Apr 2025' },
-  { tier:2, name:'Port of San Antonio',      country:'🇨🇱 San Antonio, Chile',        unlocode:'CL SAI', type:'Regional Port', position:[-33.58,-71.62], services:['WSA'],                                                  avgDelinquency:11.7, delinqTrend:'−1.4 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:47, d2:{count:148}, d5:{count:94},  terminalOps:'Puerto Central S.A.',      dwell:'3.6 days avg', nextCall:'02 May 2025' },
-  { tier:2, name:'Port of Buenos Aires',     country:'🇦🇷 Buenos Aires, Argentina',   unlocode:'AR BUE', type:'Regional Port', position:[-34.58,-58.37], services:['ES1'],                                                  avgDelinquency:16.3, delinqTrend:'+2.0 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:65, d2:{count:221}, d5:{count:118}, terminalOps:'Exolgan / TRP',            dwell:'4.1 days avg', nextCall:'26 Apr 2025' },
-  { tier:2, name:'Port Moresby',             country:'🇵🇬 Port Moresby, PNG',         unlocode:'PG POM', type:'Regional Port', position:[-9.44,147.19],  services:['ANA'],                                                   avgDelinquency:12.6, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:50, d2:{count:124}, d5:{count:68},  terminalOps:'PNG Ports Corporation',    dwell:'3.3 days avg', nextCall:'30 Apr 2025' },
+  { tier:2, name:'Port of Ningbo',           country:'🇨🇳 Ningbo, China',            unlocode:'CN NGB', type:'Regional Port', position:[29.92,122.10],  services:['CCS','AAS1'],                                             avgDelinquency:7.8,  delinqTrend:'+0.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:31, d2:{count:876}, d5:{count:612}, terminalOps:'Ningbo Zhoushan Port',     dwell:'2.0 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$165', thc40:'$255', freeTime:'7 days', storage:'$17/TEU/day', reefer:'$40/day' } },
+  { tier:2, name:'Port of Qingdao',          country:'🇨🇳 Qingdao, China',           unlocode:'CN TAO', type:'Regional Port', position:[36.07,120.38],  services:['CCS','JCS'],                                              avgDelinquency:6.9,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:28, d2:{count:694}, d5:{count:483}, terminalOps:'Qingdao Port Int\'l',      dwell:'2.0 days avg', nextCall:'19 Apr 2025', pricing:{ thc20:'$160', thc40:'$245', freeTime:'7 days', storage:'$16/TEU/day', reefer:'$39/day' } },
+  { tier:2, name:'Port of Yantian',          country:'🇨🇳 Shenzhen, China',          unlocode:'CN YTN', type:'Regional Port', position:[22.56,114.25],  services:['AAS1','SEA1'],                                            avgDelinquency:6.2,  delinqTrend:'−0.5 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:25, d2:{count:742}, d5:{count:531}, terminalOps:'YICT (Hutchison)',         dwell:'1.9 days avg', nextCall:'17 Apr 2025', pricing:{ thc20:'$168', thc40:'$258', freeTime:'7 days', storage:'$17/TEU/day', reefer:'$41/day' } },
+  { tier:2, name:'Laem Chabang Port',        country:'🇹🇭 Chonburi, Thailand',       unlocode:'TH LCB', type:'Regional Port', position:[13.08,100.88],  services:['SEA1','SEA2'],                                            avgDelinquency:10.4, delinqTrend:'−0.7 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:42, d2:{count:387}, d5:{count:223}, terminalOps:'Laem Chabang Int\'l',      dwell:'2.7 days avg', nextCall:'20 Apr 2025', pricing:{ thc20:'$135', thc40:'$210', freeTime:'6 days', storage:'$15/TEU/day', reefer:'$38/day' } },
+  { tier:2, name:'Port of Ho Chi Minh City', country:'🇻🇳 Ho Chi Minh, Vietnam',     unlocode:'VN SGN', type:'Regional Port', position:[10.77,106.72],  services:['SEA1','SEA2'],                                            avgDelinquency:11.6, delinqTrend:'+0.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:46, d2:{count:412}, d5:{count:247}, terminalOps:'CMIT / Tan Cang-Cai Mep', dwell:'2.9 days avg', nextCall:'21 Apr 2025', pricing:{ thc20:'$125', thc40:'$195', freeTime:'6 days', storage:'$14/TEU/day', reefer:'$36/day' } },
+  { tier:2, name:'Port of Manila',           country:'🇵🇭 Manila, Philippines',      unlocode:'PH MNL', type:'Regional Port', position:[14.52,120.97],  services:['SEA2'],                                                   avgDelinquency:13.2, delinqTrend:'+1.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:53, d2:{count:298}, d5:{count:167}, terminalOps:'ICTSI',                    dwell:'3.2 days avg', nextCall:'22 Apr 2025', pricing:{ thc20:'$140', thc40:'$215', freeTime:'5 days', storage:'$15/TEU/day', reefer:'$37/day' } },
+  { tier:2, name:'Port of Jakarta',          country:'🇮🇩 Jakarta, Indonesia',        unlocode:'ID JKT', type:'Regional Port', position:[-6.10,106.88],  services:['SEA2'],                                                   avgDelinquency:14.1, delinqTrend:'+1.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:56, d2:{count:334}, d5:{count:189}, terminalOps:'NPCT / Pelindo II',        dwell:'3.4 days avg', nextCall:'23 Apr 2025', pricing:{ thc20:'$130', thc40:'$200', freeTime:'5 days', storage:'$14/TEU/day', reefer:'$36/day' } },
+  { tier:2, name:'Port of Chennai',          country:'🇮🇳 Chennai, India',            unlocode:'IN MAA', type:'Regional Port', position:[13.08,80.29],   services:['RGS','EAS'],                                            avgDelinquency:15.3, delinqTrend:'+0.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:61, d2:{count:267}, d5:{count:148}, terminalOps:'Chennai Port Trust',       dwell:'3.6 days avg', nextCall:'25 Apr 2025', pricing:{ thc20:'$145', thc40:'$220', freeTime:'5 days', storage:'$16/TEU/day', reefer:'$39/day' } },
+  { tier:2, name:'Nhava Sheva (JNPT)',       country:'🇮🇳 Mumbai, India',             unlocode:'IN BOM', type:'Hub Port',      position:[18.95,72.95],   services:['RGS','GCS'],                                            avgDelinquency:16.8, delinqTrend:'+2.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:67, d2:{count:489}, d5:{count:278}, terminalOps:'JNPCT / APM Terminals',    dwell:'4.1 days avg', nextCall:'24 Apr 2025', pricing:{ thc20:'$150', thc40:'$230', freeTime:'5 days', storage:'$17/TEU/day', reefer:'$40/day' } },
+  { tier:2, name:'Port of Mundra',           country:'🇮🇳 Gujarat, India',            unlocode:'IN MUN', type:'Regional Port', position:[22.84,69.71],   services:['RGS','CSE'],                                            avgDelinquency:13.9, delinqTrend:'−0.9 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:56, d2:{count:321}, d5:{count:186}, terminalOps:'Adani Ports',              dwell:'3.3 days avg', nextCall:'23 Apr 2025', pricing:{ thc20:'$142', thc40:'$218', freeTime:'6 days', storage:'$15/TEU/day', reefer:'$38/day' } },
+  { tier:2, name:'Port of Salalah',          country:'🇴🇲 Salalah, Oman',            unlocode:'OM SAL', type:'Regional Port', position:[16.94,54.00],   services:['GCS','SWS'],                                            avgDelinquency:9.1,  delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:36, d2:{count:198}, d5:{count:112}, terminalOps:'APM Terminals Salalah',    dwell:'2.3 days avg', nextCall:'22 Apr 2025', pricing:{ thc20:'$195', thc40:'$300', freeTime:'7 days', storage:'$19/TEU/day', reefer:'$48/day' } },
+  { tier:2, name:'Port of Sohar',            country:'🇴🇲 Sohar, Oman',              unlocode:'OM OHS', type:'Regional Port', position:[24.34,56.62],   services:['GCS','CSE'],                                            avgDelinquency:8.4,  delinqTrend:'−0.3 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:34, d2:{count:156}, d5:{count:89},  terminalOps:'Sohar Port & Freezone',    dwell:'2.1 days avg', nextCall:'22 Apr 2025', pricing:{ thc20:'$188', thc40:'$290', freeTime:'7 days', storage:'$19/TEU/day', reefer:'$47/day' } },
+  { tier:2, name:'Port of Dar es Salaam',    country:'🇹🇿 Dar es Salaam, Tanzania',  unlocode:'TZ DAR', type:'Regional Port', position:[-6.82,39.29],   services:['EAS'],                                                   avgDelinquency:19.6, delinqTrend:'+2.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:78, d2:{count:224}, d5:{count:108}, terminalOps:'TPA / TICTS',              dwell:'5.4 days avg', nextCall:'28 Apr 2025', pricing:{ thc20:'$225', thc40:'$345', freeTime:'3 days', storage:'$26/TEU/day', reefer:'$56/day' } },
+  { tier:2, name:'Port of Abidjan',          country:'🇨🇮 Abidjan, Côte d\'Ivoire',  unlocode:'CI ABJ', type:'Regional Port', position:[5.28,-4.02],    services:['SWS','WA3'],                                            avgDelinquency:20.1, delinqTrend:'+1.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:80, d2:{count:196}, d5:{count:91},  terminalOps:'APM Terminals Abidjan',    dwell:'5.1 days avg', nextCall:'30 Apr 2025', pricing:{ thc20:'$238', thc40:'$368', freeTime:'3 days', storage:'$27/TEU/day', reefer:'$60/day' } },
+  { tier:2, name:'Port of Lomé',             country:'🇹🇬 Lomé, Togo',               unlocode:'TG LFW', type:'Regional Port', position:[6.14,1.22],     services:['SWS'],                                                   avgDelinquency:17.8, delinqTrend:'Stable (±0.5 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:71, d2:{count:178}, d5:{count:84},  terminalOps:'Bolloré / LCT',            dwell:'4.7 days avg', nextCall:'29 Apr 2025', pricing:{ thc20:'$232', thc40:'$358', freeTime:'3 days', storage:'$26/TEU/day', reefer:'$58/day' } },
+  { tier:2, name:'Port of Cotonou',          country:'🇧🇯 Cotonou, Benin',           unlocode:'BJ COO', type:'Regional Port', position:[6.37,2.43],     services:['WA3'],                                                   avgDelinquency:22.4, delinqTrend:'+3.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:90, d2:{count:143}, d5:{count:69},  terminalOps:'Bénin Terminal',           dwell:'5.8 days avg', nextCall:'30 Apr 2025', pricing:{ thc20:'$250', thc40:'$385', freeTime:'3 days', storage:'$29/TEU/day', reefer:'$63/day' } },
+  { tier:2, name:'Port of Luanda',           country:'🇦🇴 Luanda, Angola',            unlocode:'AO LAD', type:'Regional Port', position:[-8.78,13.24],   services:['WA3'],                                                   avgDelinquency:23.1, delinqTrend:'+2.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:92, d2:{count:167}, d5:{count:78},  terminalOps:'Unicargas / TIL',          dwell:'6.0 days avg', nextCall:'03 May 2025', pricing:{ thc20:'$255', thc40:'$390', freeTime:'3 days', storage:'$29/TEU/day', reefer:'$64/day' } },
+  { tier:2, name:'Port of Pointe-Noire',     country:'🇨🇬 Pointe-Noire, Congo',      unlocode:'CG PNR', type:'Regional Port', position:[-4.77,11.86],   services:['WA3'],                                                   avgDelinquency:21.7, delinqTrend:'+1.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:87, d2:{count:131}, d5:{count:62},  terminalOps:'CMA Terminals',            dwell:'5.7 days avg', nextCall:'02 May 2025', pricing:{ thc20:'$248', thc40:'$380', freeTime:'3 days', storage:'$28/TEU/day', reefer:'$62/day' } },
+  { tier:2, name:'Port of Melbourne',        country:'🇦🇺 Melbourne, Australia',      unlocode:'AU MEL', type:'Regional Port', position:[-37.82,144.90], services:['AA2','NZS'],                                             avgDelinquency:7.4,  delinqTrend:'−0.2 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:30, d2:{count:278}, d5:{count:163}, terminalOps:'Patrick Terminals',        dwell:'2.5 days avg', nextCall:'25 Apr 2025', pricing:{ thc20:'$218', thc40:'$330', freeTime:'5 days', storage:'$23/TEU/day', reefer:'$51/day' } },
+  { tier:2, name:'Port of Brisbane',         country:'🇦🇺 Brisbane, Australia',       unlocode:'AU BNE', type:'Regional Port', position:[-27.38,153.17], services:['AA2'],                                                   avgDelinquency:6.9,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:28, d2:{count:214}, d5:{count:127}, terminalOps:'Patrick / DP World',       dwell:'2.4 days avg', nextCall:'26 Apr 2025', pricing:{ thc20:'$212', thc40:'$322', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$50/day' } },
+  { tier:2, name:'Port of Auckland',         country:'🇳🇿 Auckland, New Zealand',     unlocode:'NZ AKL', type:'Regional Port', position:[-36.84,174.76], services:['NZS'],                                                    avgDelinquency:8.8,  delinqTrend:'+0.5 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:35, d2:{count:187}, d5:{count:112}, terminalOps:'Ports of Auckland',        dwell:'2.7 days avg', nextCall:'28 Apr 2025', pricing:{ thc20:'$225', thc40:'$342', freeTime:'5 days', storage:'$24/TEU/day', reefer:'$53/day' } },
+  { tier:2, name:'Port of San Antonio',      country:'🇨🇱 San Antonio, Chile',        unlocode:'CL SAI', type:'Regional Port', position:[-33.58,-71.62], services:['WSA'],                                                  avgDelinquency:11.7, delinqTrend:'−1.4 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:47, d2:{count:148}, d5:{count:94},  terminalOps:'Puerto Central S.A.',      dwell:'3.6 days avg', nextCall:'02 May 2025', pricing:{ thc20:'$195', thc40:'$298', freeTime:'5 days', storage:'$21/TEU/day', reefer:'$47/day' } },
+  { tier:2, name:'Port of Buenos Aires',     country:'🇦🇷 Buenos Aires, Argentina',   unlocode:'AR BUE', type:'Regional Port', position:[-34.58,-58.37], services:['ES1'],                                                  avgDelinquency:16.3, delinqTrend:'+2.0 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:65, d2:{count:221}, d5:{count:118}, terminalOps:'Exolgan / TRP',            dwell:'4.1 days avg', nextCall:'26 Apr 2025', pricing:{ thc20:'$210', thc40:'$320', freeTime:'4 days', storage:'$23/TEU/day', reefer:'$50/day' } },
+  { tier:2, name:'Port Moresby',             country:'🇵🇬 Port Moresby, PNG',         unlocode:'PG POM', type:'Regional Port', position:[-9.44,147.19],  services:['ANA'],                                                   avgDelinquency:12.6, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:50, d2:{count:124}, d5:{count:68},  terminalOps:'PNG Ports Corporation',    dwell:'3.3 days avg', nextCall:'30 Apr 2025', pricing:{ thc20:'$215', thc40:'$328', freeTime:'4 days', storage:'$23/TEU/day', reefer:'$52/day' } },
 
   // ── TIER 3: LOCAL / FEEDER ────────────────────────────────
-  { tier:3, name:'Port of Tianjin (Xingang)',country:'🇨🇳 Tianjin, China',           unlocode:'CN TSN', type:'Feeder Port',   position:[39.00,117.72],  services:['CCS'],                                                    avgDelinquency:7.3,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:29, d2:{count:531}, d5:{count:374}, terminalOps:'Tianjin Port',             dwell:'2.1 days avg', nextCall:'19 Apr 2025' },
-  { tier:3, name:'Port of Xiamen',           country:'🇨🇳 Xiamen, China',            unlocode:'CN XMN', type:'Feeder Port',   position:[24.48,118.08],  services:['CCS','AAS1'],                                             avgDelinquency:6.8,  delinqTrend:'−0.3 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:27, d2:{count:419}, d5:{count:298}, terminalOps:'Xiamen Ocean Gate',        dwell:'2.0 days avg', nextCall:'18 Apr 2025' },
-  { tier:3, name:'Port of Nansha',           country:'🇨🇳 Guangzhou, China',         unlocode:'CN NAS', type:'Feeder Port',   position:[22.72,113.58],  services:['CCS'],                                                    avgDelinquency:6.5,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:26, d2:{count:387}, d5:{count:271}, terminalOps:'Nansha Port',              dwell:'1.9 days avg', nextCall:'17 Apr 2025' },
-  { tier:3, name:'Port of Tokyo',            country:'🇯🇵 Tokyo, Japan',              unlocode:'JP TYO', type:'Feeder Port',   position:[35.45,139.65],  services:['JCS'],                                                    avgDelinquency:4.1,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:16, d2:{count:212}, d5:{count:148}, terminalOps:'Tokyo Port Terminal',      dwell:'1.6 days avg', nextCall:'20 Apr 2025' },
-  { tier:3, name:'Port of Osaka',            country:'🇯🇵 Osaka, Japan',              unlocode:'JP OSA', type:'Feeder Port',   position:[34.65,135.43],  services:['JCS'],                                                    avgDelinquency:4.3,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:17, d2:{count:178}, d5:{count:124}, terminalOps:'Osaka Port Authority',     dwell:'1.7 days avg', nextCall:'20 Apr 2025' },
-  { tier:3, name:'Port of Kobe',             country:'🇯🇵 Kobe, Japan',               unlocode:'JP UKB', type:'Feeder Port',   position:[34.69,135.20],  services:['JCS'],                                                    avgDelinquency:4.2,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:17, d2:{count:163}, d5:{count:112}, terminalOps:'Kobe Port Terminal',       dwell:'1.7 days avg', nextCall:'21 Apr 2025' },
-  { tier:3, name:'Port of Penang',           country:'🇲🇾 Penang, Malaysia',          unlocode:'MY PEN', type:'Feeder Port',   position:[5.41,100.33],   services:['SEA1'],                                                   avgDelinquency:9.8,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:39, d2:{count:198}, d5:{count:112}, terminalOps:'Penang Port',              dwell:'2.5 days avg', nextCall:'20 Apr 2025' },
-  { tier:3, name:'Port of Haiphong',         country:'🇻🇳 Haiphong, Vietnam',         unlocode:'VN HPH', type:'Feeder Port',   position:[20.87,106.68],  services:['SEA2'],                                                   avgDelinquency:12.1, delinqTrend:'+0.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:48, d2:{count:231}, d5:{count:134}, terminalOps:'Hai An / Lach Huyen',      dwell:'3.0 days avg', nextCall:'21 Apr 2025' },
-  { tier:3, name:'Port of Cebu',             country:'🇵🇭 Cebu, Philippines',         unlocode:'PH CEB', type:'Feeder Port',   position:[10.31,123.91],  services:['SEA2'],                                                   avgDelinquency:11.4, delinqTrend:'Stable (±0.6 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:46, d2:{count:142}, d5:{count:79},  terminalOps:'ICTSI Cebu',               dwell:'2.9 days avg', nextCall:'23 Apr 2025' },
-  { tier:3, name:'Port of Surabaya',         country:'🇮🇩 Surabaya, Indonesia',       unlocode:'ID SUB', type:'Feeder Port',   position:[-7.21,112.74],  services:['SEA2'],                                                   avgDelinquency:13.7, delinqTrend:'+1.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:55, d2:{count:186}, d5:{count:104}, terminalOps:'Pelindo III',              dwell:'3.3 days avg', nextCall:'24 Apr 2025' },
-  { tier:3, name:'Port of Belawan',          country:'🇮🇩 Medan, Indonesia',          unlocode:'ID BTH', type:'Feeder Port',   position:[3.78,98.68],    services:['SEA2'],                                                   avgDelinquency:14.2, delinqTrend:'+1.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:57, d2:{count:134}, d5:{count:74},  terminalOps:'Pelindo I',                dwell:'3.5 days avg', nextCall:'22 Apr 2025' },
-  { tier:3, name:'Port of Tuticorin',        country:'🇮🇳 Tamil Nadu, India',         unlocode:'IN TUT', type:'Feeder Port',   position:[8.80,78.15],    services:['RGS'],                                                   avgDelinquency:14.6, delinqTrend:'+0.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:58, d2:{count:143}, d5:{count:81},  terminalOps:'VOC Port Trust',           dwell:'3.6 days avg', nextCall:'26 Apr 2025' },
-  { tier:3, name:'Port of Karachi',          country:'🇵🇰 Karachi, Pakistan',         unlocode:'PK KHI', type:'Feeder Port',   position:[24.85,67.01],   services:['CSE'],                                                   avgDelinquency:18.9, delinqTrend:'+2.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:76, d2:{count:219}, d5:{count:124}, terminalOps:'QICT / KPT',               dwell:'4.5 days avg', nextCall:'23 Apr 2025' },
-  { tier:3, name:'Port of Bandar Abbas',     country:'🇮🇷 Bandar Abbas, Iran',        unlocode:'IR BND', type:'Feeder Port',   position:[27.19,56.27],   services:['CSE'],                                                   avgDelinquency:20.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:82, d2:{count:176}, d5:{count:94},  terminalOps:'Shahid Rajaee Port',       dwell:'5.0 days avg', nextCall:'22 Apr 2025' },
-  { tier:3, name:'Port of Umm Qasr',         country:'🇮🇶 Basra, Iraq',               unlocode:'IQ UQR', type:'Feeder Port',   position:[30.03,47.93],   services:['CSE'],                                                   avgDelinquency:19.7, delinqTrend:'+2.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:79, d2:{count:158}, d5:{count:87},  terminalOps:'Agility / GBT',            dwell:'4.8 days avg', nextCall:'23 Apr 2025' },
-  { tier:3, name:'Port Elizabeth',           country:'🇿🇦 Eastern Cape, South Africa',unlocode:'ZA PLZ', type:'Feeder Port',   position:[-33.96,25.62],  services:['ASA'],                                                   avgDelinquency:14.8, delinqTrend:'−0.4 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:59, d2:{count:142}, d5:{count:78},  terminalOps:'Transnet Port Terminals',  dwell:'4.1 days avg', nextCall:'26 Apr 2025' },
-  { tier:3, name:'Port of East London',      country:'🇿🇦 Eastern Cape, South Africa',unlocode:'ZA ELS', type:'Feeder Port',   position:[-33.03,27.91],  services:['ASA'],                                                   avgDelinquency:13.6, delinqTrend:'Stable (±0.5 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:54, d2:{count:98},  d5:{count:53},  terminalOps:'Transnet Port Terminals',  dwell:'3.8 days avg', nextCall:'27 Apr 2025' },
-  { tier:3, name:'Port of Nacala',           country:'🇲🇿 Nacala, Mozambique',        unlocode:'MZ NCA', type:'Feeder Port',   position:[-14.54,40.67],  services:['EAS'],                                                   avgDelinquency:18.3, delinqTrend:'+1.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:73, d2:{count:87},  d5:{count:46},  terminalOps:'Nacala Logistics',         dwell:'4.9 days avg', nextCall:'29 Apr 2025' },
-  { tier:3, name:'Port of Beira',            country:'🇲🇿 Beira, Mozambique',         unlocode:'MZ BEW', type:'Feeder Port',   position:[-19.84,34.84],  services:['EAS'],                                                   avgDelinquency:17.6, delinqTrend:'+1.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:70, d2:{count:96},  d5:{count:52},  terminalOps:'DP World Beira',           dwell:'4.6 days avg', nextCall:'29 Apr 2025' },
-  { tier:3, name:'Port of Djibouti',         country:'🇩🇯 Djibouti',                  unlocode:'DJ JIB', type:'Feeder Port',   position:[11.59,43.14],   services:['EAS'],                                                   avgDelinquency:11.2, delinqTrend:'−0.6 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:45, d2:{count:163}, d5:{count:89},  terminalOps:'DP World Djibouti',        dwell:'2.9 days avg', nextCall:'26 Apr 2025' },
-  { tier:3, name:'Port of Onne',             country:'🇳🇬 Rivers State, Nigeria',     unlocode:'NG ONN', type:'Feeder Port',   position:[4.71,7.16],     services:['SWS'],                                                   avgDelinquency:22.8, delinqTrend:'+2.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:91, d2:{count:112}, d5:{count:58},  terminalOps:'INTELS Nigeria',           dwell:'5.9 days avg', nextCall:'02 May 2025' },
-  { tier:3, name:'Port of Dakar',            country:'🇸🇳 Dakar, Senegal',            unlocode:'SN DKR', type:'Feeder Port',   position:[14.69,-17.44],  services:['WA3'],                                                   avgDelinquency:16.4, delinqTrend:'+0.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:66, d2:{count:124}, d5:{count:67},  terminalOps:'Dakar Terminal',           dwell:'4.2 days avg', nextCall:'27 Apr 2025' },
-  { tier:3, name:'Port of Adelaide',         country:'🇦🇺 Adelaide, Australia',        unlocode:'AU ADL', type:'Feeder Port',   position:[-34.86,138.60], services:['AA2'],                                                   avgDelinquency:7.1,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:28, d2:{count:142}, d5:{count:86},  terminalOps:'Flinders Adelaide',        dwell:'2.4 days avg', nextCall:'26 Apr 2025' },
-  { tier:3, name:'Port of Lae',              country:'🇵🇬 Lae, Papua New Guinea',     unlocode:'PG LAE', type:'Feeder Port',   position:[-6.73,147.00],  services:['ANA'],                                                   avgDelinquency:13.4, delinqTrend:'+0.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:54, d2:{count:78},  d5:{count:43},  terminalOps:'Lae Port',                 dwell:'3.4 days avg', nextCall:'01 May 2025' },
-  { tier:3, name:'Port of Noumea',           country:'🇳🇨 Noumea, New Caledonia',     unlocode:'NC NOU', type:'Feeder Port',   position:[-22.28,166.46], services:['MSP'],                                                   avgDelinquency:9.7,  delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:39, d2:{count:76},  d5:{count:41},  terminalOps:'Port Autonome de Nouméa',  dwell:'2.6 days avg', nextCall:'05 May 2025' },
-  { tier:3, name:'Port of Suva',             country:'🇫🇯 Suva, Fiji',                unlocode:'FJ SUV', type:'Feeder Port',   position:[-18.14,178.44], services:['MSP'],                                                   avgDelinquency:10.2, delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:41, d2:{count:64},  d5:{count:35},  terminalOps:'Ports Terminal Ltd',       dwell:'2.8 days avg', nextCall:'08 May 2025' },
-  { tier:3, name:'Port of Port Vila',        country:'🇻🇺 Port Vila, Vanuatu',        unlocode:'VU VLI', type:'Feeder Port',   position:[-17.74,168.32], services:['MSP'],                                                   avgDelinquency:11.1, delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:44, d2:{count:52},  d5:{count:28},  terminalOps:'Vanuatu Ports Authority',  dwell:'2.5 days avg', nextCall:'07 May 2025' },
-  { tier:3, name:'Port of Iquique',          country:'🇨🇱 Iquique, Chile',             unlocode:'CL IQQ', type:'Feeder Port',   position:[-20.22,-70.14], services:['WSA'],                                                  avgDelinquency:12.3, delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:49, d2:{count:98},  d5:{count:54},  terminalOps:'Puerto Iquique',           dwell:'3.1 days avg', nextCall:'03 May 2025' },
-  { tier:3, name:'Port of Valparaíso',       country:'🇨🇱 Valparaíso, Chile',          unlocode:'CL VAP', type:'Feeder Port',   position:[-33.05,-71.62], services:['WSA'],                                                  avgDelinquency:11.4, delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:46, d2:{count:113}, d5:{count:64},  terminalOps:'TPS / Puerto Central',     dwell:'3.0 days avg', nextCall:'03 May 2025' },
-  { tier:3, name:'Port of Montevideo',       country:'🇺🇾 Montevideo, Uruguay',        unlocode:'UY MVD', type:'Feeder Port',   position:[-34.91,-56.19], services:['ES1'],                                                  avgDelinquency:15.2, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:61, d2:{count:134}, d5:{count:76},  terminalOps:'Montecon / TCP',           dwell:'3.8 days avg', nextCall:'27 Apr 2025' },
+  { tier:3, name:'Port of Tianjin (Xingang)',country:'🇨🇳 Tianjin, China',           unlocode:'CN TSN', type:'Feeder Port',   position:[39.00,117.72],  services:['CCS'],                                                    avgDelinquency:7.3,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:29, d2:{count:531}, d5:{count:374}, terminalOps:'Tianjin Port',             dwell:'2.1 days avg', nextCall:'19 Apr 2025', pricing:{ thc20:'$158', thc40:'$242', freeTime:'7 days', storage:'$16/TEU/day', reefer:'$39/day' } },
+  { tier:3, name:'Port of Xiamen',           country:'🇨🇳 Xiamen, China',            unlocode:'CN XMN', type:'Feeder Port',   position:[24.48,118.08],  services:['CCS','AAS1'],                                             avgDelinquency:6.8,  delinqTrend:'−0.3 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:27, d2:{count:419}, d5:{count:298}, terminalOps:'Xiamen Ocean Gate',        dwell:'2.0 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$162', thc40:'$248', freeTime:'7 days', storage:'$16/TEU/day', reefer:'$40/day' } },
+  { tier:3, name:'Port of Nansha',           country:'🇨🇳 Guangzhou, China',         unlocode:'CN NAS', type:'Feeder Port',   position:[22.72,113.58],  services:['CCS'],                                                    avgDelinquency:6.5,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:26, d2:{count:387}, d5:{count:271}, terminalOps:'Nansha Port',              dwell:'1.9 days avg', nextCall:'17 Apr 2025', pricing:{ thc20:'$160', thc40:'$245', freeTime:'7 days', storage:'$16/TEU/day', reefer:'$39/day' } },
+  { tier:3, name:'Port of Tokyo',            country:'🇯🇵 Tokyo, Japan',              unlocode:'JP TYO', type:'Feeder Port',   position:[35.45,139.65],  services:['JCS'],                                                    avgDelinquency:4.1,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:16, d2:{count:212}, d5:{count:148}, terminalOps:'Tokyo Port Terminal',      dwell:'1.6 days avg', nextCall:'20 Apr 2025', pricing:{ thc20:'$195', thc40:'$298', freeTime:'7 days', storage:'$20/TEU/day', reefer:'$46/day' } },
+  { tier:3, name:'Port of Osaka',            country:'🇯🇵 Osaka, Japan',              unlocode:'JP OSA', type:'Feeder Port',   position:[34.65,135.43],  services:['JCS'],                                                    avgDelinquency:4.3,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:17, d2:{count:178}, d5:{count:124}, terminalOps:'Osaka Port Authority',     dwell:'1.7 days avg', nextCall:'20 Apr 2025', pricing:{ thc20:'$192', thc40:'$294', freeTime:'7 days', storage:'$20/TEU/day', reefer:'$46/day' } },
+  { tier:3, name:'Port of Kobe',             country:'🇯🇵 Kobe, Japan',               unlocode:'JP UKB', type:'Feeder Port',   position:[34.69,135.20],  services:['JCS'],                                                    avgDelinquency:4.2,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:17, d2:{count:163}, d5:{count:112}, terminalOps:'Kobe Port Terminal',       dwell:'1.7 days avg', nextCall:'21 Apr 2025', pricing:{ thc20:'$190', thc40:'$292', freeTime:'7 days', storage:'$19/TEU/day', reefer:'$45/day' } },
+  { tier:3, name:'Port of Penang',           country:'🇲🇾 Penang, Malaysia',          unlocode:'MY PEN', type:'Feeder Port',   position:[5.41,100.33],   services:['SEA1'],                                                   avgDelinquency:9.8,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:39, d2:{count:198}, d5:{count:112}, terminalOps:'Penang Port',              dwell:'2.5 days avg', nextCall:'20 Apr 2025', pricing:{ thc20:'$118', thc40:'$182', freeTime:'7 days', storage:'$13/TEU/day', reefer:'$36/day' } },
+  { tier:3, name:'Port of Haiphong',         country:'🇻🇳 Haiphong, Vietnam',         unlocode:'VN HPH', type:'Feeder Port',   position:[20.87,106.68],  services:['SEA2'],                                                   avgDelinquency:12.1, delinqTrend:'+0.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:48, d2:{count:231}, d5:{count:134}, terminalOps:'Hai An / Lach Huyen',      dwell:'3.0 days avg', nextCall:'21 Apr 2025', pricing:{ thc20:'$118', thc40:'$182', freeTime:'6 days', storage:'$13/TEU/day', reefer:'$35/day' } },
+  { tier:3, name:'Port of Cebu',             country:'🇵🇭 Cebu, Philippines',         unlocode:'PH CEB', type:'Feeder Port',   position:[10.31,123.91],  services:['SEA2'],                                                   avgDelinquency:11.4, delinqTrend:'Stable (±0.6 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:46, d2:{count:142}, d5:{count:79},  terminalOps:'ICTSI Cebu',               dwell:'2.9 days avg', nextCall:'23 Apr 2025', pricing:{ thc20:'$132', thc40:'$202', freeTime:'5 days', storage:'$14/TEU/day', reefer:'$36/day' } },
+  { tier:3, name:'Port of Surabaya',         country:'🇮🇩 Surabaya, Indonesia',       unlocode:'ID SUB', type:'Feeder Port',   position:[-7.21,112.74],  services:['SEA2'],                                                   avgDelinquency:13.7, delinqTrend:'+1.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:55, d2:{count:186}, d5:{count:104}, terminalOps:'Pelindo III',              dwell:'3.3 days avg', nextCall:'24 Apr 2025', pricing:{ thc20:'$122', thc40:'$188', freeTime:'5 days', storage:'$13/TEU/day', reefer:'$34/day' } },
+  { tier:3, name:'Port of Belawan',          country:'🇮🇩 Medan, Indonesia',          unlocode:'ID BTH', type:'Feeder Port',   position:[3.78,98.68],    services:['SEA2'],                                                   avgDelinquency:14.2, delinqTrend:'+1.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:57, d2:{count:134}, d5:{count:74},  terminalOps:'Pelindo I',                dwell:'3.5 days avg', nextCall:'22 Apr 2025', pricing:{ thc20:'$115', thc40:'$178', freeTime:'5 days', storage:'$13/TEU/day', reefer:'$33/day' } },
+  { tier:3, name:'Port of Tuticorin',        country:'🇮🇳 Tamil Nadu, India',         unlocode:'IN TUT', type:'Feeder Port',   position:[8.80,78.15],    services:['RGS'],                                                   avgDelinquency:14.6, delinqTrend:'+0.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:58, d2:{count:143}, d5:{count:81},  terminalOps:'VOC Port Trust',           dwell:'3.6 days avg', nextCall:'26 Apr 2025', pricing:{ thc20:'$138', thc40:'$212', freeTime:'5 days', storage:'$15/TEU/day', reefer:'$37/day' } },
+  { tier:3, name:'Port of Karachi',          country:'🇵🇰 Karachi, Pakistan',         unlocode:'PK KHI', type:'Feeder Port',   position:[24.85,67.01],   services:['CSE'],                                                   avgDelinquency:18.9, delinqTrend:'+2.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:76, d2:{count:219}, d5:{count:124}, terminalOps:'QICT / KPT',               dwell:'4.5 days avg', nextCall:'23 Apr 2025', pricing:{ thc20:'$175', thc40:'$268', freeTime:'5 days', storage:'$18/TEU/day', reefer:'$44/day' } },
+  { tier:3, name:'Port of Bandar Abbas',     country:'🇮🇷 Bandar Abbas, Iran',        unlocode:'IR BND', type:'Feeder Port',   position:[27.19,56.27],   services:['CSE'],                                                   avgDelinquency:20.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:82, d2:{count:176}, d5:{count:94},  terminalOps:'Shahid Rajaee Port',       dwell:'5.0 days avg', nextCall:'22 Apr 2025', pricing:{ thc20:'$182', thc40:'$278', freeTime:'5 days', storage:'$18/TEU/day', reefer:'$45/day' } },
+  { tier:3, name:'Port of Umm Qasr',         country:'🇮🇶 Basra, Iraq',               unlocode:'IQ UQR', type:'Feeder Port',   position:[30.03,47.93],   services:['CSE'],                                                   avgDelinquency:19.7, delinqTrend:'+2.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:79, d2:{count:158}, d5:{count:87},  terminalOps:'Agility / GBT',            dwell:'4.8 days avg', nextCall:'23 Apr 2025', pricing:{ thc20:'$185', thc40:'$282', freeTime:'5 days', storage:'$19/TEU/day', reefer:'$46/day' } },
+  { tier:3, name:'Port Elizabeth',           country:'🇿🇦 Eastern Cape, South Africa',unlocode:'ZA PLZ', type:'Feeder Port',   position:[-33.96,25.62],  services:['ASA'],                                                   avgDelinquency:14.8, delinqTrend:'−0.4 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:59, d2:{count:142}, d5:{count:78},  terminalOps:'Transnet Port Terminals',  dwell:'4.1 days avg', nextCall:'26 Apr 2025', pricing:{ thc20:'$185', thc40:'$282', freeTime:'4 days', storage:'$22/TEU/day', reefer:'$50/day' } },
+  { tier:3, name:'Port of East London',      country:'🇿🇦 Eastern Cape, South Africa',unlocode:'ZA ELS', type:'Feeder Port',   position:[-33.03,27.91],  services:['ASA'],                                                   avgDelinquency:13.6, delinqTrend:'Stable (±0.5 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:54, d2:{count:98},  d5:{count:53},  terminalOps:'Transnet Port Terminals',  dwell:'3.8 days avg', nextCall:'27 Apr 2025', pricing:{ thc20:'$180', thc40:'$275', freeTime:'4 days', storage:'$21/TEU/day', reefer:'$49/day' } },
+  { tier:3, name:'Port of Nacala',           country:'🇲🇿 Nacala, Mozambique',        unlocode:'MZ NCA', type:'Feeder Port',   position:[-14.54,40.67],  services:['EAS'],                                                   avgDelinquency:18.3, delinqTrend:'+1.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:73, d2:{count:87},  d5:{count:46},  terminalOps:'Nacala Logistics',         dwell:'4.9 days avg', nextCall:'29 Apr 2025', pricing:{ thc20:'$220', thc40:'$335', freeTime:'3 days', storage:'$25/TEU/day', reefer:'$56/day' } },
+  { tier:3, name:'Port of Beira',            country:'🇲🇿 Beira, Mozambique',         unlocode:'MZ BEW', type:'Feeder Port',   position:[-19.84,34.84],  services:['EAS'],                                                   avgDelinquency:17.6, delinqTrend:'+1.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:70, d2:{count:96},  d5:{count:52},  terminalOps:'DP World Beira',           dwell:'4.6 days avg', nextCall:'29 Apr 2025', pricing:{ thc20:'$215', thc40:'$328', freeTime:'3 days', storage:'$24/TEU/day', reefer:'$54/day' } },
+  { tier:3, name:'Port of Djibouti',         country:'🇩🇯 Djibouti',                  unlocode:'DJ JIB', type:'Feeder Port',   position:[11.59,43.14],   services:['EAS'],                                                   avgDelinquency:11.2, delinqTrend:'−0.6 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:45, d2:{count:163}, d5:{count:89},  terminalOps:'DP World Djibouti',        dwell:'2.9 days avg', nextCall:'26 Apr 2025', pricing:{ thc20:'$188', thc40:'$288', freeTime:'5 days', storage:'$20/TEU/day', reefer:'$48/day' } },
+  { tier:3, name:'Port of Onne',             country:'🇳🇬 Rivers State, Nigeria',     unlocode:'NG ONN', type:'Feeder Port',   position:[4.71,7.16],     services:['SWS'],                                                   avgDelinquency:22.8, delinqTrend:'+2.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:91, d2:{count:112}, d5:{count:58},  terminalOps:'INTELS Nigeria',           dwell:'5.9 days avg', nextCall:'02 May 2025', pricing:{ thc20:'$255', thc40:'$392', freeTime:'3 days', storage:'$29/TEU/day', reefer:'$63/day' } },
+  { tier:3, name:'Port of Dakar',            country:'🇸🇳 Dakar, Senegal',            unlocode:'SN DKR', type:'Feeder Port',   position:[14.69,-17.44],  services:['WA3'],                                                   avgDelinquency:16.4, delinqTrend:'+0.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:66, d2:{count:124}, d5:{count:67},  terminalOps:'Dakar Terminal',           dwell:'4.2 days avg', nextCall:'27 Apr 2025', pricing:{ thc20:'$228', thc40:'$348', freeTime:'3 days', storage:'$26/TEU/day', reefer:'$58/day' } },
+  { tier:3, name:'Port of Adelaide',         country:'🇦🇺 Adelaide, Australia',        unlocode:'AU ADL', type:'Feeder Port',   position:[-34.86,138.60], services:['AA2'],                                                   avgDelinquency:7.1,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:28, d2:{count:142}, d5:{count:86},  terminalOps:'Flinders Adelaide',        dwell:'2.4 days avg', nextCall:'26 Apr 2025', pricing:{ thc20:'$208', thc40:'$318', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$49/day' } },
+  { tier:3, name:'Port of Lae',              country:'🇵🇬 Lae, Papua New Guinea',     unlocode:'PG LAE', type:'Feeder Port',   position:[-6.73,147.00],  services:['ANA'],                                                   avgDelinquency:13.4, delinqTrend:'+0.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:54, d2:{count:78},  d5:{count:43},  terminalOps:'Lae Port',                 dwell:'3.4 days avg', nextCall:'01 May 2025', pricing:{ thc20:'$218', thc40:'$332', freeTime:'4 days', storage:'$23/TEU/day', reefer:'$52/day' } },
+  { tier:3, name:'Port of Noumea',           country:'🇳🇨 Noumea, New Caledonia',     unlocode:'NC NOU', type:'Feeder Port',   position:[-22.28,166.46], services:['MSP'],                                                   avgDelinquency:9.7,  delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:39, d2:{count:76},  d5:{count:41},  terminalOps:'Port Autonome de Nouméa',  dwell:'2.6 days avg', nextCall:'05 May 2025', pricing:{ thc20:'$222', thc40:'$338', freeTime:'5 days', storage:'$24/TEU/day', reefer:'$52/day' } },
+  { tier:3, name:'Port of Suva',             country:'🇫🇯 Suva, Fiji',                unlocode:'FJ SUV', type:'Feeder Port',   position:[-18.14,178.44], services:['MSP'],                                                   avgDelinquency:10.2, delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:41, d2:{count:64},  d5:{count:35},  terminalOps:'Ports Terminal Ltd',       dwell:'2.8 days avg', nextCall:'08 May 2025', pricing:{ thc20:'$218', thc40:'$332', freeTime:'5 days', storage:'$23/TEU/day', reefer:'$51/day' } },
+  { tier:3, name:'Port of Port Vila',        country:'🇻🇺 Port Vila, Vanuatu',        unlocode:'VU VLI', type:'Feeder Port',   position:[-17.74,168.32], services:['MSP'],                                                   avgDelinquency:11.1, delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:44, d2:{count:52},  d5:{count:28},  terminalOps:'Vanuatu Ports Authority',  dwell:'2.5 days avg', nextCall:'07 May 2025', pricing:{ thc20:'$215', thc40:'$328', freeTime:'5 days', storage:'$23/TEU/day', reefer:'$51/day' } },
+  { tier:3, name:'Port of Iquique',          country:'🇨🇱 Iquique, Chile',             unlocode:'CL IQQ', type:'Feeder Port',   position:[-20.22,-70.14], services:['WSA'],                                                  avgDelinquency:12.3, delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:49, d2:{count:98},  d5:{count:54},  terminalOps:'Puerto Iquique',           dwell:'3.1 days avg', nextCall:'03 May 2025', pricing:{ thc20:'$192', thc40:'$294', freeTime:'5 days', storage:'$21/TEU/day', reefer:'$47/day' } },
+  { tier:3, name:'Port of Valparaíso',       country:'🇨🇱 Valparaíso, Chile',          unlocode:'CL VAP', type:'Feeder Port',   position:[-33.05,-71.62], services:['WSA'],                                                  avgDelinquency:11.4, delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:46, d2:{count:113}, d5:{count:64},  terminalOps:'TPS / Puerto Central',     dwell:'3.0 days avg', nextCall:'03 May 2025', pricing:{ thc20:'$190', thc40:'$290', freeTime:'5 days', storage:'$21/TEU/day', reefer:'$46/day' } },
+  { tier:3, name:'Port of Montevideo',       country:'🇺🇾 Montevideo, Uruguay',        unlocode:'UY MVD', type:'Feeder Port',   position:[-34.91,-56.19], services:['ES1'],                                                  avgDelinquency:15.2, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:61, d2:{count:134}, d5:{count:76},  terminalOps:'Montecon / TCP',           dwell:'3.8 days avg', nextCall:'27 Apr 2025', pricing:{ thc20:'$205', thc40:'$315', freeTime:'4 days', storage:'$22/TEU/day', reefer:'$49/day' } },
 
   // ── AFRICA ──
-  { tier:3, name:'Port of Douala',           country:'🇨🇲 Douala, Cameroon',           unlocode:'CM DLA', type:'Feeder Port',   position:[3.98,9.70],     services:['WA3'],                                                   avgDelinquency:20.4, delinqTrend:'+2.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:82, d2:{count:112}, d5:{count:54},  terminalOps:'Bolloré / SNATV',          dwell:'5.4 days avg', nextCall:'04 May 2026' },
-  { tier:3, name:'Port of Maputo',           country:'🇲🇿 Maputo, Mozambique',          unlocode:'MZ MPM', type:'Feeder Port',   position:[-25.97,32.57],  services:['MZS'],                                                   avgDelinquency:16.8, delinqTrend:'+1.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:67, d2:{count:87},  d5:{count:44},  terminalOps:'Maputo Port Development',  dwell:'4.2 days avg', nextCall:'10 May 2026' },
-  { tier:3, name:'Port of Toamasina',        country:'🇲🇬 Toamasina, Madagascar',       unlocode:'MG TMM', type:'Feeder Port',   position:[-18.15,49.40],  services:['MZS'],                                                   avgDelinquency:14.3, delinqTrend:'Stable (±0.6 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:57, d2:{count:63},  d5:{count:31},  terminalOps:'MICTSL',                   dwell:'3.6 days avg', nextCall:'09 May 2026' },
-  { tier:3, name:'Port Louis',               country:'🇲🇺 Port Louis, Mauritius',       unlocode:'MU PLU', type:'Feeder Port',   position:[-20.16,57.50],  services:['MZS'],                                                   avgDelinquency:11.2, delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:45, d2:{count:94},  d5:{count:52},  terminalOps:'Mauritius Container Terminal', dwell:'3.1 days avg', nextCall:'08 May 2026' },
+  { tier:3, name:'Port of Douala',           country:'🇨🇲 Douala, Cameroon',           unlocode:'CM DLA', type:'Feeder Port',   position:[3.98,9.70],     services:['WA3'],                                                   avgDelinquency:20.4, delinqTrend:'+2.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:82, d2:{count:112}, d5:{count:54},  terminalOps:'Bolloré / SNATV',          dwell:'5.4 days avg', nextCall:'04 May 2026', pricing:{ thc20:'$245', thc40:'$375', freeTime:'3 days', storage:'$28/TEU/day', reefer:'$61/day' } },
+  { tier:3, name:'Port of Maputo',           country:'🇲🇿 Maputo, Mozambique',          unlocode:'MZ MPM', type:'Feeder Port',   position:[-25.97,32.57],  services:['MZS'],                                                   avgDelinquency:16.8, delinqTrend:'+1.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:67, d2:{count:87},  d5:{count:44},  terminalOps:'Maputo Port Development',  dwell:'4.2 days avg', nextCall:'10 May 2026', pricing:{ thc20:'$212', thc40:'$325', freeTime:'3 days', storage:'$24/TEU/day', reefer:'$53/day' } },
+  { tier:3, name:'Port of Toamasina',        country:'🇲🇬 Toamasina, Madagascar',       unlocode:'MG TMM', type:'Feeder Port',   position:[-18.15,49.40],  services:['MZS'],                                                   avgDelinquency:14.3, delinqTrend:'Stable (±0.6 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:57, d2:{count:63},  d5:{count:31},  terminalOps:'MICTSL',                   dwell:'3.6 days avg', nextCall:'09 May 2026', pricing:{ thc20:'$205', thc40:'$315', freeTime:'4 days', storage:'$23/TEU/day', reefer:'$52/day' } },
+  { tier:3, name:'Port Louis',               country:'🇲🇺 Port Louis, Mauritius',       unlocode:'MU PLU', type:'Feeder Port',   position:[-20.16,57.50],  services:['MZS'],                                                   avgDelinquency:11.2, delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:45, d2:{count:94},  d5:{count:52},  terminalOps:'Mauritius Container Terminal', dwell:'3.1 days avg', nextCall:'08 May 2026', pricing:{ thc20:'$198', thc40:'$302', freeTime:'5 days', storage:'$21/TEU/day', reefer:'$49/day' } },
 
   // ── MIDDLE EAST & RED SEA ──
-  { tier:2, name:'Port of Jeddah',           country:'🇸🇦 Jeddah, Saudi Arabia',        unlocode:'SA JED', type:'Regional Port', position:[21.54,39.18],   services:['RS2','IR5'],                                             avgDelinquency:10.4, delinqTrend:'+0.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:42, d2:{count:312}, d5:{count:178}, terminalOps:'Saudi Ports Authority',    dwell:'3.0 days avg', nextCall:'25 Apr 2026' },
-  { tier:2, name:'Port of Ad Dammam',        country:'🇸🇦 Ad Dammam, Saudi Arabia',     unlocode:'SA DAM', type:'Regional Port', position:[26.43,50.11],   services:['GCS'],                                                   avgDelinquency:9.6,  delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:38, d2:{count:187}, d5:{count:104}, terminalOps:'Saudi Ports Authority',    dwell:'2.7 days avg', nextCall:'24 Apr 2026' },
-  { tier:3, name:'Port of Aqaba',            country:'🇯🇴 Aqaba, Jordan',               unlocode:'JO AQJ', type:'Feeder Port',   position:[29.52,35.01],   services:['RS2'],                                                   avgDelinquency:12.1, delinqTrend:'+0.5 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:48, d2:{count:98},  d5:{count:53},  terminalOps:'Aqaba Container Terminal', dwell:'3.2 days avg', nextCall:'28 Apr 2026' },
-  { tier:3, name:'Ain Sokhna Port',          country:'🇪🇬 Ain Sokhna, Egypt',           unlocode:'EG SKH', type:'Feeder Port',   position:[29.59,32.33],   services:['RS2'],                                                   avgDelinquency:13.5, delinqTrend:'+1.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:54, d2:{count:134}, d5:{count:72},  terminalOps:'SCCT / Sokhna Port',       dwell:'3.5 days avg', nextCall:'29 Apr 2026' },
-  { tier:3, name:'Port of Djibouti',         country:'🇩🇯 Djibouti',                    unlocode:'DJ JIB', type:'Feeder Port',   position:[11.59,43.15],   services:['RS2','RGS'],                                             avgDelinquency:14.7, delinqTrend:'+1.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:59, d2:{count:156}, d5:{count:84},  terminalOps:'Doraleh Container Terminal', dwell:'3.8 days avg', nextCall:'26 Apr 2026' },
-  { tier:3, name:'Port of Aden',             country:'🇾🇪 Aden, Yemen',                 unlocode:'YE ADE', type:'Feeder Port',   position:[12.78,44.99],   services:['RGS'],                                                   avgDelinquency:18.3, delinqTrend:'+2.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:73, d2:{count:67},  d5:{count:32},  terminalOps:'Aden Container Terminal',  dwell:'4.5 days avg', nextCall:'30 Apr 2026' },
-  { tier:3, name:'Port of Karachi',          country:'🇵🇰 Karachi, Pakistan',            unlocode:'PK KHI', type:'Feeder Port',   position:[24.84,66.99],   services:['CSE'],                                                   avgDelinquency:15.6, delinqTrend:'+1.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:63, d2:{count:143}, d5:{count:78},  terminalOps:'KICT / QICT',              dwell:'4.0 days avg', nextCall:'27 Apr 2026' },
+  { tier:2, name:'Port of Jeddah',           country:'🇸🇦 Jeddah, Saudi Arabia',        unlocode:'SA JED', type:'Regional Port', position:[21.54,39.18],   services:['RS2','IR5'],                                             avgDelinquency:10.4, delinqTrend:'+0.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:42, d2:{count:312}, d5:{count:178}, terminalOps:'Saudi Ports Authority',    dwell:'3.0 days avg', nextCall:'25 Apr 2026', pricing:{ thc20:'$200', thc40:'$308', freeTime:'7 days', storage:'$20/TEU/day', reefer:'$50/day' } },
+  { tier:2, name:'Port of Ad Dammam',        country:'🇸🇦 Ad Dammam, Saudi Arabia',     unlocode:'SA DAM', type:'Regional Port', position:[26.43,50.11],   services:['GCS'],                                                   avgDelinquency:9.6,  delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:38, d2:{count:187}, d5:{count:104}, terminalOps:'Saudi Ports Authority',    dwell:'2.7 days avg', nextCall:'24 Apr 2026', pricing:{ thc20:'$195', thc40:'$300', freeTime:'7 days', storage:'$19/TEU/day', reefer:'$49/day' } },
+  { tier:3, name:'Port of Aqaba',            country:'🇯🇴 Aqaba, Jordan',               unlocode:'JO AQJ', type:'Feeder Port',   position:[29.52,35.01],   services:['RS2'],                                                   avgDelinquency:12.1, delinqTrend:'+0.5 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:48, d2:{count:98},  d5:{count:53},  terminalOps:'Aqaba Container Terminal', dwell:'3.2 days avg', nextCall:'28 Apr 2026', pricing:{ thc20:'$188', thc40:'$288', freeTime:'6 days', storage:'$19/TEU/day', reefer:'$47/day' } },
+  { tier:3, name:'Ain Sokhna Port',          country:'🇪🇬 Ain Sokhna, Egypt',           unlocode:'EG SKH', type:'Feeder Port',   position:[29.59,32.33],   services:['RS2'],                                                   avgDelinquency:13.5, delinqTrend:'+1.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:54, d2:{count:134}, d5:{count:72},  terminalOps:'SCCT / Sokhna Port',       dwell:'3.5 days avg', nextCall:'29 Apr 2026', pricing:{ thc20:'$182', thc40:'$278', freeTime:'5 days', storage:'$18/TEU/day', reefer:'$45/day' } },
+  { tier:3, name:'Port of Djibouti',         country:'🇩🇯 Djibouti',                    unlocode:'DJ JIB', type:'Feeder Port',   position:[11.59,43.15],   services:['RS2','RGS'],                                             avgDelinquency:14.7, delinqTrend:'+1.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:59, d2:{count:156}, d5:{count:84},  terminalOps:'Doraleh Container Terminal', dwell:'3.8 days avg', nextCall:'26 Apr 2026', pricing:{ thc20:'$190', thc40:'$292', freeTime:'5 days', storage:'$20/TEU/day', reefer:'$48/day' } },
+  { tier:3, name:'Port of Aden',             country:'🇾🇪 Aden, Yemen',                 unlocode:'YE ADE', type:'Feeder Port',   position:[12.78,44.99],   services:['RGS'],                                                   avgDelinquency:18.3, delinqTrend:'+2.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:73, d2:{count:67},  d5:{count:32},  terminalOps:'Aden Container Terminal',  dwell:'4.5 days avg', nextCall:'30 Apr 2026', pricing:{ thc20:'$185', thc40:'$282', freeTime:'5 days', storage:'$19/TEU/day', reefer:'$46/day' } },
+  { tier:3, name:'Port of Karachi',          country:'🇵🇰 Karachi, Pakistan',            unlocode:'PK KHI', type:'Feeder Port',   position:[24.84,66.99],   services:['CSE'],                                                   avgDelinquency:15.6, delinqTrend:'+1.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:63, d2:{count:143}, d5:{count:78},  terminalOps:'KICT / QICT',              dwell:'4.0 days avg', nextCall:'27 Apr 2026', pricing:{ thc20:'$178', thc40:'$272', freeTime:'5 days', storage:'$18/TEU/day', reefer:'$44/day' } },
 
   // ── ECSA & WCSA ──
-  { tier:2, name:'Port of Rio de Janeiro',   country:'🇧🇷 Rio de Janeiro, Brazil',      unlocode:'BR RIO', type:'Regional Port', position:[-22.88,-43.18], services:['ES1'],                                                   avgDelinquency:17.6, delinqTrend:'+1.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:70, d2:{count:198}, d5:{count:108}, terminalOps:'MultiRio / Libra',         dwell:'4.0 days avg', nextCall:'20 May 2026' },
-  { tier:3, name:'Port of Paranaguá',        country:'🇧🇷 Paranaguá, Brazil',           unlocode:'BR PNG', type:'Feeder Port',   position:[-25.52,-48.51], services:['ES1','ES2'],                                             avgDelinquency:16.4, delinqTrend:'+1.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:66, d2:{count:167}, d5:{count:91},  terminalOps:'TCP / Paranaguá Container', dwell:'3.9 days avg', nextCall:'19 May 2026' },
-  { tier:3, name:'Port of Navegantes',       country:'🇧🇷 Navegantes, Brazil',          unlocode:'BR NVT', type:'Feeder Port',   position:[-26.90,-48.65], services:['ES1','ES2'],                                             avgDelinquency:15.8, delinqTrend:'+0.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:63, d2:{count:143}, d5:{count:78},  terminalOps:'Portonave',                dwell:'3.7 days avg', nextCall:'18 May 2026' },
-  { tier:2, name:'Port of Manzanillo',       country:'🇲🇽 Manzanillo, Mexico',          unlocode:'MX MZT', type:'Regional Port', position:[19.07,-104.32], services:['WSA','WS2'],                                             avgDelinquency:13.2, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:53, d2:{count:178}, d5:{count:98},  terminalOps:'SSA Mexico / ICTSI',       dwell:'3.4 days avg', nextCall:'08 May 2026' },
-  { tier:2, name:'Port of Buenaventura',     country:'🇨🇴 Buenaventura, Colombia',      unlocode:'CO BUN', type:'Regional Port', position:[3.88,-77.05],   services:['WSA','WS6'],                                             avgDelinquency:14.5, delinqTrend:'+1.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:58, d2:{count:154}, d5:{count:83},  terminalOps:'TCBUEN / SPRC',            dwell:'3.6 days avg', nextCall:'07 May 2026' },
-  { tier:2, name:'Port of Guayaquil',        country:'🇪🇨 Guayaquil, Ecuador',           unlocode:'EC GYE', type:'Regional Port', position:[-2.27,-79.89],  services:['WSA'],                                                   avgDelinquency:13.8, delinqTrend:'+0.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:55, d2:{count:132}, d5:{count:71},  terminalOps:'Contecon Guayaquil',       dwell:'3.3 days avg', nextCall:'05 May 2026' },
+  { tier:2, name:'Port of Rio de Janeiro',   country:'🇧🇷 Rio de Janeiro, Brazil',      unlocode:'BR RIO', type:'Regional Port', position:[-22.88,-43.18], services:['ES1'],                                                   avgDelinquency:17.6, delinqTrend:'+1.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:70, d2:{count:198}, d5:{count:108}, terminalOps:'MultiRio / Libra',         dwell:'4.0 days avg', nextCall:'20 May 2026', pricing:{ thc20:'$225', thc40:'$345', freeTime:'4 days', storage:'$25/TEU/day', reefer:'$55/day' } },
+  { tier:3, name:'Port of Paranaguá',        country:'🇧🇷 Paranaguá, Brazil',           unlocode:'BR PNG', type:'Feeder Port',   position:[-25.52,-48.51], services:['ES1','ES2'],                                             avgDelinquency:16.4, delinqTrend:'+1.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:66, d2:{count:167}, d5:{count:91},  terminalOps:'TCP / Paranaguá Container', dwell:'3.9 days avg', nextCall:'19 May 2026', pricing:{ thc20:'$218', thc40:'$335', freeTime:'4 days', storage:'$24/TEU/day', reefer:'$53/day' } },
+  { tier:3, name:'Port of Navegantes',       country:'🇧🇷 Navegantes, Brazil',          unlocode:'BR NVT', type:'Feeder Port',   position:[-26.90,-48.65], services:['ES1','ES2'],                                             avgDelinquency:15.8, delinqTrend:'+0.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:63, d2:{count:143}, d5:{count:78},  terminalOps:'Portonave',                dwell:'3.7 days avg', nextCall:'18 May 2026', pricing:{ thc20:'$215', thc40:'$330', freeTime:'4 days', storage:'$24/TEU/day', reefer:'$52/day' } },
+  { tier:2, name:'Port of Manzanillo',       country:'🇲🇽 Manzanillo, Mexico',          unlocode:'MX MZT', type:'Regional Port', position:[19.07,-104.32], services:['WSA','WS2'],                                             avgDelinquency:13.2, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:53, d2:{count:178}, d5:{count:98},  terminalOps:'SSA Mexico / ICTSI',       dwell:'3.4 days avg', nextCall:'08 May 2026', pricing:{ thc20:'$198', thc40:'$305', freeTime:'5 days', storage:'$21/TEU/day', reefer:'$48/day' } },
+  { tier:2, name:'Port of Buenaventura',     country:'🇨🇴 Buenaventura, Colombia',      unlocode:'CO BUN', type:'Regional Port', position:[3.88,-77.05],   services:['WSA','WS6'],                                             avgDelinquency:14.5, delinqTrend:'+1.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:58, d2:{count:154}, d5:{count:83},  terminalOps:'TCBUEN / SPRC',            dwell:'3.6 days avg', nextCall:'07 May 2026', pricing:{ thc20:'$202', thc40:'$310', freeTime:'4 days', storage:'$22/TEU/day', reefer:'$49/day' } },
+  { tier:2, name:'Port of Guayaquil',        country:'🇪🇨 Guayaquil, Ecuador',           unlocode:'EC GYE', type:'Regional Port', position:[-2.27,-79.89],  services:['WSA'],                                                   avgDelinquency:13.8, delinqTrend:'+0.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:55, d2:{count:132}, d5:{count:71},  terminalOps:'Contecon Guayaquil',       dwell:'3.3 days avg', nextCall:'05 May 2026', pricing:{ thc20:'$196', thc40:'$300', freeTime:'5 days', storage:'$21/TEU/day', reefer:'$47/day' } },
 
   // ── OCEANIA & NEW ZEALAND ──
-  { tier:2, name:'Port of Wellington',       country:'🇳🇿 Wellington, New Zealand',     unlocode:'NZ WLG', type:'Regional Port', position:[-41.29,174.78], services:['NZS'],                                                   avgDelinquency:8.1,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:32, d2:{count:134}, d5:{count:81},  terminalOps:'CentrePort Wellington',    dwell:'2.6 days avg', nextCall:'05 May 2026' },
-  { tier:2, name:'Port of Tauranga',         country:'🇳🇿 Tauranga, New Zealand',       unlocode:'NZ TRG', type:'Regional Port', position:[-37.66,176.17], services:['NZS'],                                                   avgDelinquency:7.6,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:30, d2:{count:156}, d5:{count:94},  terminalOps:'Port of Tauranga',         dwell:'2.4 days avg', nextCall:'02 May 2026' },
-  { tier:3, name:'Port of Lyttelton',        country:'🇳🇿 Lyttelton, New Zealand',      unlocode:'NZ LYT', type:'Feeder Port',   position:[-43.61,172.72], services:['NZS'],                                                   avgDelinquency:8.9,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:36, d2:{count:112}, d5:{count:67},  terminalOps:'Lyttelton Port Company',   dwell:'2.7 days avg', nextCall:'06 May 2026' },
-  { tier:3, name:'Port of Napier',           country:'🇳🇿 Napier, New Zealand',         unlocode:'NZ NPE', type:'Feeder Port',   position:[-39.49,176.91], services:['NZS'],                                                   avgDelinquency:7.3,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:29, d2:{count:98},  d5:{count:59},  terminalOps:'Napier Port',              dwell:'2.3 days avg', nextCall:'04 May 2026' },
-  { tier:3, name:'Port of Townsville',       country:'🇦🇺 Townsville, Australia',       unlocode:'AU TSV', type:'Feeder Port',   position:[-19.26,146.82], services:['ANA'],                                                   avgDelinquency:7.8,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:31, d2:{count:87},  d5:{count:49},  terminalOps:'Port of Townsville',       dwell:'2.5 days avg', nextCall:'12 May 2026' },
-  { tier:3, name:'Port of Darwin',           country:'🇦🇺 Darwin, Australia',           unlocode:'AU DAR', type:'Feeder Port',   position:[-12.46,130.85], services:['SDD'],                                                   avgDelinquency:8.2,  delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:33, d2:{count:64},  d5:{count:36},  terminalOps:'Darwin Port Authority',    dwell:'2.6 days avg', nextCall:'15 May 2026' },
+  { tier:2, name:'Port of Wellington',       country:'🇳🇿 Wellington, New Zealand',     unlocode:'NZ WLG', type:'Regional Port', position:[-41.29,174.78], services:['NZS'],                                                   avgDelinquency:8.1,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:32, d2:{count:134}, d5:{count:81},  terminalOps:'CentrePort Wellington',    dwell:'2.6 days avg', nextCall:'05 May 2026', pricing:{ thc20:'$228', thc40:'$348', freeTime:'5 days', storage:'$24/TEU/day', reefer:'$54/day' } },
+  { tier:2, name:'Port of Tauranga',         country:'🇳🇿 Tauranga, New Zealand',       unlocode:'NZ TRG', type:'Regional Port', position:[-37.66,176.17], services:['NZS'],                                                   avgDelinquency:7.6,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:30, d2:{count:156}, d5:{count:94},  terminalOps:'Port of Tauranga',         dwell:'2.4 days avg', nextCall:'02 May 2026', pricing:{ thc20:'$222', thc40:'$338', freeTime:'5 days', storage:'$23/TEU/day', reefer:'$52/day' } },
+  { tier:3, name:'Port of Lyttelton',        country:'🇳🇿 Lyttelton, New Zealand',      unlocode:'NZ LYT', type:'Feeder Port',   position:[-43.61,172.72], services:['NZS'],                                                   avgDelinquency:8.9,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:36, d2:{count:112}, d5:{count:67},  terminalOps:'Lyttelton Port Company',   dwell:'2.7 days avg', nextCall:'06 May 2026', pricing:{ thc20:'$220', thc40:'$335', freeTime:'5 days', storage:'$23/TEU/day', reefer:'$52/day' } },
+  { tier:3, name:'Port of Napier',           country:'🇳🇿 Napier, New Zealand',         unlocode:'NZ NPE', type:'Feeder Port',   position:[-39.49,176.91], services:['NZS'],                                                   avgDelinquency:7.3,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:29, d2:{count:98},  d5:{count:59},  terminalOps:'Napier Port',              dwell:'2.3 days avg', nextCall:'04 May 2026', pricing:{ thc20:'$215', thc40:'$328', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$51/day' } },
+  { tier:3, name:'Port of Townsville',       country:'🇦🇺 Townsville, Australia',       unlocode:'AU TSV', type:'Feeder Port',   position:[-19.26,146.82], services:['ANA'],                                                   avgDelinquency:7.8,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:31, d2:{count:87},  d5:{count:49},  terminalOps:'Port of Townsville',       dwell:'2.5 days avg', nextCall:'12 May 2026', pricing:{ thc20:'$210', thc40:'$320', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$50/day' } },
+  { tier:3, name:'Port of Darwin',           country:'🇦🇺 Darwin, Australia',           unlocode:'AU DAR', type:'Feeder Port',   position:[-12.46,130.85], services:['SDD'],                                                   avgDelinquency:8.2,  delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:33, d2:{count:64},  d5:{count:36},  terminalOps:'Darwin Port Authority',    dwell:'2.6 days avg', nextCall:'15 May 2026', pricing:{ thc20:'$208', thc40:'$318', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$50/day' } },
 
   // ── PACIFIC ISLANDS (MSP/EMS/MXS) ──
-  { tier:3, name:'Port of Lautoka',          country:'🇫🇯 Lautoka, Fiji',               unlocode:'FJ LTK', type:'Feeder Port',   position:[-17.61,177.45], services:['MSP'],                                                   avgDelinquency:10.8, delinqTrend:'Stable (±0.5 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:43, d2:{count:48},  d5:{count:26},  terminalOps:'Fiji Ports Corporation',   dwell:'2.4 days avg', nextCall:'10 May 2026' },
-  { tier:3, name:'Port of Honiara',          country:'🇸🇧 Honiara, Solomon Islands',    unlocode:'SB HIR', type:'Feeder Port',   position:[-9.43,160.05],  services:['MSP'],                                                   avgDelinquency:12.4, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:50, d2:{count:41},  d5:{count:22},  terminalOps:'Solomon Islands Ports',    dwell:'2.8 days avg', nextCall:'11 May 2026' },
-  { tier:3, name:'Port of Majuro',           country:'🇲🇭 Majuro, Marshall Islands',    unlocode:'MH MAJ', type:'Feeder Port',   position:[7.09,171.38],   services:['MSP','EMS'],                                             avgDelinquency:11.6, delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:46, d2:{count:34},  d5:{count:18},  terminalOps:'Marshall Islands Ports',   dwell:'2.2 days avg', nextCall:'14 May 2026' },
-  { tier:3, name:'Port of Pohnpei',          country:'🇫🇲 Pohnpei, Micronesia',         unlocode:'FM PNI', type:'Feeder Port',   position:[6.96,158.21],   services:['MSP','EMS'],                                             avgDelinquency:10.9, delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:44, d2:{count:28},  d5:{count:14},  terminalOps:'Pohnpei Port Authority',   dwell:'2.1 days avg', nextCall:'13 May 2026' },
-  { tier:3, name:'Port of Guam',             country:'🇬🇺 Guam, USA',                   unlocode:'GU GUM', type:'Feeder Port',   position:[13.44,144.64],  services:['EMS','MXS'],                                             avgDelinquency:9.4,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:38, d2:{count:56},  d5:{count:31},  terminalOps:'Port Authority of Guam',   dwell:'2.3 days avg', nextCall:'12 May 2026' },
+  { tier:3, name:'Port of Lautoka',          country:'🇫🇯 Lautoka, Fiji',               unlocode:'FJ LTK', type:'Feeder Port',   position:[-17.61,177.45], services:['MSP'],                                                   avgDelinquency:10.8, delinqTrend:'Stable (±0.5 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:43, d2:{count:48},  d5:{count:26},  terminalOps:'Fiji Ports Corporation',   dwell:'2.4 days avg', nextCall:'10 May 2026', pricing:{ thc20:'$212', thc40:'$325', freeTime:'5 days', storage:'$23/TEU/day', reefer:'$51/day' } },
+  { tier:3, name:'Port of Honiara',          country:'🇸🇧 Honiara, Solomon Islands',    unlocode:'SB HIR', type:'Feeder Port',   position:[-9.43,160.05],  services:['MSP'],                                                   avgDelinquency:12.4, delinqTrend:'+0.7 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:50, d2:{count:41},  d5:{count:22},  terminalOps:'Solomon Islands Ports',    dwell:'2.8 days avg', nextCall:'11 May 2026', pricing:{ thc20:'$220', thc40:'$338', freeTime:'4 days', storage:'$24/TEU/day', reefer:'$53/day' } },
+  { tier:3, name:'Port of Majuro',           country:'🇲🇭 Majuro, Marshall Islands',    unlocode:'MH MAJ', type:'Feeder Port',   position:[7.09,171.38],   services:['MSP','EMS'],                                             avgDelinquency:11.6, delinqTrend:'Stable (±0.4 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:46, d2:{count:34},  d5:{count:18},  terminalOps:'Marshall Islands Ports',   dwell:'2.2 days avg', nextCall:'14 May 2026', pricing:{ thc20:'$205', thc40:'$315', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$50/day' } },
+  { tier:3, name:'Port of Pohnpei',          country:'🇫🇲 Pohnpei, Micronesia',         unlocode:'FM PNI', type:'Feeder Port',   position:[6.96,158.21],   services:['MSP','EMS'],                                             avgDelinquency:10.9, delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:44, d2:{count:28},  d5:{count:14},  terminalOps:'Pohnpei Port Authority',   dwell:'2.1 days avg', nextCall:'13 May 2026', pricing:{ thc20:'$202', thc40:'$310', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$50/day' } },
+  { tier:3, name:'Port of Guam',             country:'🇬🇺 Guam, USA',                   unlocode:'GU GUM', type:'Feeder Port',   position:[13.44,144.64],  services:['EMS','MXS'],                                             avgDelinquency:9.4,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:38, d2:{count:56},  d5:{count:31},  terminalOps:'Port Authority of Guam',   dwell:'2.3 days avg', nextCall:'12 May 2026', pricing:{ thc20:'$198', thc40:'$302', freeTime:'5 days', storage:'$21/TEU/day', reefer:'$48/day' } },
 
   // ── INTRA ASIA ──
-  { tier:2, name:'Port of Kaohsiung',        country:'🇹🇼 Kaohsiung, Taiwan',           unlocode:'TW KHH', type:'Regional Port', position:[22.62,120.27],  services:['ASA','WSA','NZS'],                                        avgDelinquency:7.2,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:29, d2:{count:634}, d5:{count:451}, terminalOps:'KTMT / HPH',               dwell:'2.0 days avg', nextCall:'19 Apr 2026' },
-  { tier:2, name:'Port of Busan',            country:'🇰🇷 Busan, South Korea',          unlocode:'KR PUS', type:'Hub Port',      position:[35.10,129.04],  services:['KCS','KCI'],                                             avgDelinquency:6.8,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:27, d2:{count:812}, d5:{count:578}, terminalOps:'PNC / HPNT / DPCT',        dwell:'1.9 days avg', nextCall:'20 Apr 2026' },
-  { tier:2, name:'Port of Chittagong',       country:'🇧🇩 Chittagong, Bangladesh',      unlocode:'BD CGP', type:'Regional Port', position:[22.33,91.83],   services:['BD1','BD2','CCE'],                                        avgDelinquency:18.7, delinqTrend:'+2.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:75, d2:{count:167}, d5:{count:89},  terminalOps:'Chittagong Port Authority', dwell:'4.8 days avg', nextCall:'28 Apr 2026' },
-  { tier:3, name:'Port of Yangon',           country:'🇲🇲 Yangon, Myanmar',             unlocode:'MM RGN', type:'Feeder Port',   position:[16.77,96.16],   services:['YGS'],                                                   avgDelinquency:16.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:66, d2:{count:98},  d5:{count:52},  terminalOps:'Myanmar Industrial Port',  dwell:'4.2 days avg', nextCall:'02 May 2026' },
-  { tier:3, name:'Port of Kolkata',          country:'🇮🇳 Kolkata, India',              unlocode:'IN CCU', type:'Feeder Port',   position:[22.55,88.35],   services:['CCS','CAS'],                                             avgDelinquency:17.2, delinqTrend:'+1.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:69, d2:{count:112}, d5:{count:61},  terminalOps:'Kolkata Port Trust',        dwell:'4.5 days avg', nextCall:'01 May 2026' },
+  { tier:2, name:'Port of Kaohsiung',        country:'🇹🇼 Kaohsiung, Taiwan',           unlocode:'TW KHH', type:'Regional Port', position:[22.62,120.27],  services:['ASA','WSA','NZS'],                                        avgDelinquency:7.2,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:29, d2:{count:634}, d5:{count:451}, terminalOps:'KTMT / HPH',               dwell:'2.0 days avg', nextCall:'19 Apr 2026', pricing:{ thc20:'$172', thc40:'$262', freeTime:'7 days', storage:'$17/TEU/day', reefer:'$42/day' } },
+  { tier:2, name:'Port of Busan',            country:'🇰🇷 Busan, South Korea',          unlocode:'KR PUS', type:'Hub Port',      position:[35.10,129.04],  services:['KCS','KCI'],                                             avgDelinquency:6.8,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:27, d2:{count:812}, d5:{count:578}, terminalOps:'PNC / HPNT / DPCT',        dwell:'1.9 days avg', nextCall:'20 Apr 2026', pricing:{ thc20:'$180', thc40:'$275', freeTime:'7 days', storage:'$18/TEU/day', reefer:'$43/day' } },
+  { tier:2, name:'Port of Chittagong',       country:'🇧🇩 Chittagong, Bangladesh',      unlocode:'BD CGP', type:'Regional Port', position:[22.33,91.83],   services:['BD1','BD2','CCE'],                                        avgDelinquency:18.7, delinqTrend:'+2.3 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:75, d2:{count:167}, d5:{count:89},  terminalOps:'Chittagong Port Authority', dwell:'4.8 days avg', nextCall:'28 Apr 2026', pricing:{ thc20:'$148', thc40:'$228', freeTime:'5 days', storage:'$16/TEU/day', reefer:'$40/day' } },
+  { tier:3, name:'Port of Yangon',           country:'🇲🇲 Yangon, Myanmar',             unlocode:'MM RGN', type:'Feeder Port',   position:[16.77,96.16],   services:['YGS'],                                                   avgDelinquency:16.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:66, d2:{count:98},  d5:{count:52},  terminalOps:'Myanmar Industrial Port',  dwell:'4.2 days avg', nextCall:'02 May 2026', pricing:{ thc20:'$128', thc40:'$198', freeTime:'5 days', storage:'$14/TEU/day', reefer:'$35/day' } },
+  { tier:3, name:'Port of Kolkata',          country:'🇮🇳 Kolkata, India',              unlocode:'IN CCU', type:'Feeder Port',   position:[22.55,88.35],   services:['CCS','CAS'],                                             avgDelinquency:17.2, delinqTrend:'+1.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:69, d2:{count:112}, d5:{count:61},  terminalOps:'Kolkata Port Trust',        dwell:'4.5 days avg', nextCall:'01 May 2026', pricing:{ thc20:'$142', thc40:'$218', freeTime:'5 days', storage:'$15/TEU/day', reefer:'$38/day' } },
 ];
 
 // ── VESSEL ROUTE LINES (dotted, transit vessels only) ─────────
@@ -2286,49 +2641,124 @@ function buildPortPopup(p) {
     </div>
     <div class="port-popup-body">
 
-      <div style="margin-bottom:12px;">
-        <div class="delinq-title" style="margin-bottom:6px;">PIL Services Calling</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;">${servicePills}</div>
+      <!-- ── P&L MODE ── -->
+      <div class="popup-mode-pnl">
+        <div style="margin-bottom:12px;">
+          <div class="delinq-title" style="margin-bottom:6px;">PIL Services Calling</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">${servicePills}</div>
+        </div>
+        <div class="port-divider"></div>
+        <div class="delinq-section">
+          <div class="delinq-title">Avg. Container Delinquency</div>
+          <div class="delinq-value-row">
+            <span class="delinq-days" style="color:${p.delinqColor}">${p.avgDelinquency}</span>
+            <span class="delinq-unit">days</span>
+            <span class="delinq-trend ${p.trendClass}">${p.delinqTrend}</span>
+          </div>
+          <div class="delinq-bar-track">
+            <div class="delinq-bar-fill" style="width:${p.delinqBarPct}%;background:${p.delinqColor};opacity:0.75"></div>
+          </div>
+        </div>
+        <div class="port-divider"></div>
+        <div class="inv-title">Containers Available on Land</div>
+        <div class="inv-grid">
+          <div class="inv-card">
+            <div class="inv-card-type">D2</div>
+            <div class="inv-card-desc">20' Dry Standard</div>
+            <div class="inv-card-count">${p.d2.count}</div>
+            <div class="inv-card-label">Units on Ground</div>
+          </div>
+          <div class="inv-card">
+            <div class="inv-card-type">D5</div>
+            <div class="inv-card-desc">40' High Cube</div>
+            <div class="inv-card-count">${p.d5.count}</div>
+            <div class="inv-card-label">Units on Ground</div>
+          </div>
+        </div>
+        <div class="port-divider"></div>
+        <div class="port-detail-row"><span class="port-detail-label">UN/LOCODE</span><span class="port-detail-value">${p.unlocode}</span></div>
+        <div class="port-detail-row"><span class="port-detail-label">Terminal Operator</span><span class="port-detail-value">${p.terminalOps}</span></div>
+        <div class="port-detail-row"><span class="port-detail-label">Avg. Dwell Time</span><span class="port-detail-value">${p.dwell}</span></div>
+        <div class="port-detail-row"><span class="port-detail-label">Next PIL Call</span><span class="port-detail-value">${p.nextCall}</span></div>
       </div>
 
-      <div class="port-divider"></div>
-
-      <div class="delinq-section">
-        <div class="delinq-title">Avg. Container Delinquency</div>
-        <div class="delinq-value-row">
-          <span class="delinq-days" style="color:${p.delinqColor}">${p.avgDelinquency}</span>
-          <span class="delinq-unit">days</span>
-          <span class="delinq-trend ${p.trendClass}">${p.delinqTrend}</span>
+      <!-- ── CARGOFLOW MODE ── -->
+      <div class="popup-mode-cargoflow">
+        <div style="margin-bottom:10px;">
+          <div class="delinq-title" style="margin-bottom:5px;">PIL Services Calling</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">${servicePills}</div>
         </div>
-        <div class="delinq-bar-track">
-          <div class="delinq-bar-fill" style="width:${p.delinqBarPct}%;background:${p.delinqColor};opacity:0.75"></div>
-        </div>
+        <div class="port-divider"></div>
+        ${p.dwellingLaden && p.dwellingLaden.length ? `
+        <div class="delinq-title" style="margin-bottom:5px;">Laden Containers Dwelling</div>
+        <table class="dwell-table">
+          <thead><tr>
+            <th class="dwell-th" style="text-align:left">Svc</th>
+            <th class="dwell-th" style="text-align:left;padding-left:4px">Dir</th>
+            <th class="dwell-th" style="text-align:left;padding-left:4px">Next Port</th>
+            <th class="dwell-th" style="text-align:right">20"</th>
+            <th class="dwell-th" style="text-align:right;padding-left:6px">40"</th>
+          </tr></thead>
+          <tbody>
+            ${p.dwellingLaden.map(r => `
+            <tr>
+              <td class="dwell-td"><span class="dwell-svc">${r.service}</span></td>
+              <td class="dwell-td" style="padding-left:4px"><span class="dwell-dir dwell-dir-${r.dir.toLowerCase()}">${r.dir}</span></td>
+              <td class="dwell-td dwell-port" style="padding-left:4px">${r.nextPort}</td>
+              <td class="dwell-td dwell-num" style="text-align:right">${r.teu20}</td>
+              <td class="dwell-td dwell-num" style="text-align:right;padding-left:6px">${r.teu40}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+        ` : '<div style="font-size:9px;color:var(--muted);padding:8px 0;">No dwelling container data available for this port.</div>'}
+        <div class="port-divider"></div>
+        <div class="port-detail-row"><span class="port-detail-label">Terminal Operator</span><span class="port-detail-value">${p.terminalOps}</span></div>
+        <div class="port-detail-row"><span class="port-detail-label">Avg. Dwell Time</span><span class="port-detail-value">${p.dwell}</span></div>
+        <div class="port-detail-row"><span class="port-detail-label">Next PIL Call</span><span class="port-detail-value">${p.nextCall}</span></div>
       </div>
 
-      <div class="port-divider"></div>
-
-      <div class="inv-title">Containers Available on Land</div>
-      <div class="inv-grid">
-        <div class="inv-card">
-          <div class="inv-card-type">D2</div>
-          <div class="inv-card-desc">20' Dry Standard</div>
-          <div class="inv-card-count">${p.d2.count}</div>
-          <div class="inv-card-label">Units on Ground</div>
+      <!-- ── PRICING MODE ── -->
+      <div class="popup-mode-pricing">
+        <div style="margin-bottom:10px;">
+          <div class="delinq-title" style="margin-bottom:5px;">PIL Services Calling</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">${servicePills}</div>
         </div>
-        <div class="inv-card">
-          <div class="inv-card-type">D5</div>
-          <div class="inv-card-desc">40' High Cube</div>
-          <div class="inv-card-count">${p.d5.count}</div>
-          <div class="inv-card-label">Units on Ground</div>
+        <div class="port-divider"></div>
+        <div class="delinq-title" style="margin-bottom:6px;">Port Tariffs</div>
+        <div class="pr-cost-grid">
+          <div class="pr-cost-card">
+            <div class="pr-cost-label">THC 20'</div>
+            <div class="pr-cost-val">${p.pricing ? p.pricing.thc20 : 'N/A'}</div>
+            <div class="pr-cost-sub">Per box</div>
+          </div>
+          <div class="pr-cost-card">
+            <div class="pr-cost-label">THC 40'</div>
+            <div class="pr-cost-val">${p.pricing ? p.pricing.thc40 : 'N/A'}</div>
+            <div class="pr-cost-sub">Per box</div>
+          </div>
+          <div class="pr-cost-card">
+            <div class="pr-cost-label">Free Time</div>
+            <div class="pr-cost-val">${p.pricing ? p.pricing.freeTime : 'N/A'}</div>
+            <div class="pr-cost-sub">Storage free</div>
+          </div>
+          <div class="pr-cost-card">
+            <div class="pr-cost-label">Storage</div>
+            <div class="pr-cost-val" style="font-size:10px;">${p.pricing ? p.pricing.storage : 'N/A'}</div>
+            <div class="pr-cost-sub">After free days</div>
+          </div>
         </div>
+        <div class="pr-cost-grid" style="margin-top:5px;">
+          <div class="pr-cost-card" style="grid-column:1/-1;">
+            <div class="pr-cost-label">Reefer Plug Rate</div>
+            <div class="pr-cost-val">${p.pricing ? p.pricing.reefer : 'N/A'}</div>
+            <div class="pr-cost-sub">Per connection per day</div>
+          </div>
+        </div>
+        <div class="port-divider"></div>
+        <div class="port-detail-row"><span class="port-detail-label">Terminal Operator</span><span class="port-detail-value">${p.terminalOps}</span></div>
+        <div class="port-detail-row"><span class="port-detail-label">Next PIL Call</span><span class="port-detail-value">${p.nextCall}</span></div>
       </div>
 
-      <div class="port-divider"></div>
-
-      <div class="port-detail-row"><span class="port-detail-label">UN/LOCODE</span><span class="port-detail-value">${p.unlocode}</span></div>
-      <div class="port-detail-row"><span class="port-detail-label">Terminal Operator</span><span class="port-detail-value">${p.terminalOps}</span></div>
-      <div class="port-detail-row"><span class="port-detail-label">Avg. Dwell Time</span><span class="port-detail-value">${p.dwell}</span></div>
-      <div class="port-detail-row"><span class="port-detail-label">Next PIL Call</span><span class="port-detail-value">${p.nextCall}</span></div>
     </div>
   </div>`;
 }
@@ -2339,11 +2769,11 @@ const portLayers = { 1: L.layerGroup(), 2: L.layerGroup(), 3: L.layerGroup() };
 ports.forEach(p => {
   const marker = L.marker(p.position, { icon: portIcon(p.tier) });
   const popup = L.popup({
-    maxWidth: 240, minWidth: 235,
+    maxWidth: 275, minWidth: 270,
     className: 'vessel-popup-wrapper',
     offset: [0, -8], autoPan: false, closeOnClick: false
   }).setContent(buildPortPopup(p));
-  bindSmartPopup(marker, popup, 240, 380);
+  bindSmartPopup(marker, popup, 270, 460);
   portLayers[p.tier].addLayer(marker);
 });
 
