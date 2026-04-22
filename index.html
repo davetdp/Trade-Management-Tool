@@ -1753,8 +1753,12 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
     popup.options.offset = L.point(ox, oy);
   }
 
-  function cancelClose() { clearTimeout(_closeTimer); }
-  function scheduleClose() { _closeTimer = setTimeout(() => marker.closePopup(), 700); }
+  function cancelClose()   { clearTimeout(_closeTimer); _closeTimer = null; }
+  // Always cancel any existing timer before scheduling a new one.
+  // This means if multiple mouseleave listeners fire (from accumulated popup.on('add') calls),
+  // each one cancels the previous timer so only the very last one survives — and that
+  // single survivor is then cancelled by cancelClose() / the move guard.
+  function scheduleClose() { clearTimeout(_closeTimer); _closeTimer = setTimeout(() => marker.closePopup(), 700); }
 
   // While the mouse might be crossing the gap between marker and popup,
   // keep watching cursor position; cancel close whenever it's within 28px of
@@ -1784,7 +1788,10 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
   popup.on('add', function () {
     const el = this.getElement();
     if (!el) return;
-    // Keep direct hover listeners as primary path (they fire instantly)
+    // Remove before adding — popup.on('add') fires on every re-open, so without
+    // this we'd accumulate duplicate mouseleave listeners each time.
+    el.removeEventListener('mouseenter', cancelClose);
+    el.removeEventListener('mouseleave', scheduleClose);
     el.addEventListener('mouseenter', cancelClose);
     el.addEventListener('mouseleave', scheduleClose);
 
