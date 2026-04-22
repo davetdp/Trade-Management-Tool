@@ -2722,7 +2722,7 @@ function buildPortPopup(p) {
         }).join('');
         return `<div class="dwell-dir-block">
           <div class="dwell-dir-row">
-            <span class="dwell-dir-pill dwell-dir-${d.dir.toLowerCase()}">${d.dir}</span>
+            <span class="dwell-dir-pill dwell-dir-${d.dir.toLowerCase()}">${d.dir === 'HH' ? 'Headhaul' : 'Backhaul'}</span>
             <span class="dwell-dir-port">→ ${d.nextPort}</span>
             <div class="dwell-dir-counts">
               <span style="font-size:8px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;">Dwell:</span>
