@@ -500,14 +500,22 @@
     .vsl-cap  { font-family: 'Space Grotesk', sans-serif; font-size: 8.5px; font-weight: 500; color: #3d4f5e; }
 
     /* ── CARGOFLOW / PRICING POPUP SECTIONS ── */
-    .cf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px; }
+    .cf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 8px; }
     .cf-card { background: rgba(0,180,255,0.06); border: 1px solid rgba(0,180,255,0.15); border-radius: 6px; padding: 5px 6px; text-align: center; }
     .cf-card-label { font-size: 8px; color: var(--muted); margin-bottom: 2px; }
     .cf-card-val { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
     .cf-card-sub { font-size: 8px; color: var(--muted); margin-top: 1px; }
-    .flow-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .flow-route { font-size: 9px; color: rgba(255,255,255,0.75); }
-    .flow-teu { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--accent); }
+    .cf-card-reefer { background: rgba(0,229,160,0.06) !important; border-color: rgba(0,229,160,0.18) !important; }
+    .cf-card-reefer .cf-card-val { color: #00e5a0 !important; }
+    .cf-card-empty { background: rgba(255,255,255,0.03) !important; border-color: rgba(255,255,255,0.08) !important; }
+    .cf-card-empty .cf-card-val { color: var(--muted) !important; }
+    .flow-tbl { margin-bottom: 8px; }
+    .flow-tbl-hdr, .flow-tbl-row { display: grid; grid-template-columns: 1.8fr 0.7fr 0.7fr 0.7fr 0.6fr 0.6fr; align-items: center; gap: 3px; padding: 2px 3px; }
+    .flow-tbl-hdr { font-size: 7px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.07); padding-bottom: 3px; margin-bottom: 2px; }
+    .flow-tbl-alt { background: rgba(255,255,255,0.025); border-radius: 3px; }
+    .flow-route-cell { font-size: 8.5px; color: rgba(255,255,255,0.75); }
+    .flow-teu-cell { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 700; color: var(--amber); }
+    .flow-val-cell { font-size: 8.5px; color: rgba(255,255,255,0.65); font-family: 'Space Grotesk', sans-serif; }
     .pr-rate-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .pr-route { font-size: 9px; color: rgba(255,255,255,0.75); }
     .pr-rate { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--text); }
@@ -1288,9 +1296,9 @@ const vessels = [
     util: 88,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Shanghai',   pod:'Cape Town',  teu: 3240 },
-      { pol:'Singapore',  pod:'Durban',     teu: 2180 },
-      { pol:'Port Klang', pod:'Cape Town',  teu: 1840 },
+      { pol:'Shanghai',   pod:'Cape Town',  teu: 3240, rate20:'$1,650', rate40:'$2,850', avgWt:'11.8t', ratePerTon:'$139' },
+      { pol:'Singapore',  pod:'Durban',     teu: 2180, rate20:'$1,420', rate40:'$2,480', avgWt:'12.4t', ratePerTon:'$115' },
+      { pol:'Port Klang', pod:'Cape Town',  teu: 1840, rate20:'$1,380', rate40:'$2,390', avgWt:'11.2t', ratePerTon:'$123' },
     ],
     pr: {
       rates: [
@@ -1329,9 +1337,9 @@ const vessels = [
     util: 84,
     utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)',
     topFlows: [
-      { pol:'Singapore',  pod:'Fremantle', teu: 2640 },
-      { pol:'Port Klang', pod:'Sydney',    teu: 1980 },
-      { pol:'Singapore',  pod:'Melbourne', teu: 1840 },
+      { pol:'Singapore',  pod:'Fremantle',  teu: 2640, rate20:'$890',   rate40:'$1,540', avgWt:'10.8t', ratePerTon:'$82'  },
+      { pol:'Port Klang', pod:'Sydney',     teu: 1980, rate20:'$980',   rate40:'$1,720', avgWt:'11.4t', ratePerTon:'$86'  },
+      { pol:'Singapore',  pod:'Melbourne',  teu: 1840, rate20:'$920',   rate40:'$1,590', avgWt:'10.6t', ratePerTon:'$87'  },
     ],
     pr: {
       rates: [
@@ -1370,9 +1378,9 @@ const vessels = [
     util: 86,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Shanghai',  teu: 3840 },
-      { pol:'Ho Chi Minh',pod:'Ningbo',    teu: 2960 },
-      { pol:'Manila',     pod:'Shanghai',  teu: 2190 },
+      { pol:'Singapore',  pod:'Shanghai',   teu: 3840, rate20:'$420',   rate40:'$730',   avgWt:'9.8t',  ratePerTon:'$43'  },
+      { pol:'Ho Chi Minh',pod:'Ningbo',     teu: 2960, rate20:'$380',   rate40:'$660',   avgWt:'10.2t', ratePerTon:'$37'  },
+      { pol:'Manila',     pod:'Shanghai',   teu: 2190, rate20:'$340',   rate40:'$590',   avgWt:'9.4t',  ratePerTon:'$36'  },
     ],
     pr: {
       rates: [
@@ -1411,9 +1419,9 @@ const vessels = [
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Port Klang', pod:'Jebel Ali', teu: 2980 },
-      { pol:'Singapore',  pod:'Salalah',   teu: 2140 },
-      { pol:'Port Klang', pod:'Colombo',   teu: 1620 },
+      { pol:'Port Klang', pod:'Jebel Ali',  teu: 2980, rate20:'$850',   rate40:'$1,450', avgWt:'12.4t', ratePerTon:'$69'  },
+      { pol:'Singapore',  pod:'Salalah',    teu: 2140, rate20:'$790',   rate40:'$1,360', avgWt:'11.8t', ratePerTon:'$67'  },
+      { pol:'Port Klang', pod:'Colombo',    teu: 1620, rate20:'$420',   rate40:'$720',   avgWt:'10.8t', ratePerTon:'$39'  },
     ],
     pr: {
       rates: [
@@ -1453,9 +1461,9 @@ const vessels = [
     util: 86,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Jebel Ali', teu: 3120 },
-      { pol:'Colombo',    pod:'Salalah',   teu: 2480 },
-      { pol:'Singapore',  pod:'Muscat',    teu: 1960 },
+      { pol:'Singapore',  pod:'Jebel Ali',  teu: 3120, rate20:'$880',   rate40:'$1,510', avgWt:'12.6t', ratePerTon:'$70'  },
+      { pol:'Colombo',    pod:'Salalah',    teu: 2480, rate20:'$640',   rate40:'$1,100', avgWt:'11.4t', ratePerTon:'$56'  },
+      { pol:'Singapore',  pod:'Muscat',     teu: 1960, rate20:'$920',   rate40:'$1,580', avgWt:'12.2t', ratePerTon:'$75'  },
     ],
     pr: {
       rates: [
@@ -1495,9 +1503,9 @@ const vessels = [
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Sohar',     teu: 2740 },
-      { pol:'Port Klang', pod:'Jebel Ali', teu: 2180 },
-      { pol:'Colombo',    pod:'Sohar',     teu: 1620 },
+      { pol:'Singapore',  pod:'Sohar',      teu: 2740, rate20:'$860',   rate40:'$1,480', avgWt:'12.0t', ratePerTon:'$72'  },
+      { pol:'Port Klang', pod:'Jebel Ali',  teu: 2180, rate20:'$850',   rate40:'$1,450', avgWt:'11.8t', ratePerTon:'$72'  },
+      { pol:'Colombo',    pod:'Sohar',      teu: 1620, rate20:'$560',   rate40:'$960',   avgWt:'11.2t', ratePerTon:'$50'  },
     ],
     pr: {
       rates: [
@@ -1537,9 +1545,9 @@ const vessels = [
     util: 84,
     utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)',
     topFlows: [
-      { pol:'Singapore',  pod:'Mombasa',        teu: 2540 },
-      { pol:'Colombo',    pod:'Dar es Salaam',  teu: 1980 },
-      { pol:'Port Klang', pod:'Mombasa',        teu: 1620 },
+      { pol:'Singapore',  pod:'Mombasa',        teu: 2540, rate20:'$1,280', rate40:'$2,220', avgWt:'11.6t', ratePerTon:'$110' },
+      { pol:'Colombo',    pod:'Dar es Salaam',  teu: 1980, rate20:'$1,140', rate40:'$1,980', avgWt:'10.8t', ratePerTon:'$106' },
+      { pol:'Port Klang', pod:'Mombasa',        teu: 1620, rate20:'$1,320', rate40:'$2,280', avgWt:'12.0t', ratePerTon:'$110' },
     ],
     pr: {
       rates: [
@@ -1579,9 +1587,9 @@ const vessels = [
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Yantian',    pod:'Callao',      teu: 3480 },
-      { pol:'Singapore',  pod:'San Antonio', teu: 2760 },
-      { pol:'Yantian',    pod:'Valparaíso',  teu: 2210 },
+      { pol:'Yantian',    pod:'Callao',         teu: 3480, rate20:'$1,840', rate40:'$3,180', avgWt:'12.8t', ratePerTon:'$144' },
+      { pol:'Singapore',  pod:'San Antonio',    teu: 2760, rate20:'$1,960', rate40:'$3,380', avgWt:'13.2t', ratePerTon:'$149' },
+      { pol:'Yantian',    pod:'Valparaíso',     teu: 2210, rate20:'$1,780', rate40:'$3,080', avgWt:'12.4t', ratePerTon:'$144' },
     ],
     pr: {
       rates: [
@@ -1621,9 +1629,9 @@ const vessels = [
     util: 82,
     utilColor: 'linear-gradient(90deg,#0066cc,#ec4899)',
     topFlows: [
-      { pol:'Singapore',  pod:'Noumea', teu: 1240 },
-      { pol:'Sydney',     pod:'Suva',   teu: 980  },
-      { pol:'Singapore',  pod:'Suva',   teu: 860  },
+      { pol:'Singapore',  pod:'Noumea',         teu: 1240, rate20:'$1,640', rate40:'$2,820', avgWt:'10.4t', ratePerTon:'$158' },
+      { pol:'Sydney',     pod:'Suva',           teu: 980,  rate20:'$1,480', rate40:'$2,560', avgWt:'9.8t',  ratePerTon:'$151' },
+      { pol:'Singapore',  pod:'Suva',           teu: 860,  rate20:'$1,720', rate40:'$2,960', avgWt:'11.2t', ratePerTon:'$154' },
     ],
     pr: {
       rates: [
@@ -1663,9 +1671,9 @@ const vessels = [
     util: 58,
     utilColor: 'linear-gradient(90deg,#a78bfa,#6d28d9)',
     topFlows: [
-      { pol:'Santos',     pod:'Singapore',  teu: 2180 },
-      { pol:'Montevideo', pod:'Port Klang', teu: 1640 },
-      { pol:'Navegantes', pod:'Singapore',  teu: 1420 },
+      { pol:'Santos',     pod:'Singapore',      teu: 2180, rate20:'$420',   rate40:'$720',   avgWt:'8.4t',  ratePerTon:'$50'  },
+      { pol:'Montevideo', pod:'Port Klang',     teu: 1640, rate20:'$380',   rate40:'$640',   avgWt:'7.8t',  ratePerTon:'$49'  },
+      { pol:'Navegantes', pod:'Singapore',      teu: 1420, rate20:'$400',   rate40:'$680',   avgWt:'8.2t',  ratePerTon:'$49'  },
     ],
     pr: {
       rates: [
@@ -2024,44 +2032,57 @@ function buildPopup(v, laneColor) {
 
       <!-- ── CARGOFLOW MODE ── -->
       <div class="popup-mode-cargoflow">
-        <div class="popup-section-title">Cargo Manifest</div>
-        <div class="cf-grid">
-          <div class="cf-card">
-            <div class="cf-card-label">20' Laden</div>
-            <div class="cf-card-val">${Math.round(v.teuLoaded*0.40).toLocaleString()}</div>
-            <div class="cf-card-sub">boxes</div>
+        <div class="popup-section-title">Cargo Onboard</div>
+        ${(function(){
+          const isHH = v.leg === 'Headhaul';
+          const empty = v.teu - v.teuLoaded;
+          return `<div class="cf-grid">
+            <div class="cf-card">
+              <div class="cf-card-label">20' Laden</div>
+              <div class="cf-card-val">${Math.round(v.teuLoaded*0.44).toLocaleString()}</div>
+              <div class="cf-card-sub">boxes</div>
+            </div>
+            <div class="cf-card">
+              <div class="cf-card-label">40' Laden</div>
+              <div class="cf-card-val">${Math.round(v.teuLoaded*0.17).toLocaleString()}</div>
+              <div class="cf-card-sub">boxes</div>
+            </div>
+            <div class="cf-card cf-card-reefer">
+              <div class="cf-card-label">20' Reefer</div>
+              <div class="cf-card-val">${Math.round(v.teuLoaded*0.07).toLocaleString()}</div>
+              <div class="cf-card-sub">boxes</div>
+            </div>
+            <div class="cf-card cf-card-reefer">
+              <div class="cf-card-label">40' Reefer</div>
+              <div class="cf-card-val">${Math.round(v.teuLoaded*0.04).toLocaleString()}</div>
+              <div class="cf-card-sub">boxes</div>
+            </div>
+            <div class="cf-card cf-card-empty">
+              <div class="cf-card-label">20' Empty</div>
+              <div class="cf-card-val">${isHH ? 0 : Math.round(empty*0.60).toLocaleString()}</div>
+              <div class="cf-card-sub">boxes</div>
+            </div>
+            <div class="cf-card cf-card-empty">
+              <div class="cf-card-label">40' Empty</div>
+              <div class="cf-card-val">${isHH ? 0 : Math.round(empty*0.30).toLocaleString()}</div>
+              <div class="cf-card-sub">boxes</div>
+            </div>
+          </div>`;
+        })()}
+        <div class="popup-section-title">Port-to-Port Flows On This Vessel</div>
+        <div class="flow-tbl">
+          <div class="flow-tbl-hdr">
+            <span>Route</span><span>TEU</span><span>Avg/20'</span><span>Avg/40'</span><span>Wt/TEU</span><span>R/Ton</span>
           </div>
-          <div class="cf-card">
-            <div class="cf-card-label">40' Laden</div>
-            <div class="cf-card-val">${Math.round(v.teuLoaded*0.30).toLocaleString()}</div>
-            <div class="cf-card-sub">boxes</div>
-          </div>
-          <div class="cf-card">
-            <div class="cf-card-label">20' Empty</div>
-            <div class="cf-card-val">${Math.round((v.teu-v.teuLoaded)*0.50).toLocaleString()}</div>
-            <div class="cf-card-sub">boxes</div>
-          </div>
-          <div class="cf-card">
-            <div class="cf-card-label">40' Empty</div>
-            <div class="cf-card-val">${Math.round((v.teu-v.teuLoaded)*0.25).toLocaleString()}</div>
-            <div class="cf-card-sub">boxes</div>
-          </div>
-        </div>
-        <div class="popup-section-title">Top Port-to-Port Flows</div>
-        ${v.topFlows.map(f => `
-        <div class="flow-row">
-          <span class="flow-route">${f.pol} → ${f.pod}</span>
-          <span class="flow-teu">${f.teu.toLocaleString()} TEU</span>
-        </div>`).join('')}
-        <div class="popup-divider"></div>
-        <div class="popup-section-title">Vessel Details</div>
-        <div class="detail-table">
-          <div class="detail-row"><span class="detail-label">IMO Number</span><span class="detail-value">${v.imo}</span></div>
-          <div class="detail-row"><span class="detail-label">Vessel Class</span><span class="detail-value">${v.vesselClass}</span></div>
-          <div class="detail-row"><span class="detail-label">Built</span><span class="detail-value">${v.built}</span></div>
-          <div class="detail-row"><span class="detail-label">Speed</span><span class="detail-value">${v.speed}</span></div>
-          <div class="detail-row"><span class="detail-label">Heading</span><span class="detail-value">${v.heading}</span></div>
-          <div class="detail-row"><span class="detail-label">ETA / Status</span><span class="detail-value">${v.eta}</span></div>
+          ${v.topFlows.map((f,i) => `
+          <div class="flow-tbl-row ${i%2===1?'flow-tbl-alt':''}">
+            <span class="flow-route-cell">${f.pol} → ${f.pod}</span>
+            <span class="flow-teu-cell">${f.teu.toLocaleString()}</span>
+            <span class="flow-val-cell">${f.rate20}</span>
+            <span class="flow-val-cell">${f.rate40}</span>
+            <span class="flow-val-cell">${f.avgWt}</span>
+            <span class="flow-val-cell">${f.ratePerTon}</span>
+          </div>`).join('')}
         </div>
         <div class="utilization-bar-wrap">
           <div class="util-label-row">
