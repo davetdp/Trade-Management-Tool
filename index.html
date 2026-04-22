@@ -353,7 +353,7 @@
 
     /* ── PORT POPUP CARD ── */
     .port-popup {
-      width: 235px;
+      width: 270px;
       background: rgba(20, 12, 3, 0.94);
       border: 1px solid rgba(255,184,48,0.25);
       border-radius: 11px;
@@ -408,6 +408,21 @@
     .port-detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .port-detail-label { font-size: 10px; color: var(--muted); }
     .port-detail-value { font-size: 10px; font-weight: 600; color: var(--text); }
+
+    /* ── LADEN DWELLING TABLE ── */
+    .dwell-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+    .dwell-th { font-size: 8px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; padding-bottom: 4px; }
+    .dwell-th:nth-child(4), .dwell-th:nth-child(5) { text-align: right; }
+    .dwell-th:nth-child(3) { padding-left: 4px; }
+    .dwell-td { font-size: 9px; padding: 3px 0; border-top: 1px solid rgba(255,184,48,0.06); vertical-align: middle; }
+    .dwell-td:nth-child(3) { padding-left: 4px; }
+    .dwell-td:nth-child(4), .dwell-td:nth-child(5) { text-align: right; }
+    .dwell-svc { display: inline-block; background: rgba(0,180,255,0.12); border: 1px solid rgba(0,180,255,0.22); color: #00b4ff; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 8px; letter-spacing: 0.3px; }
+    .dwell-dir { font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 8px; }
+    .dwell-dir-hh { background: rgba(0,229,160,0.12); color: #00e5a0; }
+    .dwell-dir-bh { background: rgba(255,159,67,0.12); color: #ff9f43; }
+    .dwell-port { font-size: 9px; color: rgba(255,255,255,0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; }
+    .dwell-num  { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; color: var(--text); }
 
     /* ── P&L ANALYTICS PANEL ── */
     #pnl-panel {
@@ -2045,11 +2060,42 @@ vessels.forEach((v, i) => {
 // tier 3 = local/feeder (visible zoom 6+)
 const ports = [
   // ── TIER 1: MAJOR HUBS ───────────────────────────────────
-  { tier:1, name:'Port of Singapore',       country:'🇸🇬 Singapore',              unlocode:'SG SIN', type:'Hub Port',      position:[1.26,103.82],   services:['SEA1','SEA2','SWS','EAS','ASA','GCS','AA2','WSA'], avgDelinquency:5.2,  delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:21, d2:{count:892}, d5:{count:634}, terminalOps:'PSA International',        dwell:'1.8 days avg', nextCall:'17 Apr 2025' },
+  { tier:1, name:'Port of Singapore',       country:'🇸🇬 Singapore',              unlocode:'SG SIN', type:'Hub Port',      position:[1.26,103.82],   services:['SEA1','SEA2','SWS','EAS','ASA','GCS','AA2','WSA'], avgDelinquency:5.2,  delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:21, d2:{count:892}, d5:{count:634}, terminalOps:'PSA International',        dwell:'1.8 days avg', nextCall:'17 Apr 2025',
+    dwellingLaden:[
+      { service:'SWS',  dir:'HH', nextPort:'Tema',      teu20:142, teu40:87  },
+      { service:'SWS',  dir:'BH', nextPort:'Qingdao',   teu20:78,  teu40:53  },
+      { service:'SEA1', dir:'HH', nextPort:'Durban',    teu20:94,  teu40:61  },
+      { service:'SEA1', dir:'BH', nextPort:'Shanghai',  teu20:112, teu40:74  },
+      { service:'EAS',  dir:'HH', nextPort:'Mombasa',   teu20:67,  teu40:43  },
+      { service:'EAS',  dir:'BH', nextPort:'Port Klang',teu20:58,  teu40:39  },
+      { service:'GCS',  dir:'HH', nextPort:'Jebel Ali', teu20:83,  teu40:52  },
+      { service:'GCS',  dir:'BH', nextPort:'Colombo',   teu20:71,  teu40:48  },
+    ]},
   { tier:1, name:'Port of Shanghai',         country:'🇨🇳 Shanghai, China',         unlocode:'CN SHA', type:'Hub Port',      position:[31.23,121.47],  services:['CCS','JCS','AAS1','SEA1','WSA'],                        avgDelinquency:7.1,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:29, d2:{count:1140},d5:{count:820}, terminalOps:'SIPG / Yangshan',          dwell:'2.1 days avg', nextCall:'18 Apr 2025' },
-  { tier:1, name:'Port Klang',               country:'🇲🇾 Selangor, Malaysia',       unlocode:'MY PKG', type:'Hub Port',      position:[3.00,101.37],   services:['SEA1','SWS','EAS','GCS','AA2'],                       avgDelinquency:9.3,  delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:37, d2:{count:674}, d5:{count:412}, terminalOps:'Westports / Northport',    dwell:'2.4 days avg', nextCall:'19 Apr 2025' },
-  { tier:1, name:'Port of Colombo',          country:'🇱🇰 Colombo, Sri Lanka',       unlocode:'LK CMB', type:'Hub Port',      position:[6.95,79.85],    services:['SWS','EAS','GCS','RGS'],                              avgDelinquency:12.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:50, d2:{count:503}, d5:{count:291}, terminalOps:'JCT / SAGT',               dwell:'2.8 days avg', nextCall:'20 Apr 2025' },
-  { tier:1, name:'Port of Jebel Ali',        country:'🇦🇪 Dubai, UAE',               unlocode:'AE JEA', type:'Hub Port',      position:[24.99,55.07],   services:['GCS','CSE','RGS'],                                     avgDelinquency:8.7,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:35, d2:{count:448}, d5:{count:326}, terminalOps:'DP World',                 dwell:'2.2 days avg', nextCall:'21 Apr 2025' },
+  { tier:1, name:'Port Klang',               country:'🇲🇾 Selangor, Malaysia',       unlocode:'MY PKG', type:'Hub Port',      position:[3.00,101.37],   services:['SEA1','SWS','EAS','GCS','AA2'],                       avgDelinquency:9.3,  delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:37, d2:{count:674}, d5:{count:412}, terminalOps:'Westports / Northport',    dwell:'2.4 days avg', nextCall:'19 Apr 2025',
+    dwellingLaden:[
+      { service:'SWS',  dir:'HH', nextPort:'Tema',      teu20:108, teu40:64  },
+      { service:'SWS',  dir:'BH', nextPort:'Singapore', teu20:61,  teu40:38  },
+      { service:'SEA1', dir:'HH', nextPort:'Colombo',   teu20:87,  teu40:56  },
+      { service:'SEA1', dir:'BH', nextPort:'Singapore', teu20:93,  teu40:62  },
+      { service:'EAS',  dir:'HH', nextPort:'Colombo',   teu20:54,  teu40:34  },
+      { service:'GCS',  dir:'HH', nextPort:'Colombo',   teu20:72,  teu40:44  },
+    ]},
+  { tier:1, name:'Port of Colombo',          country:'🇱🇰 Colombo, Sri Lanka',       unlocode:'LK CMB', type:'Hub Port',      position:[6.95,79.85],    services:['SWS','EAS','GCS','RGS'],                              avgDelinquency:12.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:50, d2:{count:503}, d5:{count:291}, terminalOps:'JCT / SAGT',               dwell:'2.8 days avg', nextCall:'20 Apr 2025',
+    dwellingLaden:[
+      { service:'SWS',  dir:'HH', nextPort:'Salalah',   teu20:96,  teu40:58  },
+      { service:'SWS',  dir:'BH', nextPort:'Port Klang',teu20:74,  teu40:46  },
+      { service:'EAS',  dir:'HH', nextPort:'Mombasa',   teu20:61,  teu40:39  },
+      { service:'GCS',  dir:'HH', nextPort:'Salalah',   teu20:78,  teu40:49  },
+      { service:'GCS',  dir:'BH', nextPort:'Singapore', teu20:52,  teu40:33  },
+    ]},
+  { tier:1, name:'Port of Jebel Ali',        country:'🇦🇪 Dubai, UAE',               unlocode:'AE JEA', type:'Hub Port',      position:[24.99,55.07],   services:['GCS','CSE','RGS'],                                     avgDelinquency:8.7,  delinqTrend:'Stable (±0.2 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:35, d2:{count:448}, d5:{count:326}, terminalOps:'DP World',                 dwell:'2.2 days avg', nextCall:'21 Apr 2025',
+    dwellingLaden:[
+      { service:'GCS',  dir:'HH', nextPort:'Salalah',   teu20:88,  teu40:54  },
+      { service:'GCS',  dir:'BH', nextPort:'Colombo',   teu20:63,  teu40:41  },
+      { service:'CSE',  dir:'HH', nextPort:'Karachi',   teu20:71,  teu40:44  },
+      { service:'CSE',  dir:'BH', nextPort:'Salalah',   teu20:48,  teu40:29  },
+    ]},
   { tier:1, name:'Port of Durban',           country:'🇿🇦 Durban, South Africa',     unlocode:'ZA DUR', type:'Hub Port',      position:[-29.87,31.03],  services:['ASA','EAS'],                                            avgDelinquency:16.2, delinqTrend:'+2.8 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:65, d2:{count:387}, d5:{count:198}, terminalOps:'Transnet Port Terminals',  dwell:'4.8 days avg', nextCall:'23 Apr 2025' },
   { tier:1, name:'Port of Cape Town',        country:'🇿🇦 Cape Town, South Africa',  unlocode:'ZA CPT', type:'Gateway Port',  position:[-33.92,18.43],  services:['ASA','ES1'],                                           avgDelinquency:13.5, delinqTrend:'−0.6 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:54, d2:{count:261}, d5:{count:144}, terminalOps:'Transnet Port Terminals',  dwell:'3.9 days avg', nextCall:'25 Apr 2025' },
   { tier:1, name:'Port of Tema',             country:'🇬🇭 Tema, Ghana',              unlocode:'GH TEM', type:'Hub Port',      position:[5.62,-0.00],    services:['SWS','WA3'],                                            avgDelinquency:21.3, delinqTrend:'+3.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:85, d2:{count:318}, d5:{count:162}, terminalOps:'MPS / Meridian Port',      dwell:'5.6 days avg', nextCall:'29 Apr 2025' },
@@ -2325,6 +2371,32 @@ function buildPortPopup(p) {
 
       <div class="port-divider"></div>
 
+      ${p.dwellingLaden && p.dwellingLaden.length ? `
+      <div class="port-divider"></div>
+      <div class="delinq-title" style="margin-bottom:5px;">Laden Containers Dwelling</div>
+      <table class="dwell-table">
+        <thead>
+          <tr>
+            <th class="dwell-th" style="text-align:left">Svc</th>
+            <th class="dwell-th" style="text-align:left;padding-left:4px">Dir</th>
+            <th class="dwell-th" style="text-align:left;padding-left:4px">Next Port</th>
+            <th class="dwell-th" style="text-align:right">20"</th>
+            <th class="dwell-th" style="text-align:right;padding-left:6px">40"</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${p.dwellingLaden.map(r => `
+          <tr>
+            <td class="dwell-td"><span class="dwell-svc">${r.service}</span></td>
+            <td class="dwell-td" style="padding-left:4px"><span class="dwell-dir dwell-dir-${r.dir.toLowerCase()}">${r.dir}</span></td>
+            <td class="dwell-td dwell-port" style="padding-left:4px">${r.nextPort}</td>
+            <td class="dwell-td dwell-num" style="text-align:right">${r.teu20}</td>
+            <td class="dwell-td dwell-num" style="text-align:right;padding-left:6px">${r.teu40}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      ` : ''}
+
       <div class="port-detail-row"><span class="port-detail-label">UN/LOCODE</span><span class="port-detail-value">${p.unlocode}</span></div>
       <div class="port-detail-row"><span class="port-detail-label">Terminal Operator</span><span class="port-detail-value">${p.terminalOps}</span></div>
       <div class="port-detail-row"><span class="port-detail-label">Avg. Dwell Time</span><span class="port-detail-value">${p.dwell}</span></div>
@@ -2339,11 +2411,11 @@ const portLayers = { 1: L.layerGroup(), 2: L.layerGroup(), 3: L.layerGroup() };
 ports.forEach(p => {
   const marker = L.marker(p.position, { icon: portIcon(p.tier) });
   const popup = L.popup({
-    maxWidth: 240, minWidth: 235,
+    maxWidth: 275, minWidth: 270,
     className: 'vessel-popup-wrapper',
     offset: [0, -8], autoPan: false, closeOnClick: false
   }).setContent(buildPortPopup(p));
-  bindSmartPopup(marker, popup, 240, 380);
+  bindSmartPopup(marker, popup, 270, 440);
   portLayers[p.tier].addLayer(marker);
 });
 
