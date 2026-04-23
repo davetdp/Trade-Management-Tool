@@ -257,6 +257,9 @@
       -webkit-backdrop-filter: blur(32px) saturate(180%);
       overflow: hidden;
       font-family: 'Inter', sans-serif;
+      max-height: calc(100vh - 120px);
+      display: flex;
+      flex-direction: column;
     }
     .popup-header {
       padding: 9px 12px 8px;
@@ -275,7 +278,10 @@
     .badge-arrived  { background: rgba(0,229,160,0.15); color: var(--green); border: 1px solid rgba(0,229,160,0.25); }
     .badge-drydock  { background: rgba(150,150,170,0.15); color: #a0a8b8; border: 1px solid rgba(150,150,170,0.25); }
 
-    .popup-body { padding: 8px 11px; }
+    .popup-body { padding: 8px 11px; overflow-y: auto; flex: 1; min-height: 0; }
+    .popup-body::-webkit-scrollbar { width: 3px; }
+    .popup-body::-webkit-scrollbar-track { background: transparent; }
+    .popup-body::-webkit-scrollbar-thumb { background: rgba(0,180,255,0.25); border-radius: 3px; }
     .popup-section-title {
       font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase;
       letter-spacing: 1.2px; margin: 0 0 5px;
