@@ -1282,7 +1282,7 @@ const vessels = [
     vvd: 'KCTK0041W',
     service: 'ASA',
     position: [-38.5, 19.2],
-    route: 'Shanghai → Singapore → Port Klang → Durban → Cape Town',
+    route: 'Kaohsiung → Xiamen → Hong Kong → Nansha → Singapore → Port Kelang → Durban → Cape Town',
     nextPort: 'Cape Town',
     status: 'On route to Cape Town',
     badgeClass: 'badge-transit', leg: 'Headhaul',
@@ -1305,13 +1305,13 @@ const vessels = [
     util: 88,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Shanghai',   pod:'Cape Town',  teu: 3240, rate20:'$1,650', rate40:'$2,850', avgWt:'11.8mt', cmPerTon:'$342', ratePerTon:'$139' },
+      { pol:'Nansha',     pod:'Cape Town',  teu: 3240, rate20:'$1,650', rate40:'$2,850', avgWt:'11.8mt', cmPerTon:'$342', ratePerTon:'$139' },
       { pol:'Singapore',  pod:'Durban',     teu: 2180, rate20:'$1,420', rate40:'$2,480', avgWt:'12.4mt', cmPerTon:'$308', ratePerTon:'$115' },
       { pol:'Port Klang', pod:'Cape Town',  teu: 1840, rate20:'$1,380', rate40:'$2,390', avgWt:'11.2mt', cmPerTon:'$318', ratePerTon:'$123' },
     ],
     pr: {
       rates: [
-        { pol:'Shanghai',   pod:'Cape Town',  rate:'$1,650', vs:'+8% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Nansha',     pod:'Cape Town',  rate:'$1,650', vs:'+8% mkt',  vsClass:'pr-vs-up'   },
         { pol:'Singapore',  pod:'Durban',     rate:'$1,420', vs:'At mkt',   vsClass:'pr-vs-flat' },
         { pol:'Port Klang', pod:'Cape Town',  rate:'$1,380', vs:'−3% mkt',  vsClass:'pr-vs-down' },
       ],
@@ -1323,7 +1323,7 @@ const vessels = [
     vvd: 'KCHY0005S',
     service: 'AA2',
     position: [-31.5, 153.8],
-    route: 'Singapore → Port Klang → Fremantle → Melbourne → Sydney',
+    route: 'Singapore → Port Kelang → Fremantle → Sydney → Melbourne → Adelaide',
     nextPort: 'Sydney',
     status: 'Arrived at Sydney',
     badgeClass: 'badge-arrived', leg: 'Headhaul',
@@ -1364,7 +1364,7 @@ const vessels = [
     vvd: 'KCPK0101N',
     service: 'CCS',
     position: [29.92, 122.10],
-    route: 'Singapore → Ho Chi Minh → Manila → Shanghai → Ningbo',
+    route: 'Xiamen → Shekou → Haiphong → Singapore → Kolkata',
     nextPort: 'Ningbo',
     status: 'Arrived at Ningbo',
     badgeClass: 'badge-arrived', leg: 'Headhaul',
@@ -1387,15 +1387,15 @@ const vessels = [
     util: 86,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Shanghai',   teu: 3840, rate20:'$420',   rate40:'$730',   avgWt:'9.8mt',  cmPerTon:'$80',  ratePerTon:'$43'  },
-      { pol:'Ho Chi Minh',pod:'Ningbo',     teu: 2960, rate20:'$380',   rate40:'$660',   avgWt:'10.2mt', cmPerTon:'$74',  ratePerTon:'$37'  },
-      { pol:'Manila',     pod:'Shanghai',   teu: 2190, rate20:'$340',   rate40:'$590',   avgWt:'9.4mt',  cmPerTon:'$68',  ratePerTon:'$36'  },
+      { pol:'Xiamen',     pod:'Kolkata',    teu: 3840, rate20:'$420',   rate40:'$730',   avgWt:'9.8mt',  cmPerTon:'$80',  ratePerTon:'$43'  },
+      { pol:'Singapore',  pod:'Kolkata',    teu: 2960, rate20:'$380',   rate40:'$660',   avgWt:'10.2mt', cmPerTon:'$74',  ratePerTon:'$37'  },
+      { pol:'Haiphong',   pod:'Kolkata',    teu: 2190, rate20:'$340',   rate40:'$590',   avgWt:'9.4mt',  cmPerTon:'$68',  ratePerTon:'$36'  },
     ],
     pr: {
       rates: [
-        { pol:'Singapore',  pod:'Shanghai',  rate:'$880',  vs:'+12% mkt', vsClass:'pr-vs-up'   },
-        { pol:'Ho Chi Minh',pod:'Ningbo',    rate:'$760',  vs:'+4% mkt',  vsClass:'pr-vs-up'   },
-        { pol:'Manila',     pod:'Shanghai',  rate:'$820',  vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Xiamen',     pod:'Kolkata',   rate:'$820',  vs:'+12% mkt', vsClass:'pr-vs-up'   },
+        { pol:'Singapore',  pod:'Kolkata',   rate:'$760',  vs:'+4% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Haiphong',   pod:'Kolkata',   rate:'$780',  vs:'At mkt',   vsClass:'pr-vs-flat' },
       ],
       thc20:'$165', thc40:'$250', freeTime:'7 days', storage:'$15/TEU/day'
     },
@@ -1405,9 +1405,9 @@ const vessels = [
     vvd: 'KCPT0001W',
     service: 'GCS',
     position: [11.5, 92.5],
-    route: 'Port Klang → Singapore → Colombo → Salalah → Jebel Ali',
-    nextPort: 'Colombo',
-    status: 'On route to Colombo',
+    route: 'Qingdao → Shanghai → Ningbo → Nansha → Singapore → Jebel Ali → Ad Dammam',
+    nextPort: 'Jebel Ali',
+    status: 'On route to Jebel Ali',
     badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9556789',
@@ -1428,15 +1428,15 @@ const vessels = [
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Port Klang', pod:'Jebel Ali',  teu: 2980, rate20:'$850',   rate40:'$1,450', avgWt:'12.4mt', cmPerTon:'$194', ratePerTon:'$69'  },
-      { pol:'Singapore',  pod:'Salalah',    teu: 2140, rate20:'$790',   rate40:'$1,360', avgWt:'11.8mt', cmPerTon:'$182', ratePerTon:'$67'  },
-      { pol:'Port Klang', pod:'Colombo',    teu: 1620, rate20:'$420',   rate40:'$720',   avgWt:'10.8mt', cmPerTon:'$88',  ratePerTon:'$39'  },
+      { pol:'Singapore',  pod:'Jebel Ali',  teu: 2980, rate20:'$850',   rate40:'$1,450', avgWt:'12.4mt', cmPerTon:'$194', ratePerTon:'$69'  },
+      { pol:'Nansha',     pod:'Jebel Ali',  teu: 2140, rate20:'$790',   rate40:'$1,360', avgWt:'11.8mt', cmPerTon:'$182', ratePerTon:'$67'  },
+      { pol:'Ningbo',     pod:'Ad Dammam',  teu: 1620, rate20:'$820',   rate40:'$1,400', avgWt:'10.8mt', cmPerTon:'$188', ratePerTon:'$76'  },
     ],
     pr: {
       rates: [
-        { pol:'Port Klang', pod:'Jebel Ali', rate:'$1,340', vs:'+6% mkt',  vsClass:'pr-vs-up'   },
-        { pol:'Singapore',  pod:'Salalah',   rate:'$1,180', vs:'At mkt',   vsClass:'pr-vs-flat' },
-        { pol:'Port Klang', pod:'Colombo',   rate:'$920',   vs:'−4% mkt',  vsClass:'pr-vs-down' },
+        { pol:'Singapore',  pod:'Jebel Ali', rate:'$1,340', vs:'+6% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Nansha',     pod:'Jebel Ali', rate:'$1,240', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Ningbo',     pod:'Ad Dammam', rate:'$1,180', vs:'−2% mkt',  vsClass:'pr-vs-down' },
       ],
       thc20:'$170', thc40:'$260', freeTime:'7 days', storage:'$16/TEU/day'
     },
@@ -1447,9 +1447,9 @@ const vessels = [
     vvd: 'KEGL0023W',
     position: [7.4, 67.2],
     service: 'CSE',
-    route: 'Singapore → Colombo → Salalah → Muscat → Jebel Ali',
-    nextPort: 'Salalah',
-    status: 'On route to Salalah',
+    route: 'Shanghai → Ningbo → Shekou → Singapore → Port Kelang → Nhava Sheva → Mundra → Karachi',
+    nextPort: 'Nhava Sheva',
+    status: 'On route to Nhava Sheva',
     badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9688412',
@@ -1470,15 +1470,15 @@ const vessels = [
     util: 86,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Jebel Ali',  teu: 3120, rate20:'$880',   rate40:'$1,510', avgWt:'12.6mt', cmPerTon:'$202', ratePerTon:'$70'  },
-      { pol:'Colombo',    pod:'Salalah',    teu: 2480, rate20:'$640',   rate40:'$1,100', avgWt:'11.4mt', cmPerTon:'$158', ratePerTon:'$56'  },
-      { pol:'Singapore',  pod:'Muscat',     teu: 1960, rate20:'$920',   rate40:'$1,580', avgWt:'12.2mt', cmPerTon:'$218', ratePerTon:'$75'  },
+      { pol:'Singapore',  pod:'Nhava Sheva',teu: 3120, rate20:'$880',   rate40:'$1,510', avgWt:'12.6mt', cmPerTon:'$202', ratePerTon:'$70'  },
+      { pol:'Shekou',     pod:'Karachi',    teu: 2480, rate20:'$820',   rate40:'$1,420', avgWt:'11.4mt', cmPerTon:'$192', ratePerTon:'$72'  },
+      { pol:'Ningbo',     pod:'Mundra',     teu: 1960, rate20:'$860',   rate40:'$1,480', avgWt:'12.2mt', cmPerTon:'$198', ratePerTon:'$70'  },
     ],
     pr: {
       rates: [
-        { pol:'Singapore',  pod:'Jebel Ali', rate:'$1,480', vs:'+9% mkt',  vsClass:'pr-vs-up'   },
-        { pol:'Colombo',    pod:'Salalah',   rate:'$1,220', vs:'At mkt',   vsClass:'pr-vs-flat' },
-        { pol:'Singapore',  pod:'Muscat',    rate:'$1,310', vs:'+3% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Singapore',  pod:'Nhava Sheva', rate:'$1,260', vs:'+5% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Shekou',     pod:'Karachi',     rate:'$1,120', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Ningbo',     pod:'Mundra',      rate:'$1,180', vs:'−2% mkt',  vsClass:'pr-vs-down' },
       ],
       thc20:'$175', thc40:'$265', freeTime:'7 days', storage:'$17/TEU/day'
     },
@@ -1489,9 +1489,9 @@ const vessels = [
     vvd: 'KGDG0087W',
     position: [17.8, 57.4],
     service: 'GCS',
-    route: 'Singapore → Colombo → Salalah → Sohar → Jebel Ali',
-    nextPort: 'Sohar',
-    status: 'On route to Sohar',
+    route: 'Qingdao → Shanghai → Ningbo → Nansha → Singapore → Jebel Ali → Ad Dammam',
+    nextPort: 'Jebel Ali',
+    status: 'On route to Jebel Ali',
     badgeClass: 'badge-transit', leg: 'Headhaul',
     flag: '🇸🇬',
     imo: '9724561',
@@ -1512,15 +1512,15 @@ const vessels = [
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Sohar',      teu: 2740, rate20:'$860',   rate40:'$1,480', avgWt:'12.0mt', cmPerTon:'$196', ratePerTon:'$72'  },
-      { pol:'Colombo',    pod:'Jebel Ali',  teu: 2180, rate20:'$850',   rate40:'$1,450', avgWt:'11.8mt', cmPerTon:'$194', ratePerTon:'$72'  },
-      { pol:'Colombo',    pod:'Sohar',      teu: 1620, rate20:'$560',   rate40:'$960',   avgWt:'11.2mt', cmPerTon:'$140', ratePerTon:'$50'  },
+      { pol:'Singapore',  pod:'Jebel Ali',  teu: 2740, rate20:'$860',   rate40:'$1,480', avgWt:'12.0mt', cmPerTon:'$196', ratePerTon:'$72'  },
+      { pol:'Nansha',     pod:'Jebel Ali',  teu: 2180, rate20:'$850',   rate40:'$1,450', avgWt:'11.8mt', cmPerTon:'$194', ratePerTon:'$72'  },
+      { pol:'Shanghai',   pod:'Ad Dammam',  teu: 1620, rate20:'$820',   rate40:'$1,400', avgWt:'11.2mt', cmPerTon:'$188', ratePerTon:'$73'  },
     ],
     pr: {
       rates: [
-        { pol:'Singapore',  pod:'Sohar',     rate:'$1,260', vs:'+5% mkt',  vsClass:'pr-vs-up'   },
-        { pol:'Colombo',    pod:'Jebel Ali', rate:'$1,320', vs:'At mkt',   vsClass:'pr-vs-flat' },
-        { pol:'Colombo',    pod:'Sohar',     rate:'$1,080', vs:'−2% mkt',  vsClass:'pr-vs-down' },
+        { pol:'Singapore',  pod:'Jebel Ali', rate:'$1,260', vs:'+5% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Nansha',     pod:'Jebel Ali', rate:'$1,240', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Shanghai',   pod:'Ad Dammam', rate:'$1,180', vs:'−2% mkt',  vsClass:'pr-vs-down' },
       ],
       thc20:'$160', thc40:'$245', freeTime:'7 days', storage:'$15/TEU/day'
     },
@@ -1573,7 +1573,7 @@ const vessels = [
     vvd: 'KLYG0012E',
     position: [-11.8, -90.5],
     service: 'WSA',
-    route: 'Yantian → Singapore → Callao → San Antonio → Valparaíso',
+    route: 'Hong Kong → Yantian → Shanghai → Ningbo → Manzanillo → Buenaventura → Callao → Valparaíso',
     nextPort: 'Callao',
     status: 'On route to Callao',
     badgeClass: 'badge-transit', leg: 'Headhaul',
@@ -1597,14 +1597,14 @@ const vessels = [
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
       { pol:'Yantian',    pod:'Callao',         teu: 3480, rate20:'$1,840', rate40:'$3,180', avgWt:'12.8mt', cmPerTon:'$468', ratePerTon:'$144' },
-      { pol:'Singapore',  pod:'San Antonio',    teu: 2760, rate20:'$1,960', rate40:'$3,380', avgWt:'13.2mt', cmPerTon:'$492', ratePerTon:'$149' },
-      { pol:'Yantian',    pod:'Valparaíso',     teu: 2210, rate20:'$1,780', rate40:'$3,080', avgWt:'12.4mt', cmPerTon:'$450', ratePerTon:'$144' },
+      { pol:'Shanghai',   pod:'Manzanillo',     teu: 2760, rate20:'$1,960', rate40:'$3,380', avgWt:'13.2mt', cmPerTon:'$492', ratePerTon:'$149' },
+      { pol:'Ningbo',     pod:'Valparaíso',     teu: 2210, rate20:'$1,780', rate40:'$3,080', avgWt:'12.4mt', cmPerTon:'$450', ratePerTon:'$144' },
     ],
     pr: {
       rates: [
-        { pol:'Yantian',    pod:'Callao',      rate:'$1,920', vs:'+6% mkt',  vsClass:'pr-vs-up'   },
-        { pol:'Singapore',  pod:'San Antonio', rate:'$2,080', vs:'At mkt',   vsClass:'pr-vs-flat' },
-        { pol:'Yantian',    pod:'Valparaíso',  rate:'$1,980', vs:'−1% mkt',  vsClass:'pr-vs-down' },
+        { pol:'Yantian',    pod:'Callao',         rate:'$2,240', vs:'+4% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Shanghai',   pod:'Manzanillo',     rate:'$2,380', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Ningbo',     pod:'Valparaíso',     rate:'$2,180', vs:'−1% mkt',  vsClass:'pr-vs-down' },
       ],
       thc20:'$195', thc40:'$295', freeTime:'7 days', storage:'$19/TEU/day'
     },
@@ -1615,7 +1615,7 @@ const vessels = [
     vvd: 'KOAS0008E',
     service: 'MSP',
     position: [-18.4, 169.8],
-    route: 'Singapore → Sydney → Noumea → Port Vila → Suva',
+    route: 'Nansha → Hong Kong → Lae → Honiara → Suva → Lautoka → Majuro',
     nextPort: 'Suva',
     status: 'On route to Suva',
     badgeClass: 'badge-transit', leg: 'Headhaul',
@@ -1638,15 +1638,15 @@ const vessels = [
     util: 82,
     utilColor: 'linear-gradient(90deg,#0066cc,#ec4899)',
     topFlows: [
-      { pol:'Singapore',  pod:'Noumea',         teu: 1240, rate20:'$1,640', rate40:'$2,820', avgWt:'10.4mt', cmPerTon:'$414', ratePerTon:'$158' },
-      { pol:'Sydney',     pod:'Suva',           teu: 980,  rate20:'$1,480', rate40:'$2,560', avgWt:'9.8mt',  cmPerTon:'$386', ratePerTon:'$151' },
-      { pol:'Singapore',  pod:'Suva',           teu: 860,  rate20:'$1,720', rate40:'$2,960', avgWt:'11.2mt', cmPerTon:'$428', ratePerTon:'$154' },
+      { pol:'Nansha',     pod:'Suva',           teu: 1240, rate20:'$1,640', rate40:'$2,820', avgWt:'10.4mt', cmPerTon:'$414', ratePerTon:'$158' },
+      { pol:'Hong Kong',  pod:'Majuro',         teu: 980,  rate20:'$1,480', rate40:'$2,560', avgWt:'9.8mt',  cmPerTon:'$386', ratePerTon:'$151' },
+      { pol:'Nansha',     pod:'Honiara',        teu: 860,  rate20:'$1,720', rate40:'$2,960', avgWt:'11.2mt', cmPerTon:'$428', ratePerTon:'$154' },
     ],
     pr: {
       rates: [
-        { pol:'Singapore',  pod:'Noumea', rate:'$1,640', vs:'+4% mkt',  vsClass:'pr-vs-up'   },
-        { pol:'Sydney',     pod:'Suva',   rate:'$1,480', vs:'At mkt',   vsClass:'pr-vs-flat' },
-        { pol:'Singapore',  pod:'Suva',   rate:'$1,560', vs:'+2% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Nansha',     pod:'Suva',    rate:'$1,640', vs:'+4% mkt',  vsClass:'pr-vs-up'   },
+        { pol:'Hong Kong',  pod:'Majuro',  rate:'$1,480', vs:'At mkt',   vsClass:'pr-vs-flat' },
+        { pol:'Nansha',     pod:'Honiara', rate:'$1,560', vs:'+2% mkt',  vsClass:'pr-vs-up'   },
       ],
       thc20:'$200', thc40:'$305', freeTime:'5 days', storage:'$21/TEU/day'
     },
@@ -2284,11 +2284,11 @@ function buildPopup(v, laneColor) {
 
 // ── TRADE LANE COLOURS ───────────────────────────────────────
 const tradeLanes = {
-  'Africa':                      { color: '#ef4444', services: ['SWS','WA3','EAS','ASA','AAS1'] },
+  'Africa':                      { color: '#ef4444', services: ['SWS','WA3','EAS','ASA'] },
   'ECSA':                        { color: '#ec4899', services: ['ES1'] },
   'WCSA':                        { color: '#a78bfa', services: ['WSA'] },
-  'Intra Asia':                  { color: '#00b4ff', services: ['CCS','JCS','SEA1','SEA2','IAX'] },
-  'Middle East & W. Coast India':{ color: '#f97316', services: ['GCS','CSE','RGS'] },
+  'Intra Asia':                  { color: '#00b4ff', services: ['CCS'] },
+  'Middle East & S. Asia':       { color: '#f97316', services: ['GCS','CSE','RGS'] },
   'Oceania':                     { color: '#00e5a0', services: ['AA2','NZS','ANA','MSP'] },
 };
 
@@ -2615,18 +2615,18 @@ vessels.forEach((v, i) => {
 // tier 3 = local/feeder (visible zoom 6+)
 const ports = [
   // ── TIER 1: MAJOR HUBS ───────────────────────────────────
-  { tier:1, name:'Port of Singapore',       country:'🇸🇬 Singapore',              unlocode:'SG SIN', type:'Hub Port',      position:[1.26,103.82],   services:['SEA1','SEA2','SWS','EAS','ASA','GCS','AA2','WSA'], avgDelinquency:5.2,  delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:21, d2:{count:892}, d5:{count:634}, terminalOps:'PSA International',        dwell:'1.8 days avg', nextCall:'17 Apr 2025', pricing:{ thc20:'$185', thc40:'$285', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$48/day' }, dwellingLaden:[
+  { tier:1, name:'Port of Singapore',       country:'🇸🇬 Singapore',              unlocode:'SG SIN', type:'Hub Port',      position:[1.26,103.82],   services:['SWS','EAS','ASA','GCS','CSE','AA2','WSA'], avgDelinquency:5.2,  delinqTrend:'−0.8 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:21, d2:{count:892}, d5:{count:634}, terminalOps:'PSA International',        dwell:'1.8 days avg', nextCall:'17 Apr 2025', pricing:{ thc20:'$185', thc40:'$285', freeTime:'5 days', storage:'$22/TEU/day', reefer:'$48/day' }, dwellingLaden:[
     { service: 'SWS', directions: [
       { dir:'HH', pods:[{port:'Tema',teu:148},{port:'Abidjan',teu:78},{port:'Apapa',teu:52},{port:'Colombo',teu:38}], teu20:142, teu40:87,
         vessels:[{ name:'Kota Layang', eta:'19 Apr', alloc:150 },{ name:'Kota Damai', eta:'24 Apr', alloc:150 },{ name:'Kota Gadang', eta:'29 Apr', alloc:150 }] },
       { dir:'BH', pods:[{port:'Qingdao',teu:98},{port:'Shanghai',teu:86}], teu20:78, teu40:53,
         vessels:[{ name:'Kota Ebony',  eta:'21 Apr', alloc:120 },{ name:'Kota Cempaka', eta:'26 Apr', alloc:120 },{ name:'Kota Oasis', eta:'30 Apr', alloc:120 }] },
     ]},
-    { service: 'SEA1', directions: [
-      { dir:'HH', pods:[{port:'Durban',teu:96},{port:'Cape Town',teu:60},{port:'Colombo',teu:38},{port:'Port Klang',teu:22}], teu20:94, teu40:61,
-        vessels:[{ name:'Kota Cantik', eta:'22 Apr', alloc:120 },{ name:'Kota Cahaya', eta:'27 Apr', alloc:120 },{ name:'Kota Cepat', eta:'01 May', alloc:120 }] },
-      { dir:'BH', pods:[{port:'Shanghai',teu:176},{port:'Hong Kong',teu:84}], teu20:112, teu40:74,
-        vessels:[{ name:'Kota Frontier', eta:'20 Apr', alloc:140 },{ name:'Kota Horizon', eta:'25 Apr', alloc:140 },{ name:'Kota Tenang', eta:'30 Apr', alloc:140 }] },
+    { service: 'ASA', directions: [
+      { dir:'HH', pods:[{port:'Durban',teu:96},{port:'Cape Town',teu:60}], teu20:94, teu40:61,
+        vessels:[{ name:'Kota Cantik', eta:'22 Apr', alloc:120 },{ name:'Kota Frontier', eta:'27 Apr', alloc:120 },{ name:'Kota Horizon', eta:'01 May', alloc:120 }] },
+      { dir:'BH', pods:[{port:'Singapore',teu:124},{port:'Hong Kong',teu:84}], teu20:112, teu40:74,
+        vessels:[{ name:'Kota Horizon', eta:'20 Apr', alloc:140 },{ name:'Kota Tenang', eta:'25 Apr', alloc:140 },{ name:'Kota Setia', eta:'30 Apr', alloc:140 }] },
     ]},
     { service: 'EAS', directions: [
       { dir:'HH', pods:[{port:'Mombasa',teu:153}], teu20:67, teu40:43,
@@ -2635,29 +2635,29 @@ const ports = [
         vessels:[{ name:'Kota Ebony',  eta:'23 Apr', alloc:100 },{ name:'Kota Gadang', eta:'28 Apr', alloc:100 },{ name:'Kota Damai', eta:'03 May', alloc:100 }] },
     ]},
     { service: 'GCS', directions: [
-      { dir:'HH', pods:[{port:'Jebel Ali',teu:72},{port:'Salalah',teu:48},{port:'Ad Dammam',teu:35},{port:'Colombo',teu:32}], teu20:83, teu40:52,
-        vessels:[{ name:'Kota Eagle',  eta:'20 Apr', alloc:110 },{ name:'Kota Cepat', eta:'26 Apr', alloc:110 },{ name:'Kota Setia', eta:'01 May', alloc:110 }] },
+      { dir:'HH', pods:[{port:'Jebel Ali',teu:107},{port:'Ad Dammam',teu:80}], teu20:83, teu40:52,
+        vessels:[{ name:'Kota Eagle',  eta:'20 Apr', alloc:110 },{ name:'Kota Cepat', eta:'26 Apr', alloc:110 },{ name:'Kota Gadang', eta:'01 May', alloc:110 }] },
       { dir:'BH', pods:[{port:'Shanghai',teu:89},{port:'Qingdao',teu:78}], teu20:71, teu40:48,
-        vessels:[{ name:'Kota Cantik', eta:'22 Apr', alloc:110 },{ name:'Kota Cahaya', eta:'28 Apr', alloc:110 },{ name:'Kota Cepat', eta:'03 May', alloc:110 }] },
+        vessels:[{ name:'Kota Cepat', eta:'22 Apr', alloc:110 },{ name:'Kota Gadang', eta:'28 Apr', alloc:110 },{ name:'Kota Setia', eta:'03 May', alloc:110 }] },
     ]},
   ] },
-  { tier:1, name:'Port of Shanghai',         country:'🇨🇳 Shanghai, China',         unlocode:'CN SHA', type:'Hub Port',      position:[31.23,121.47],  services:['CCS','JCS','AAS1','SEA1','WSA'],                        avgDelinquency:7.1,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:29, d2:{count:1140},d5:{count:820}, terminalOps:'SIPG / Yangshan',          dwell:'2.1 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$175', thc40:'$270', freeTime:'7 days', storage:'$18/TEU/day', reefer:'$42/day' } },
-  { tier:1, name:'Port Klang',               country:'🇲🇾 Selangor, Malaysia',       unlocode:'MY PKG', type:'Hub Port',      position:[3.00,101.37],   services:['SEA1','SWS','EAS','GCS','AA2'],                       avgDelinquency:9.3,  delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:37, d2:{count:674}, d5:{count:412}, terminalOps:'Westports / Northport',    dwell:'2.4 days avg', nextCall:'19 Apr 2025', pricing:{ thc20:'$120', thc40:'$185', freeTime:'7 days', storage:'$14/TEU/day', reefer:'$38/day' }, dwellingLaden:[
+  { tier:1, name:'Port of Shanghai',         country:'🇨🇳 Shanghai, China',         unlocode:'CN SHA', type:'Hub Port',      position:[31.23,121.47],  services:['CCS','GCS','EAS','SWS','WSA'],                        avgDelinquency:7.1,  delinqTrend:'+0.4 days vs last month', trendClass:'trend-up',   delinqColor:'#ffb830', delinqBarPct:29, d2:{count:1140},d5:{count:820}, terminalOps:'SIPG / Yangshan',          dwell:'2.1 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$175', thc40:'$270', freeTime:'7 days', storage:'$18/TEU/day', reefer:'$42/day' } },
+  { tier:1, name:'Port Klang',               country:'🇲🇾 Selangor, Malaysia',       unlocode:'MY PKG', type:'Hub Port',      position:[3.00,101.37],   services:['SWS','EAS','ASA','GCS','CSE','AA2'],                       avgDelinquency:9.3,  delinqTrend:'−1.1 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:37, d2:{count:674}, d5:{count:412}, terminalOps:'Westports / Northport',    dwell:'2.4 days avg', nextCall:'19 Apr 2025', pricing:{ thc20:'$120', thc40:'$185', freeTime:'7 days', storage:'$14/TEU/day', reefer:'$38/day' }, dwellingLaden:[
     { service: 'SWS', directions: [
       { dir:'HH', pods:[{port:'Tema',teu:124},{port:'Abidjan',teu:54},{port:'Apapa',teu:32},{port:'Colombo',teu:26}], teu20:108, teu40:64,
         vessels:[{ name:'Kota Layang', eta:'20 Apr', alloc:130 },{ name:'Kota Damai', eta:'25 Apr', alloc:130 },{ name:'Kota Gadang', eta:'30 Apr', alloc:130 }] },
       { dir:'BH', pods:[{port:'Singapore',teu:137}], teu20:61, teu40:38,
         vessels:[{ name:'Kota Ebony',  eta:'22 Apr', alloc:110 },{ name:'Kota Cempaka', eta:'27 Apr', alloc:110 },{ name:'Kota Oasis', eta:'01 May', alloc:110 }] },
     ]},
-    { service: 'SEA1', directions: [
-      { dir:'HH', pods:[{port:'Durban',teu:98},{port:'Cape Town',teu:59},{port:'Colombo',teu:42}], teu20:87, teu40:56,
-        vessels:[{ name:'Kota Cantik', eta:'23 Apr', alloc:120 },{ name:'Kota Cahaya', eta:'28 Apr', alloc:120 },{ name:'Kota Cepat', eta:'02 May', alloc:120 }] },
-      { dir:'BH', pods:[{port:'Singapore',teu:98},{port:'Shanghai',teu:119}], teu20:93, teu40:62,
-        vessels:[{ name:'Kota Frontier', eta:'21 Apr', alloc:130 },{ name:'Kota Horizon', eta:'26 Apr', alloc:130 },{ name:'Kota Tenang', eta:'01 May', alloc:130 }] },
+    { service: 'ASA', directions: [
+      { dir:'HH', pods:[{port:'Durban',teu:98},{port:'Cape Town',teu:59}], teu20:87, teu40:56,
+        vessels:[{ name:'Kota Cantik', eta:'23 Apr', alloc:120 },{ name:'Kota Frontier', eta:'28 Apr', alloc:120 },{ name:'Kota Horizon', eta:'02 May', alloc:120 }] },
+      { dir:'BH', pods:[{port:'Singapore',teu:124},{port:'Nansha',teu:94}], teu20:93, teu40:62,
+        vessels:[{ name:'Kota Tenang', eta:'21 Apr', alloc:130 },{ name:'Kota Setia', eta:'26 Apr', alloc:130 },{ name:'Kota Impian', eta:'01 May', alloc:130 }] },
     ]},
     { service: 'GCS', directions: [
-      { dir:'HH', pods:[{port:'Jebel Ali',teu:76},{port:'Colombo',teu:48},{port:'Salalah',teu:36}], teu20:72, teu40:44,
-        vessels:[{ name:'Kota Eagle',  eta:'21 Apr', alloc:100 },{ name:'Kota Cepat', eta:'27 Apr', alloc:100 },{ name:'Kota Setia', eta:'02 May', alloc:100 }] },
+      { dir:'HH', pods:[{port:'Jebel Ali',teu:124},{port:'Ad Dammam',teu:36}], teu20:72, teu40:44,
+        vessels:[{ name:'Kota Eagle',  eta:'21 Apr', alloc:100 },{ name:'Kota Cepat', eta:'27 Apr', alloc:100 },{ name:'Kota Gadang', eta:'02 May', alloc:100 }] },
     ]},
   ] },
   { tier:1, name:'Port of Colombo',          country:'🇱🇰 Colombo, Sri Lanka',       unlocode:'LK CMB', type:'Hub Port',      position:[6.95,79.85],    services:['SWS','EAS','GCS','RGS'],                              avgDelinquency:12.4, delinqTrend:'+1.6 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:50, d2:{count:503}, d5:{count:291}, terminalOps:'JCT / SAGT',               dwell:'2.8 days avg', nextCall:'20 Apr 2025', pricing:{ thc20:'$130', thc40:'$200', freeTime:'5 days', storage:'$16/TEU/day', reefer:'$40/day' }, dwellingLaden:[
@@ -2692,7 +2692,7 @@ const ports = [
   { tier:1, name:'Port of Cape Town',        country:'🇿🇦 Cape Town, South Africa',  unlocode:'ZA CPT', type:'Gateway Port',  position:[-33.92,18.43],  services:['ASA','ES1'],                                           avgDelinquency:13.5, delinqTrend:'−0.6 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:54, d2:{count:261}, d5:{count:144}, terminalOps:'Transnet Port Terminals',  dwell:'3.9 days avg', nextCall:'25 Apr 2025', pricing:{ thc20:'$190', thc40:'$290', freeTime:'4 days', storage:'$23/TEU/day', reefer:'$53/day' } },
   { tier:1, name:'Port of Tema',             country:'🇬🇭 Tema, Ghana',              unlocode:'GH TEM', type:'Hub Port',      position:[5.62,-0.00],    services:['SWS','WA3'],                                            avgDelinquency:21.3, delinqTrend:'+3.2 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:85, d2:{count:318}, d5:{count:162}, terminalOps:'MPS / Meridian Port',      dwell:'5.6 days avg', nextCall:'29 Apr 2025', pricing:{ thc20:'$245', thc40:'$380', freeTime:'3 days', storage:'$28/TEU/day', reefer:'$62/day' } },
   { tier:1, name:'Port of Apapa',            country:'🇳🇬 Lagos, Nigeria',           unlocode:'NG APL', type:'Hub Port',      position:[6.45,3.39],     services:['SWS','WA3'],                                            avgDelinquency:24.7, delinqTrend:'+1.9 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:99, d2:{count:429}, d5:{count:203}, terminalOps:'ENL / APM Terminals',      dwell:'6.2 days avg', nextCall:'01 May 2025', pricing:{ thc20:'$260', thc40:'$400', freeTime:'3 days', storage:'$30/TEU/day', reefer:'$65/day' } },
-  { tier:1, name:'Port of Hong Kong',        country:'🇭🇰 Hong Kong',                unlocode:'HK HKG', type:'Hub Port',      position:[22.30,114.17],  services:['CCS','JCS','AAS1'],                                       avgDelinquency:6.4,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:26, d2:{count:528}, d5:{count:374}, terminalOps:'HPH / Modern Terminals',   dwell:'1.9 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$170', thc40:'$260', freeTime:'7 days', storage:'$17/TEU/day', reefer:'$43/day' } },
+  { tier:1, name:'Port of Hong Kong',        country:'🇭🇰 Hong Kong',                unlocode:'HK HKG', type:'Hub Port',      position:[22.30,114.17],  services:['CCS','WSA','MSP'],                                       avgDelinquency:6.4,  delinqTrend:'Stable (±0.1 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:26, d2:{count:528}, d5:{count:374}, terminalOps:'HPH / Modern Terminals',   dwell:'1.9 days avg', nextCall:'18 Apr 2025', pricing:{ thc20:'$170', thc40:'$260', freeTime:'7 days', storage:'$17/TEU/day', reefer:'$43/day' } },
   { tier:1, name:'Port of Fremantle',        country:'🇦🇺 Perth, Australia',         unlocode:'AU FRE', type:'Gateway Port',  position:[-32.05,115.74], services:['AA2'],                                                   avgDelinquency:8.2,  delinqTrend:'Stable (±0.3 days)',      trendClass:'trend-flat', delinqColor:'#ffb830', delinqBarPct:33, d2:{count:224}, d5:{count:139}, terminalOps:'Patrick Terminals',        dwell:'2.9 days avg', nextCall:'19 Apr 2025', pricing:{ thc20:'$215', thc40:'$325', freeTime:'5 days', storage:'$23/TEU/day', reefer:'$50/day' } },
   { tier:1, name:'Port of Sydney',           country:'🇦🇺 Sydney, Australia',        unlocode:'AU SYD', type:'Gateway Port',  position:[-33.87,151.21], services:['AA2','NZS'],                                             avgDelinquency:7.6,  delinqTrend:'−0.4 days vs last month', trendClass:'trend-down', delinqColor:'#00e5a0', delinqBarPct:30, d2:{count:302}, d5:{count:181}, terminalOps:'Patrick Terminals',        dwell:'2.6 days avg', nextCall:'24 Apr 2025', pricing:{ thc20:'$220', thc40:'$335', freeTime:'5 days', storage:'$24/TEU/day', reefer:'$52/day' } },
   { tier:1, name:'Port of Santos',           country:'🇧🇷 Santos, Brazil',           unlocode:'BR STS', type:'Hub Port',      position:[-23.95,-46.33], services:['ES1'],                                                  avgDelinquency:18.4, delinqTrend:'+2.1 days vs last month', trendClass:'trend-up',   delinqColor:'#ff4d6a', delinqBarPct:74, d2:{count:312}, d5:{count:187}, terminalOps:'Santos Brasil Terminais',  dwell:'4.2 days avg', nextCall:'24 Apr 2025', pricing:{ thc20:'$230', thc40:'$350', freeTime:'4 days', storage:'$26/TEU/day', reefer:'$58/day' } },
