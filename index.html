@@ -500,11 +500,11 @@
     .vsl-cap  { font-family: 'Space Grotesk', sans-serif; font-size: 8.5px; font-weight: 500; color: #3d4f5e; }
 
     /* ── CARGOFLOW / PRICING POPUP SECTIONS ── */
-    .cf-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-bottom: 8px; }
-    .cf-card { background: rgba(0,180,255,0.06); border: 1px solid rgba(0,180,255,0.15); border-radius: 6px; padding: 5px 6px; text-align: center; }
-    .cf-card-label { font-size: 8px; color: var(--muted); margin-bottom: 2px; }
-    .cf-card-val { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
-    .cf-card-sub { font-size: 8px; color: var(--muted); margin-top: 1px; }
+    .cf-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; margin-bottom: 8px; }
+    .cf-card { background: rgba(0,180,255,0.06); border: 1px solid rgba(0,180,255,0.15); border-radius: 5px; padding: 3px 5px; text-align: center; }
+    .cf-card-label { font-size: 7px; color: var(--muted); margin-bottom: 1px; }
+    .cf-card-val { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: var(--text); }
+    .cf-card-sub { font-size: 7px; color: var(--muted); margin-top: 1px; }
     .cf-card-reefer { background: rgba(0,229,160,0.06) !important; border-color: rgba(0,229,160,0.18) !important; }
     .cf-card-reefer .cf-card-val { color: #00e5a0 !important; }
     .cf-card-empty { background: rgba(255,255,255,0.03) !important; border-color: rgba(255,255,255,0.08) !important; }
@@ -1300,9 +1300,9 @@ const vessels = [
     util: 88,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Shanghai',   pod:'Cape Town',  teu: 3240, rate20:'$1,650', rate40:'$2,850', avgWt:'11.8t', ratePerTon:'$139' },
-      { pol:'Singapore',  pod:'Durban',     teu: 2180, rate20:'$1,420', rate40:'$2,480', avgWt:'12.4t', ratePerTon:'$115' },
-      { pol:'Port Klang', pod:'Cape Town',  teu: 1840, rate20:'$1,380', rate40:'$2,390', avgWt:'11.2t', ratePerTon:'$123' },
+      { pol:'Shanghai',   pod:'Cape Town',  teu: 3240, rate20:'$1,650', rate40:'$2,850', avgWt:'11.8mt', cmPerTon:'$342', ratePerTon:'$139' },
+      { pol:'Singapore',  pod:'Durban',     teu: 2180, rate20:'$1,420', rate40:'$2,480', avgWt:'12.4mt', cmPerTon:'$308', ratePerTon:'$115' },
+      { pol:'Port Klang', pod:'Cape Town',  teu: 1840, rate20:'$1,380', rate40:'$2,390', avgWt:'11.2mt', cmPerTon:'$318', ratePerTon:'$123' },
     ],
     pr: {
       rates: [
@@ -1341,9 +1341,9 @@ const vessels = [
     util: 84,
     utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)',
     topFlows: [
-      { pol:'Singapore',  pod:'Fremantle',  teu: 2640, rate20:'$890',   rate40:'$1,540', avgWt:'10.8t', ratePerTon:'$82'  },
-      { pol:'Port Klang', pod:'Sydney',     teu: 1980, rate20:'$980',   rate40:'$1,720', avgWt:'11.4t', ratePerTon:'$86'  },
-      { pol:'Singapore',  pod:'Melbourne',  teu: 1840, rate20:'$920',   rate40:'$1,590', avgWt:'10.6t', ratePerTon:'$87'  },
+      { pol:'Singapore',  pod:'Fremantle',  teu: 2640, rate20:'$890',   rate40:'$1,540', avgWt:'10.8mt', cmPerTon:'$192', ratePerTon:'$82'  },
+      { pol:'Port Klang', pod:'Sydney',     teu: 1980, rate20:'$980',   rate40:'$1,720', avgWt:'11.4mt', cmPerTon:'$214', ratePerTon:'$86'  },
+      { pol:'Singapore',  pod:'Melbourne',  teu: 1840, rate20:'$920',   rate40:'$1,590', avgWt:'10.6mt', cmPerTon:'$205', ratePerTon:'$87'  },
     ],
     pr: {
       rates: [
@@ -1382,9 +1382,9 @@ const vessels = [
     util: 86,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Shanghai',   teu: 3840, rate20:'$420',   rate40:'$730',   avgWt:'9.8t',  ratePerTon:'$43'  },
-      { pol:'Ho Chi Minh',pod:'Ningbo',     teu: 2960, rate20:'$380',   rate40:'$660',   avgWt:'10.2t', ratePerTon:'$37'  },
-      { pol:'Manila',     pod:'Shanghai',   teu: 2190, rate20:'$340',   rate40:'$590',   avgWt:'9.4t',  ratePerTon:'$36'  },
+      { pol:'Singapore',  pod:'Shanghai',   teu: 3840, rate20:'$420',   rate40:'$730',   avgWt:'9.8mt',  cmPerTon:'$80',  ratePerTon:'$43'  },
+      { pol:'Ho Chi Minh',pod:'Ningbo',     teu: 2960, rate20:'$380',   rate40:'$660',   avgWt:'10.2mt', cmPerTon:'$74',  ratePerTon:'$37'  },
+      { pol:'Manila',     pod:'Shanghai',   teu: 2190, rate20:'$340',   rate40:'$590',   avgWt:'9.4mt',  cmPerTon:'$68',  ratePerTon:'$36'  },
     ],
     pr: {
       rates: [
@@ -1423,9 +1423,9 @@ const vessels = [
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Port Klang', pod:'Jebel Ali',  teu: 2980, rate20:'$850',   rate40:'$1,450', avgWt:'12.4t', ratePerTon:'$69'  },
-      { pol:'Singapore',  pod:'Salalah',    teu: 2140, rate20:'$790',   rate40:'$1,360', avgWt:'11.8t', ratePerTon:'$67'  },
-      { pol:'Port Klang', pod:'Colombo',    teu: 1620, rate20:'$420',   rate40:'$720',   avgWt:'10.8t', ratePerTon:'$39'  },
+      { pol:'Port Klang', pod:'Jebel Ali',  teu: 2980, rate20:'$850',   rate40:'$1,450', avgWt:'12.4mt', cmPerTon:'$194', ratePerTon:'$69'  },
+      { pol:'Singapore',  pod:'Salalah',    teu: 2140, rate20:'$790',   rate40:'$1,360', avgWt:'11.8mt', cmPerTon:'$182', ratePerTon:'$67'  },
+      { pol:'Port Klang', pod:'Colombo',    teu: 1620, rate20:'$420',   rate40:'$720',   avgWt:'10.8mt', cmPerTon:'$88',  ratePerTon:'$39'  },
     ],
     pr: {
       rates: [
@@ -1465,9 +1465,9 @@ const vessels = [
     util: 86,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Jebel Ali',  teu: 3120, rate20:'$880',   rate40:'$1,510', avgWt:'12.6t', ratePerTon:'$70'  },
-      { pol:'Colombo',    pod:'Salalah',    teu: 2480, rate20:'$640',   rate40:'$1,100', avgWt:'11.4t', ratePerTon:'$56'  },
-      { pol:'Singapore',  pod:'Muscat',     teu: 1960, rate20:'$920',   rate40:'$1,580', avgWt:'12.2t', ratePerTon:'$75'  },
+      { pol:'Singapore',  pod:'Jebel Ali',  teu: 3120, rate20:'$880',   rate40:'$1,510', avgWt:'12.6mt', cmPerTon:'$202', ratePerTon:'$70'  },
+      { pol:'Colombo',    pod:'Salalah',    teu: 2480, rate20:'$640',   rate40:'$1,100', avgWt:'11.4mt', cmPerTon:'$158', ratePerTon:'$56'  },
+      { pol:'Singapore',  pod:'Muscat',     teu: 1960, rate20:'$920',   rate40:'$1,580', avgWt:'12.2mt', cmPerTon:'$218', ratePerTon:'$75'  },
     ],
     pr: {
       rates: [
@@ -1507,9 +1507,9 @@ const vessels = [
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Singapore',  pod:'Sohar',      teu: 2740, rate20:'$860',   rate40:'$1,480', avgWt:'12.0t', ratePerTon:'$72'  },
-      { pol:'Port Klang', pod:'Jebel Ali',  teu: 2180, rate20:'$850',   rate40:'$1,450', avgWt:'11.8t', ratePerTon:'$72'  },
-      { pol:'Colombo',    pod:'Sohar',      teu: 1620, rate20:'$560',   rate40:'$960',   avgWt:'11.2t', ratePerTon:'$50'  },
+      { pol:'Singapore',  pod:'Sohar',      teu: 2740, rate20:'$860',   rate40:'$1,480', avgWt:'12.0mt', cmPerTon:'$196', ratePerTon:'$72'  },
+      { pol:'Port Klang', pod:'Jebel Ali',  teu: 2180, rate20:'$850',   rate40:'$1,450', avgWt:'11.8mt', cmPerTon:'$194', ratePerTon:'$72'  },
+      { pol:'Colombo',    pod:'Sohar',      teu: 1620, rate20:'$560',   rate40:'$960',   avgWt:'11.2mt', cmPerTon:'$140', ratePerTon:'$50'  },
     ],
     pr: {
       rates: [
@@ -1549,9 +1549,9 @@ const vessels = [
     util: 84,
     utilColor: 'linear-gradient(90deg,#0066cc,#00b4ff)',
     topFlows: [
-      { pol:'Singapore',   pod:'Mombasa', teu: 2540, rate20:'$1,280', rate40:'$2,220', avgWt:'11.6t', ratePerTon:'$110' },
-      { pol:'Nansha',      pod:'Mombasa', teu: 1980, rate20:'$1,140', rate40:'$1,980', avgWt:'10.8t', ratePerTon:'$106' },
-      { pol:'Port Kelang', pod:'Mombasa', teu: 1620, rate20:'$1,320', rate40:'$2,280', avgWt:'12.0t', ratePerTon:'$110' },
+      { pol:'Singapore',   pod:'Mombasa', teu: 2540, rate20:'$1,280', rate40:'$2,220', avgWt:'11.6mt', cmPerTon:'$312', ratePerTon:'$110' },
+      { pol:'Nansha',      pod:'Mombasa', teu: 1980, rate20:'$1,140', rate40:'$1,980', avgWt:'10.8mt', cmPerTon:'$298', ratePerTon:'$106' },
+      { pol:'Port Kelang', pod:'Mombasa', teu: 1620, rate20:'$1,320', rate40:'$2,280', avgWt:'12.0mt', cmPerTon:'$328', ratePerTon:'$110' },
     ],
     pr: {
       rates: [
@@ -1591,9 +1591,9 @@ const vessels = [
     util: 89,
     utilColor: 'linear-gradient(90deg,#0066cc,#00e5a0)',
     topFlows: [
-      { pol:'Yantian',    pod:'Callao',         teu: 3480, rate20:'$1,840', rate40:'$3,180', avgWt:'12.8t', ratePerTon:'$144' },
-      { pol:'Singapore',  pod:'San Antonio',    teu: 2760, rate20:'$1,960', rate40:'$3,380', avgWt:'13.2t', ratePerTon:'$149' },
-      { pol:'Yantian',    pod:'Valparaíso',     teu: 2210, rate20:'$1,780', rate40:'$3,080', avgWt:'12.4t', ratePerTon:'$144' },
+      { pol:'Yantian',    pod:'Callao',         teu: 3480, rate20:'$1,840', rate40:'$3,180', avgWt:'12.8mt', cmPerTon:'$468', ratePerTon:'$144' },
+      { pol:'Singapore',  pod:'San Antonio',    teu: 2760, rate20:'$1,960', rate40:'$3,380', avgWt:'13.2mt', cmPerTon:'$492', ratePerTon:'$149' },
+      { pol:'Yantian',    pod:'Valparaíso',     teu: 2210, rate20:'$1,780', rate40:'$3,080', avgWt:'12.4mt', cmPerTon:'$450', ratePerTon:'$144' },
     ],
     pr: {
       rates: [
@@ -1633,9 +1633,9 @@ const vessels = [
     util: 82,
     utilColor: 'linear-gradient(90deg,#0066cc,#ec4899)',
     topFlows: [
-      { pol:'Singapore',  pod:'Noumea',         teu: 1240, rate20:'$1,640', rate40:'$2,820', avgWt:'10.4t', ratePerTon:'$158' },
-      { pol:'Sydney',     pod:'Suva',           teu: 980,  rate20:'$1,480', rate40:'$2,560', avgWt:'9.8t',  ratePerTon:'$151' },
-      { pol:'Singapore',  pod:'Suva',           teu: 860,  rate20:'$1,720', rate40:'$2,960', avgWt:'11.2t', ratePerTon:'$154' },
+      { pol:'Singapore',  pod:'Noumea',         teu: 1240, rate20:'$1,640', rate40:'$2,820', avgWt:'10.4mt', cmPerTon:'$414', ratePerTon:'$158' },
+      { pol:'Sydney',     pod:'Suva',           teu: 980,  rate20:'$1,480', rate40:'$2,560', avgWt:'9.8mt',  cmPerTon:'$386', ratePerTon:'$151' },
+      { pol:'Singapore',  pod:'Suva',           teu: 860,  rate20:'$1,720', rate40:'$2,960', avgWt:'11.2mt', cmPerTon:'$428', ratePerTon:'$154' },
     ],
     pr: {
       rates: [
@@ -1675,9 +1675,9 @@ const vessels = [
     util: 58,
     utilColor: 'linear-gradient(90deg,#a78bfa,#6d28d9)',
     topFlows: [
-      { pol:'Santos',     pod:'Singapore',      teu: 2180, rate20:'$420',   rate40:'$720',   avgWt:'8.4t',  ratePerTon:'$50'  },
-      { pol:'Montevideo', pod:'Port Klang',     teu: 1640, rate20:'$380',   rate40:'$640',   avgWt:'7.8t',  ratePerTon:'$49'  },
-      { pol:'Navegantes', pod:'Singapore',      teu: 1420, rate20:'$400',   rate40:'$680',   avgWt:'8.2t',  ratePerTon:'$49'  },
+      { pol:'Santos',     pod:'Singapore',      teu: 2180, rate20:'$420',   rate40:'$720',   avgWt:'8.4mt',  cmPerTon:'$72',  ratePerTon:'$50'  },
+      { pol:'Montevideo', pod:'Port Klang',     teu: 1640, rate20:'$380',   rate40:'$640',   avgWt:'7.8mt',  cmPerTon:'$68',  ratePerTon:'$49'  },
+      { pol:'Navegantes', pod:'Singapore',      teu: 1420, rate20:'$400',   rate40:'$680',   avgWt:'8.2mt',  cmPerTon:'$70',  ratePerTon:'$49'  },
     ],
     pr: {
       rates: [
@@ -2025,7 +2025,7 @@ function buildPopup(v, laneColor) {
         </div>
         <div class="utilization-bar-wrap">
           <div class="util-label-row">
-            <span class="util-label">Container Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
+            <span class="util-label">Vessel Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
             <span class="util-pct">${v.util}%</span>
           </div>
           <div class="util-track">
@@ -2091,11 +2091,15 @@ function buildPopup(v, laneColor) {
                 <span class="flow-metric-val">${f.rate40}</span>
               </div>
               <div class="flow-metric">
+                <span class="flow-metric-label">Avg. CM/T</span>
+                <span class="flow-metric-val" style="color:#00e5a0;">${f.cmPerTon}</span>
+              </div>
+              <div class="flow-metric">
                 <span class="flow-metric-label">Avg. Wt/T</span>
                 <span class="flow-metric-val">${f.avgWt}</span>
               </div>
               <div class="flow-metric">
-                <span class="flow-metric-label">Avg Rt/mt</span>
+                <span class="flow-metric-label">Avg. Rt/mt</span>
                 <span class="flow-metric-val">${f.ratePerTon}</span>
               </div>
             </div>
@@ -2103,7 +2107,7 @@ function buildPopup(v, laneColor) {
         </div>
         <div class="utilization-bar-wrap">
           <div class="util-label-row">
-            <span class="util-label">Container Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
+            <span class="util-label">Vessel Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
             <span class="util-pct">${v.util}%</span>
           </div>
           <div class="util-track">
@@ -2157,7 +2161,7 @@ function buildPopup(v, laneColor) {
         </div>
         <div class="utilization-bar-wrap">
           <div class="util-label-row">
-            <span class="util-label">Container Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
+            <span class="util-label">Vessel Utilisation — ${v.teuLoaded.toLocaleString()} / ${v.teu.toLocaleString()} TEU</span>
             <span class="util-pct">${v.util}%</span>
           </div>
           <div class="util-track">
