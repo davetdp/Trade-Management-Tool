@@ -239,68 +239,68 @@
     }
     .leaflet-control-zoom a:hover { background: rgba(0,180,255,0.15) !important; }
 
-    /* ── RISK OVERLAY TOGGLE ── */
-    #riskToggle {
-      position: absolute;
-      top: 130px; right: 14px;
-      z-index: 1000;
-      width: 30px; height: 30px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
+    /* ── RISK OVERLAY CONTROL (Leaflet-managed, aligns with zoom) ── */
+    .risk-ctrl-btn {
+      width: 26px; height: 26px;
+      background: var(--surface) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 8px !important;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.45) !important;
+      display: flex !important; align-items: center; justify-content: center;
       cursor: pointer;
-      transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.45);
       color: var(--muted);
+      transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+      position: relative;
       user-select: none;
     }
-    #riskToggle:hover {
-      background: rgba(240,130,50,0.14);
-      border-color: rgba(240,130,50,0.45);
+    .risk-ctrl-btn:hover {
+      background: rgba(240,130,50,0.14) !important;
+      border-color: rgba(240,130,50,0.45) !important;
       color: #f09050;
     }
-    #riskToggle.active {
-      background: rgba(240,130,50,0.18);
-      border-color: rgba(240,130,50,0.6);
+    .risk-ctrl-btn.active {
+      background: rgba(240,130,50,0.18) !important;
+      border-color: rgba(240,130,50,0.6) !important;
       color: #f09050;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.45), 0 0 10px rgba(240,130,50,0.25);
+      box-shadow: 0 1px 5px rgba(0,0,0,0.45), 0 0 10px rgba(240,130,50,0.25) !important;
     }
-    #riskToggle svg { width: 16px; height: 16px; flex-shrink: 0; pointer-events: none; }
-    #riskToggle .rtip {
-      position: absolute; right: 38px; top: 50%; transform: translateY(-50%);
+    .risk-ctrl-btn svg { width: 15px; height: 15px; flex-shrink: 0; pointer-events: none; }
+    @keyframes riskSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+    .risk-ctrl-btn.loading svg { animation: riskSpin 0.9s linear infinite; }
+
+    /* Legend panel tooltip — appears to the left on hover */
+    .risk-panel-tip {
+      position: absolute; right: 34px; top: 0;
       background: rgba(8,18,40,0.97);
       border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 8px; padding: 5px 10px;
-      font-size: 11px; font-family: 'Inter',sans-serif; color: #e8f4ff;
-      white-space: nowrap; pointer-events: none; opacity: 0;
-      transition: opacity 0.15s; box-shadow: 0 4px 14px rgba(0,0,0,0.55);
-    }
-    #riskToggle:hover .rtip { opacity: 1; }
-
-    /* ── RISK COUNTRY TOOLTIP ── */
-    .leaflet-tooltip.risk-tt {
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-    }
-    .leaflet-tooltip.risk-tt::before { display: none !important; }
-    .risk-tt-inner {
-      background: rgba(8,18,40,0.95);
-      border: 1px solid rgba(255,255,255,0.13);
-      border-radius: 10px; padding: 8px 12px;
-      font-family: 'Inter', sans-serif;
-      min-width: 155px;
+      border-radius: 10px; padding: 10px 13px;
+      min-width: 178px;
+      pointer-events: none; opacity: 0;
+      transition: opacity 0.15s;
       box-shadow: 0 4px 22px rgba(0,0,0,0.65);
       backdrop-filter: blur(14px);
-      pointer-events: none;
+      white-space: nowrap; font-family: 'Inter', sans-serif;
     }
-    .risk-tt-country { font-size: 12px; font-weight: 700; color: #e8f4ff; margin-bottom: 5px; }
-    .risk-tt-row { display: flex; align-items: center; gap: 7px; }
-    .risk-tt-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .risk-tt-level { font-size: 11px; font-weight: 600; }
-    .risk-tt-score { font-size: 10px; color: var(--muted); }
+    .risk-ctrl-btn:hover .risk-panel-tip { opacity: 1; }
+    .risk-panel-title {
+      font-size: 11px; font-weight: 700; color: #e8f4ff;
+      letter-spacing: 0.2px; margin-bottom: 8px;
+      padding-bottom: 7px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .risk-legend-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+    .rl-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .rl-name { font-size: 11px; color: rgba(255,255,255,0.82); flex: 1; }
+    .rl-num  { font-size: 10px; color: var(--muted); font-family:'Space Grotesk',sans-serif; font-weight:600; }
+
+    /* ── RISK COUNTRY TOOLTIP ── */
+    .leaflet-tooltip.risk-tt { background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important; }
+    .leaflet-tooltip.risk-tt::before { display:none!important; }
+    .risk-tt-inner { background:rgba(8,18,40,0.95);border:1px solid rgba(255,255,255,0.13);border-radius:10px;padding:8px 12px;font-family:'Inter',sans-serif;min-width:155px;box-shadow:0 4px 22px rgba(0,0,0,0.65);backdrop-filter:blur(14px);pointer-events:none; }
+    .risk-tt-country { font-size:12px;font-weight:700;color:#e8f4ff;margin-bottom:5px; }
+    .risk-tt-row { display:flex;align-items:center;gap:7px; }
+    .risk-tt-dot { width:10px;height:10px;border-radius:50%;flex-shrink:0; }
+    .risk-tt-level { font-size:11px;font-weight:600; }
+    .risk-tt-score { font-size:10px;color:var(--muted); }
 
     /* ── VESSEL MARKER ── */
     .vessel-marker {
@@ -956,15 +956,6 @@
     <button class="uc-btn"        id="ucPricing"    onclick="setUseCase('pricing')">🏷️ Pricing</button>
   </div>
 
-  <!-- Risk overlay toggle — below Leaflet zoom controls -->
-  <div id="riskToggle" onclick="toggleRiskOverlay()" title="">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
-         stroke-linejoin="round" stroke-linecap="round">
-      <path d="M8 1.5 L13.5 4.2 L13.5 8.8 C13.5 11.8 11 13.8 8 14.8 C5 13.8 2.5 11.8 2.5 8.8 L2.5 4.2 Z"/>
-      <path d="M5.5 8.2 L7.1 9.8 L10.5 6.4"/>
-    </svg>
-    <span class="rtip">Security &amp; Safety Risk</span>
-  </div>
 </div>
 <div id="map-glow"></div>
 
@@ -3449,6 +3440,44 @@ let riskLayer = null;
 let riskLayerLoaded = false;
 let riskOverlayOn = false;
 
+// Shield icon SVG (used in the Leaflet control button)
+const RISK_ICON_SVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linejoin="round" stroke-linecap="round">
+  <path d="M8 1.5 L13.5 4.2 L13.5 8.8 C13.5 11.8 11 13.8 8 14.8 C5 13.8 2.5 11.8 2.5 8.8 L2.5 4.2 Z"/>
+  <path d="M5.5 8.2 L7.1 9.8 L10.5 6.4"/>
+</svg>`;
+
+// Build the legend rows HTML from RISK_LEVELS (Critical → Negligible order)
+const _riskLegendHtml = [6,5,4,3,2,1].map(function(s) {
+  return `<div class="risk-legend-row">
+    <span class="rl-dot" style="background:${RISK_LEVELS[s].color}"></span>
+    <span class="rl-name">${RISK_LEVELS[s].label}</span>
+    <span class="rl-num">${s}</span>
+  </div>`;
+}).join('');
+
+// ── Leaflet custom control — renders in topright, stacks below zoom ──
+const RiskControl = L.Control.extend({
+  options: { position: 'topright' },
+  onAdd: function() {
+    const btn = L.DomUtil.create('div', 'risk-ctrl-btn');
+    btn.id = 'riskToggle';
+    btn.innerHTML = RISK_ICON_SVG +
+      `<div class="risk-panel-tip">
+         <div class="risk-panel-title">Safety &amp; Risk Indicator</div>
+         ${_riskLegendHtml}
+       </div>`;
+    L.DomEvent.on(btn, 'click', function(e) {
+      L.DomEvent.stopPropagation(e);
+      toggleRiskOverlay();
+    });
+    L.DomEvent.disableClickPropagation(btn);
+    L.DomEvent.disableScrollPropagation(btn);
+    return btn;
+  }
+});
+new RiskControl().addTo(map);
+
 function _riskScore(geoName) {
   if (RISK_DATA[geoName] !== undefined) return RISK_DATA[geoName];
   const alias = RISK_ALIAS[geoName];
@@ -3460,16 +3489,9 @@ function _riskStyle(feature) {
   const name = feature.properties.ADMIN || feature.properties.name || '';
   const score = _riskScore(name);
   if (!score || !RISK_LEVELS[score]) {
-    // No data or score=0 (Martinique): grey outline only
     return { fillOpacity:0, color:'#6b7280', weight:0.4, opacity:0.35 };
   }
-  return {
-    fillColor: RISK_LEVELS[score].color,
-    fillOpacity: 0.42,
-    color: 'rgba(0,0,0,0.18)',
-    weight: 0.5,
-    opacity: 0.6
-  };
+  return { fillColor:RISK_LEVELS[score].color, fillOpacity:0.42, color:'rgba(0,0,0,0.18)', weight:0.5, opacity:0.6 };
 }
 
 function _buildRiskLayer(geojson) {
@@ -3482,27 +3504,17 @@ function _buildRiskLayer(geojson) {
       const info  = score && RISK_LEVELS[score] ? RISK_LEVELS[score] : null;
       const dot   = info ? info.color : '#6b7280';
       const levelHtml = info
-        ? `<span class="risk-tt-level" style="color:${dot}">${info.label}</span>
-           <span class="risk-tt-score">· ${score} / 6</span>`
+        ? `<span class="risk-tt-level" style="color:${dot}">${info.label}</span><span class="risk-tt-score"> · ${score}/6</span>`
         : `<span class="risk-tt-level" style="color:#6b7280">No Data</span>`;
-
       layer.bindTooltip(
-        `<div class="risk-tt-inner">
-           <div class="risk-tt-country">${name}</div>
-           <div class="risk-tt-row">
-             <div class="risk-tt-dot" style="background:${dot}"></div>
-             ${levelHtml}
-           </div>
-         </div>`,
+        `<div class="risk-tt-inner"><div class="risk-tt-country">${name}</div>
+         <div class="risk-tt-row"><div class="risk-tt-dot" style="background:${dot}"></div>${levelHtml}</div></div>`,
         { sticky:true, direction:'right', className:'risk-tt', opacity:1 }
       );
-
       layer.on('mouseover', function() {
-        layer.setStyle({ fillOpacity: Math.min((info ? 0.42 : 0) + 0.22, 0.70), weight:1.2, color:'rgba(255,255,255,0.28)' });
+        layer.setStyle({ fillOpacity:Math.min((info ? 0.42 : 0) + 0.22, 0.70), weight:1.2, color:'rgba(255,255,255,0.28)' });
       });
-      layer.on('mouseout', function() {
-        riskLayer.resetStyle(layer);
-      });
+      layer.on('mouseout', function() { riskLayer.resetStyle(layer); });
     }
   });
 }
@@ -3517,39 +3529,26 @@ function toggleRiskOverlay() {
       riskLayer.addTo(map);
       riskLayer.bringToBack();
     } else {
-      // Show spinner while loading
-      btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="8" cy="8" r="5.5" stroke-dasharray="12 6" stroke-linecap="round">
-          <animateTransform attributeName="transform" type="rotate" from="0 8 8" to="360 8 8" dur="0.9s" repeatCount="indefinite"/>
-        </circle>
-      </svg><span class="rtip">Loading…</span>`;
-
+      // CSS spinner via .loading class — icon spins, panel tip still accessible
+      btn.classList.add('loading');
       fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
         .then(function(r) { return r.json(); })
         .then(function(data) {
           _buildRiskLayer(data);
           riskLayerLoaded = true;
+          btn.classList.remove('loading');
           riskLayer.addTo(map);
           riskLayer.bringToBack();
-          // Restore icon
-          btn.innerHTML = RISK_ICON_SVG + '<span class="rtip">Security &amp; Safety Risk</span>';
         })
         .catch(function() {
           riskOverlayOn = false;
-          btn.classList.remove('active');
-          btn.innerHTML = RISK_ICON_SVG + '<span class="rtip">Security &amp; Safety Risk</span>';
+          btn.classList.remove('active', 'loading');
         });
     }
   } else {
     if (riskLayer) map.removeLayer(riskLayer);
   }
 }
-
-const RISK_ICON_SVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
-  stroke-linejoin="round" stroke-linecap="round">
-  <path d="M8 1.5 L13.5 4.2 L13.5 8.8 C13.5 11.8 11 13.8 8 14.8 C5 13.8 2.5 11.8 2.5 8.8 L2.5 4.2 Z"/>
-  <path d="M5.5 8.2 L7.1 9.8 L10.5 6.4"/>
-</svg>`;
 
 // Zoom thresholds: tier1 ≥ 2 | tier2 ≥ 4 | tier3 ≥ 6
 const TIER_ZOOM = { 1: 2, 2: 4, 3: 6 };
