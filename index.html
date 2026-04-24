@@ -1333,6 +1333,19 @@ function setMapMode(mode) {
     : L.tileLayer(TILE_LIGHT, { subdomains: 'abcd', maxZoom: 19 }).addTo(map);
   // Push tile layer behind vessel markers
   activeTileLayer.bringToBack();
+  // Refresh risk overlay colours for the new map mode
+  if (riskLayer) {
+    riskLayer.setStyle(_riskStyle);
+  }
+  // Update legend dots in the hover panel to match new mode
+  const toggle = document.getElementById('riskToggle');
+  if (toggle) {
+    const dots = toggle.querySelectorAll('.rl-dot');
+    const scores = [6,5,4,3,2,1];
+    dots.forEach(function(dot, i) {
+      dot.style.background = isDark ? RISK_LEVELS[scores[i]].colorDark : RISK_LEVELS[scores[i]].color;
+    });
+  }
 }
 
 // ── USE-CASE TOGGLE ──────────────────────────────────────────
@@ -3424,12 +3437,12 @@ const RISK_ALIAS = {
 };
 
 const RISK_LEVELS = {
-  1: { label:'Negligible', color:'#5c6572' },
-  2: { label:'Low',        color:'#4a9e3e' },
-  3: { label:'Moderate',   color:'#d4a810' },
-  4: { label:'High',       color:'#c86020' },
-  5: { label:'Severe',     color:'#b01818' },
-  6: { label:'Critical',   color:'#680808' }
+  1: { label:'Negligible', color:'#5c6572', colorDark:'#94a3b8' },
+  2: { label:'Low',        color:'#4a9e3e', colorDark:'#22c55e' },
+  3: { label:'Moderate',   color:'#d4a810', colorDark:'#eab308' },
+  4: { label:'High',       color:'#c86020', colorDark:'#f97316' },
+  5: { label:'Severe',     color:'#b01818', colorDark:'#ef4444' },
+  6: { label:'Critical',   color:'#680808', colorDark:'#dc2626' }
 };
 
 // Custom pane: sits above tiles (200) but below route overlays (400) and markers (600)
@@ -3448,13 +3461,18 @@ const RISK_ICON_SVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor
 </svg>`;
 
 // Build the legend rows HTML from RISK_LEVELS (Critical → Negligible order)
-const _riskLegendHtml = [6,5,4,3,2,1].map(function(s) {
-  return `<div class="risk-legend-row">
-    <span class="rl-dot" style="background:${RISK_LEVELS[s].color}"></span>
+// Uses colorDark by default since dark map is the default mode
+function _riskLegendRowsHtml(useDark) {
+  return [6,5,4,3,2,1].map(function(s) {
+    const c = useDark ? RISK_LEVELS[s].colorDark : RISK_LEVELS[s].color;
+    return `<div class="risk-legend-row">
+    <span class="rl-dot" style="background:${c}"></span>
     <span class="rl-name">${RISK_LEVELS[s].label}</span>
     <span class="rl-num">${s}</span>
   </div>`;
-}).join('');
+  }).join('');
+}
+const _riskLegendHtml = _riskLegendRowsHtml(true); // dark is default at startup
 
 // ── Leaflet custom control — renders in topright, stacks below zoom ──
 const RiskControl = L.Control.extend({
@@ -3488,10 +3506,14 @@ function _riskScore(geoName) {
 function _riskStyle(feature) {
   const name = feature.properties.ADMIN || feature.properties.name || '';
   const score = _riskScore(name);
+  const isDark = !document.body.classList.contains('map-light');
   if (!score || !RISK_LEVELS[score]) {
-    return { fillOpacity:0, color:'#6b7280', weight:0.4, opacity:0.35 };
+    return { fillOpacity:0, color: isDark ? 'rgba(255,255,255,0.15)' : '#6b7280', weight:0.4, opacity:0.35 };
   }
-  return { fillColor:RISK_LEVELS[score].color, fillOpacity:0.42, color:'rgba(0,0,0,0.18)', weight:0.5, opacity:0.6 };
+  const fillColor = isDark ? RISK_LEVELS[score].colorDark : RISK_LEVELS[score].color;
+  const fillOpacity = isDark ? 0.72 : 0.42;
+  const strokeColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.18)';
+  return { fillColor, fillOpacity, color: strokeColor, weight:0.5, opacity:0.6 };
 }
 
 function _buildRiskLayer(geojson) {
