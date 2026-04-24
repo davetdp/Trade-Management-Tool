@@ -1274,6 +1274,7 @@ function setMapMode(mode) {
 // ── USE-CASE TOGGLE ──────────────────────────────────────────
 let currentMode = 'cargoflow';
 document.body.classList.add('mode-cargoflow');
+// port marker colors initialised after portMarkerList is built (see below)
 
 function setUseCase(mode) {
   currentMode = mode;
@@ -1283,6 +1284,7 @@ function setUseCase(mode) {
   document.getElementById('uc' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
   const labels = { pnl: 'Profit \u0026 Loss', cargoflow: 'Cargoflow', pricing: 'Pricing' };
   document.querySelector('.nav-title-sub').textContent = labels[mode];
+  updatePortMarkerColors(mode);
 }
 
 // ── VESSEL DATA ─────────────────────────────────────────────
@@ -2178,7 +2180,7 @@ function buildPopup(v, laneColor) {
               +'" text-anchor="middle" font-size="6" fill="rgba(0,229,160,0.55)">'+pctHigh+'% of bkgs</text>';
 
           return '<div class="bell-wrap">'
-            +'<div class="bell-header"><span class="bell-lbl">Avg Rate / TEU</span>'
+            +'<div class="bell-header"><span class="bell-lbl" style="text-transform:none;">Avg. Rev/TEU</span>'
             +'<span class="bell-val">'+fR(wtAvg)+'</span></div>'
             +'<svg class="bell-svg" viewBox="0 0 '+W+' '+H+'">'
             +'<defs><linearGradient id="bellG" x1="0" y1="0" x2="1" y2="0">'
@@ -3244,8 +3246,10 @@ function buildPortPopup(p) {
 // ── RENDER PORTS (zoom-based tier visibility) ─────────────────
 const portLayers = { 1: L.layerGroup(), 2: L.layerGroup(), 3: L.layerGroup() };
 
+const portMarkerList = [];
 ports.forEach(p => {
-  const marker = L.marker(p.position, { icon: portIcon(p.tier, portMaxSailings(p) >= 3) });
+  const alert = portMaxSailings(p) >= 3;
+  const marker = L.marker(p.position, { icon: portIcon(p.tier, false) });
   const popup = L.popup({
     maxWidth: 275, minWidth: 270,
     className: 'vessel-popup-wrapper',
@@ -3253,7 +3257,15 @@ ports.forEach(p => {
   }).setContent(buildPortPopup(p));
   bindSmartPopup(marker, popup, 270, 460);
   portLayers[p.tier].addLayer(marker);
+  portMarkerList.push({ marker, tier: p.tier, alert });
 });
+
+function updatePortMarkerColors(mode) {
+  portMarkerList.forEach(({ marker, tier, alert }) => {
+    marker.setIcon(portIcon(tier, mode === 'cargoflow' && alert));
+  });
+}
+updatePortMarkerColors('cargoflow');
 
 // Zoom thresholds: tier1 ≥ 2 | tier2 ≥ 4 | tier3 ≥ 6
 const TIER_ZOOM = { 1: 2, 2: 4, 3: 6 };
