@@ -1333,6 +1333,9 @@ function setMapMode(mode) {
     : L.tileLayer(TILE_LIGHT, { subdomains: 'abcd', maxZoom: 19 }).addTo(map);
   // Push tile layer behind vessel markers
   activeTileLayer.bringToBack();
+  // Toggle screen blend mode: looks great on dark tiles, revert to normal on light
+  const riskPane = map.getPane('riskPane');
+  if (riskPane) riskPane.style.mixBlendMode = isDark ? 'screen' : 'normal';
   // Refresh risk overlay colours for the new map mode
   if (riskLayer) {
     riskLayer.setStyle(_riskStyle);
@@ -3448,6 +3451,7 @@ const RISK_LEVELS = {
 // Custom pane: sits above tiles (200) but below route overlays (400) and markers (600)
 map.createPane('riskPane');
 map.getPane('riskPane').style.zIndex = '250';
+map.getPane('riskPane').style.mixBlendMode = 'screen';
 
 let riskLayer = null;
 let riskLayerLoaded = false;
@@ -3511,7 +3515,7 @@ function _riskStyle(feature) {
     return { fillOpacity:0, color: isDark ? 'rgba(255,255,255,0.15)' : '#6b7280', weight:0.4, opacity:0.35 };
   }
   const fillColor = isDark ? RISK_LEVELS[score].colorDark : RISK_LEVELS[score].color;
-  const fillOpacity = isDark ? 0.72 : 0.42;
+  const fillOpacity = isDark ? 0.55 : 0.42;
   const strokeColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.18)';
   return { fillColor, fillOpacity, color: strokeColor, weight:0.5, opacity:0.6 };
 }
