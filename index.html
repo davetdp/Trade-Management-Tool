@@ -239,6 +239,69 @@
     }
     .leaflet-control-zoom a:hover { background: rgba(0,180,255,0.15) !important; }
 
+    /* ── RISK OVERLAY TOGGLE ── */
+    #riskToggle {
+      position: absolute;
+      top: 130px; right: 14px;
+      z-index: 1000;
+      width: 30px; height: 30px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.45);
+      color: var(--muted);
+      user-select: none;
+    }
+    #riskToggle:hover {
+      background: rgba(240,130,50,0.14);
+      border-color: rgba(240,130,50,0.45);
+      color: #f09050;
+    }
+    #riskToggle.active {
+      background: rgba(240,130,50,0.18);
+      border-color: rgba(240,130,50,0.6);
+      color: #f09050;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.45), 0 0 10px rgba(240,130,50,0.25);
+    }
+    #riskToggle svg { width: 16px; height: 16px; flex-shrink: 0; pointer-events: none; }
+    #riskToggle .rtip {
+      position: absolute; right: 38px; top: 50%; transform: translateY(-50%);
+      background: rgba(8,18,40,0.97);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; padding: 5px 10px;
+      font-size: 11px; font-family: 'Inter',sans-serif; color: #e8f4ff;
+      white-space: nowrap; pointer-events: none; opacity: 0;
+      transition: opacity 0.15s; box-shadow: 0 4px 14px rgba(0,0,0,0.55);
+    }
+    #riskToggle:hover .rtip { opacity: 1; }
+
+    /* ── RISK COUNTRY TOOLTIP ── */
+    .leaflet-tooltip.risk-tt {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+    .leaflet-tooltip.risk-tt::before { display: none !important; }
+    .risk-tt-inner {
+      background: rgba(8,18,40,0.95);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 10px; padding: 8px 12px;
+      font-family: 'Inter', sans-serif;
+      min-width: 155px;
+      box-shadow: 0 4px 22px rgba(0,0,0,0.65);
+      backdrop-filter: blur(14px);
+      pointer-events: none;
+    }
+    .risk-tt-country { font-size: 12px; font-weight: 700; color: #e8f4ff; margin-bottom: 5px; }
+    .risk-tt-row { display: flex; align-items: center; gap: 7px; }
+    .risk-tt-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .risk-tt-level { font-size: 11px; font-weight: 600; }
+    .risk-tt-score { font-size: 10px; color: var(--muted); }
+
     /* ── VESSEL MARKER ── */
     .vessel-marker {
       cursor: pointer;
@@ -891,6 +954,16 @@
     <button class="uc-btn"        id="ucPnl"       onclick="setUseCase('pnl')">📊 P&amp;L</button>
     <button class="uc-btn active" id="ucCargoflow"  onclick="setUseCase('cargoflow')">📦 Cargoflow</button>
     <button class="uc-btn"        id="ucPricing"    onclick="setUseCase('pricing')">🏷️ Pricing</button>
+  </div>
+
+  <!-- Risk overlay toggle — below Leaflet zoom controls -->
+  <div id="riskToggle" onclick="toggleRiskOverlay()" title="">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
+         stroke-linejoin="round" stroke-linecap="round">
+      <path d="M8 1.5 L13.5 4.2 L13.5 8.8 C13.5 11.8 11 13.8 8 14.8 C5 13.8 2.5 11.8 2.5 8.8 L2.5 4.2 Z"/>
+      <path d="M5.5 8.2 L7.1 9.8 L10.5 6.4"/>
+    </svg>
+    <span class="rtip">Security &amp; Safety Risk</span>
   </div>
 </div>
 <div id="map-glow"></div>
@@ -3266,6 +3339,217 @@ function updatePortMarkerColors(mode) {
   });
 }
 updatePortMarkerColors('cargoflow');
+
+// ── SECURITY & SAFETY RISK OVERLAY ──────────────────────────────────────────
+
+const RISK_DATA = {
+  'Afghanistan':6,'Albania':3,'Algeria':4,'Andorra':1,'Angola':4,
+  'Antigua and Barbuda':2,'Argentina':3,'Armenia':2,'Australia':2,'Austria':2,
+  'Azerbaijan':2,'Bahamas':2,'Bahrain':3,'Bangladesh':4,'Barbados':2,
+  'Belarus':2,'Belgium':2,'Belize':4,'Benin':3,'Bermuda':2,
+  'Bhutan':1,'Bolivia':3,'Bosnia and Herzegovina':3,'Botswana':2,'Brazil':4,
+  'British Virgin Islands':2,'Brunei':2,'Bulgaria':2,'Burkina Faso':5,'Burundi':4,
+  'Cambodia':3,'Cameroon':4,'Canada':2,'Cape Verde':2,'Cayman Islands':2,
+  'Central African Republic':6,'Chad':5,'Chile':3,'China':3,'Colombia':4,
+  'Comoros':3,'Costa Rica':3,"Cote d'Ivoire":4,'Croatia':2,'Cuba':3,
+  'Cyprus':2,'Cyprus TRNC':2,'Czech Republic':2,'Democratic Republic of Congo':5,
+  'Denmark':1,'Djibouti':3,'Dominica':3,'Dominican Republic':3,'East Timor':3,
+  'Ecuador':4,'Egypt':4,'El Salvador':4,'Equatorial Guinea':3,'Eritrea':4,
+  'Estonia':2,'Eswatini':4,'Ethiopia':5,'Fiji':2,'Finland':1,'France':2,
+  'French Guiana':3,'Gabon':3,'Gambia':2,'Georgia':3,'Germany':2,'Ghana':2,
+  'Greece':2,'Greenland':1,'Grenada':3,'Guatemala':4,'Guinea':4,'Guinea-Bissau':4,
+  'Guyana':4,'Haiti':6,'Honduras':5,'Hong Kong':3,'Hungary':2,'Iceland':1,
+  'India':4,'Indonesia':4,'Iran':6,'Iraq':5,'Ireland':2,'Israel':4,'Italy':2,
+  'Jamaica':4,'Japan':2,'Jordan':3,'Kazakhstan':3,'Kenya':4,'Kiribati':2,
+  'Kosovo':3,'Kuwait':3,'Kyrgyzstan':3,'Laos':3,'Latvia':2,'Lebanon':6,
+  'Lesotho':3,'Liberia':3,'Libya':6,'Liechtenstein':1,'Lithuania':2,'Luxembourg':1,
+  'Macau':2,'Madagascar':4,'Malawi':3,'Malaysia':3,'Maldives':3,'Mali':5,
+  'Malta':1,'Marshall Islands':2,'Martinique':0,'Mauritania':4,'Mauritius':2,
+  'Mexico':4,'Micronesia':2,'Moldova':3,'Monaco':1,'Mongolia':2,'Montenegro':2,
+  'Morocco':3,'Mozambique':3,'Myanmar':4,'Namibia':2,'Nauru':2,'Nepal':4,
+  'Netherlands':2,'Netherlands Antilles':2,'New Caledonia':3,'New Zealand':1,
+  'Nicaragua':4,'Niger':5,'Nigeria':5,'North Korea':5,'North Macedonia':2,
+  'Norway':1,'Oman':3,'Pakistan':4,'Palau':2,'Palestine':4,'Panama':3,
+  'Papua New Guinea':5,'Paraguay':3,'Peru':4,'Philippines':4,'Poland':2,
+  'Portugal':2,'Puerto Rico':2,'Qatar':3,'Republic of Congo':3,'Romania':2,
+  'Russia':4,'Rwanda':2,'Saint Kitts and Nevis':2,'Saint Lucia':2,
+  'Saint Vincent and the Grenadines':2,'Samoa':2,'San Marino':1,
+  'Sao Tome and Principe':2,'Saudi Arabia':3,'Senegal':3,'Serbia':2,
+  'Seychelles':2,'Sierra Leone':3,'Singapore':1,'Slovakia':2,'Slovenia':2,
+  'Solomon Islands':3,'Somalia':6,'Somaliland':4,'South Africa':3,
+  'South Korea':2,'South Sudan':6,'Spain':2,'Sri Lanka':3,'Sudan':6,
+  'Suriname':3,'Sweden':2,'Switzerland':1,'Syria':6,'Taiwan':2,
+  'Tajikistan':3,'Tanzania':3,'Thailand':3,'Togo':3,'Tonga':4,
+  'Trinidad and Tobago':3,'Tunisia':4,'Turkiye':3,'Turkmenistan':4,
+  'Turks and Caicos Islands':2,'Tuvalu':2,'Uganda':3,'Ukraine':5,
+  'United Arab Emirates':3,'United Kingdom':2,'United States':2,'Uruguay':2,
+  'Uzbekistan':3,'Vanuatu':2,'Vatican':1,'Venezuela':6,'Vietnam':3,
+  'Western Sahara':4,'Yemen':6,'Zambia':3,'Zimbabwe':3
+};
+
+// GeoJSON feature name → RISK_DATA key (handles Natural Earth naming differences)
+const RISK_ALIAS = {
+  'Turkey':'Turkiye','Turkiye':'Turkiye',
+  'Ivory Coast':"Cote d'Ivoire","Côte d'Ivoire":"Cote d'Ivoire",
+  'Czechia':'Czech Republic',
+  'Democratic Republic of the Congo':'Democratic Republic of Congo',
+  'Dem. Rep. Congo':'Democratic Republic of Congo',
+  'Republic of the Congo':'Republic of Congo','Congo':'Republic of Congo',
+  'Timor-Leste':'East Timor',
+  'Macao':'Macau',
+  'Korea, Republic of':'South Korea','Republic of Korea':'South Korea',
+  'Dem. Rep. Korea':'North Korea','North Korea':'North Korea',
+  'Russian Federation':'Russia',
+  'Iran (Islamic Republic of)':'Iran',
+  'Syrian Arab Republic':'Syria',
+  'Lao PDR':'Laos','Lao People\'s Democratic Republic':'Laos',
+  'United Republic of Tanzania':'Tanzania',
+  'Republic of Moldova':'Moldova',
+  'Viet Nam':'Vietnam',
+  'Bolivia (Plurinational State of)':'Bolivia',
+  'Venezuela (Bolivarian Republic of)':'Venezuela',
+  'United States of America':'United States',
+  'Burma':'Myanmar',
+  'Palestinian Territory':'Palestine','State of Palestine':'Palestine',
+  'West Bank':'Palestine','Gaza Strip':'Palestine',
+  'Kosovo':'Kosovo',
+  'Swaziland':'Eswatini',
+  'Macedonia':'North Macedonia',
+  'Cabo Verde':'Cape Verde',
+  'São Tomé and Príncipe':'Sao Tome and Principe',
+  'Federated States of Micronesia':'Micronesia','Micronesia (Federated States of)':'Micronesia',
+  'Holy See':'Vatican','Vatican City':'Vatican',
+  'Taiwan, Province of China':'Taiwan',
+  'Brunei Darussalam':'Brunei',
+  'Czech Republic':'Czech Republic',
+  'Bosnia and Herz.':'Bosnia and Herzegovina',
+  'Central African Rep.':'Central African Republic',
+  'Eq. Guinea':'Equatorial Guinea',
+  'S. Sudan':'South Sudan',
+  'Solomon Is.':'Solomon Islands',
+  'Fr. S. Antarctic Lands':'France',
+  'W. Sahara':'Western Sahara',
+  'Dominican Rep.':'Dominican Republic',
+};
+
+const RISK_LEVELS = {
+  1: { label:'Negligible', color:'#5c6572' },
+  2: { label:'Low',        color:'#4a9e3e' },
+  3: { label:'Moderate',   color:'#d4a810' },
+  4: { label:'High',       color:'#c86020' },
+  5: { label:'Severe',     color:'#b01818' },
+  6: { label:'Critical',   color:'#680808' }
+};
+
+// Custom pane: sits above tiles (200) but below route overlays (400) and markers (600)
+map.createPane('riskPane');
+map.getPane('riskPane').style.zIndex = '250';
+
+let riskLayer = null;
+let riskLayerLoaded = false;
+let riskOverlayOn = false;
+
+function _riskScore(geoName) {
+  if (RISK_DATA[geoName] !== undefined) return RISK_DATA[geoName];
+  const alias = RISK_ALIAS[geoName];
+  if (alias !== undefined && RISK_DATA[alias] !== undefined) return RISK_DATA[alias];
+  return null;
+}
+
+function _riskStyle(feature) {
+  const name = feature.properties.ADMIN || feature.properties.name || '';
+  const score = _riskScore(name);
+  if (!score || !RISK_LEVELS[score]) {
+    // No data or score=0 (Martinique): grey outline only
+    return { fillOpacity:0, color:'#6b7280', weight:0.4, opacity:0.35 };
+  }
+  return {
+    fillColor: RISK_LEVELS[score].color,
+    fillOpacity: 0.42,
+    color: 'rgba(0,0,0,0.18)',
+    weight: 0.5,
+    opacity: 0.6
+  };
+}
+
+function _buildRiskLayer(geojson) {
+  riskLayer = L.geoJSON(geojson, {
+    pane: 'riskPane',
+    style: _riskStyle,
+    onEachFeature: function(feature, layer) {
+      const name  = feature.properties.ADMIN || feature.properties.name || '';
+      const score = _riskScore(name);
+      const info  = score && RISK_LEVELS[score] ? RISK_LEVELS[score] : null;
+      const dot   = info ? info.color : '#6b7280';
+      const levelHtml = info
+        ? `<span class="risk-tt-level" style="color:${dot}">${info.label}</span>
+           <span class="risk-tt-score">· ${score} / 6</span>`
+        : `<span class="risk-tt-level" style="color:#6b7280">No Data</span>`;
+
+      layer.bindTooltip(
+        `<div class="risk-tt-inner">
+           <div class="risk-tt-country">${name}</div>
+           <div class="risk-tt-row">
+             <div class="risk-tt-dot" style="background:${dot}"></div>
+             ${levelHtml}
+           </div>
+         </div>`,
+        { sticky:true, direction:'right', className:'risk-tt', opacity:1 }
+      );
+
+      layer.on('mouseover', function() {
+        layer.setStyle({ fillOpacity: Math.min((info ? 0.42 : 0) + 0.22, 0.70), weight:1.2, color:'rgba(255,255,255,0.28)' });
+      });
+      layer.on('mouseout', function() {
+        riskLayer.resetStyle(layer);
+      });
+    }
+  });
+}
+
+function toggleRiskOverlay() {
+  const btn = document.getElementById('riskToggle');
+  riskOverlayOn = !riskOverlayOn;
+  btn.classList.toggle('active', riskOverlayOn);
+
+  if (riskOverlayOn) {
+    if (riskLayerLoaded && riskLayer) {
+      riskLayer.addTo(map);
+      riskLayer.bringToBack();
+    } else {
+      // Show spinner while loading
+      btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="8" r="5.5" stroke-dasharray="12 6" stroke-linecap="round">
+          <animateTransform attributeName="transform" type="rotate" from="0 8 8" to="360 8 8" dur="0.9s" repeatCount="indefinite"/>
+        </circle>
+      </svg><span class="rtip">Loading…</span>`;
+
+      fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          _buildRiskLayer(data);
+          riskLayerLoaded = true;
+          riskLayer.addTo(map);
+          riskLayer.bringToBack();
+          // Restore icon
+          btn.innerHTML = RISK_ICON_SVG + '<span class="rtip">Security &amp; Safety Risk</span>';
+        })
+        .catch(function() {
+          riskOverlayOn = false;
+          btn.classList.remove('active');
+          btn.innerHTML = RISK_ICON_SVG + '<span class="rtip">Security &amp; Safety Risk</span>';
+        });
+    }
+  } else {
+    if (riskLayer) map.removeLayer(riskLayer);
+  }
+}
+
+const RISK_ICON_SVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
+  stroke-linejoin="round" stroke-linecap="round">
+  <path d="M8 1.5 L13.5 4.2 L13.5 8.8 C13.5 11.8 11 13.8 8 14.8 C5 13.8 2.5 11.8 2.5 8.8 L2.5 4.2 Z"/>
+  <path d="M5.5 8.2 L7.1 9.8 L10.5 6.4"/>
+</svg>`;
 
 // Zoom thresholds: tier1 ≥ 2 | tier2 ≥ 4 | tier3 ≥ 6
 const TIER_ZOOM = { 1: 2, 2: 4, 3: 6 };
