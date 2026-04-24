@@ -264,6 +264,34 @@
       color: #f09050;
       box-shadow: 0 1px 5px rgba(0,0,0,0.45), 0 0 10px rgba(240,130,50,0.25) !important;
     }
+    /* Critical+Severe only state — red tint */
+    .risk-ctrl-btn.active-filtered {
+      background: rgba(220,38,38,0.18) !important;
+      border-color: rgba(220,38,38,0.6) !important;
+      color: #ef4444;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.45), 0 0 10px rgba(220,38,38,0.28) !important;
+    }
+    .risk-ctrl-btn.active-filtered:hover {
+      background: rgba(220,38,38,0.24) !important;
+      border-color: rgba(220,38,38,0.75) !important;
+      color: #ef4444;
+    }
+    /* Small state badge — top-right corner of button */
+    .risk-state-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 13px; height: 13px; border-radius: 50%;
+      font-size: 8px; font-weight: 800; line-height: 13px; text-align: center;
+      pointer-events: none; display: none;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .risk-ctrl-btn.active-filtered .risk-state-badge {
+      display: block; background: #dc2626; color: #fff;
+      box-shadow: 0 0 0 1.5px var(--surface);
+    }
+    .risk-ctrl-btn.active .risk-state-badge {
+      display: block; background: #f09050; color: #fff;
+      box-shadow: 0 0 0 1.5px var(--surface);
+    }
     .risk-ctrl-btn svg { width: 15px; height: 15px; flex-shrink: 0; pointer-events: none; }
     @keyframes riskSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
     .risk-ctrl-btn.loading svg { animation: riskSpin 0.9s linear infinite; }
@@ -3455,7 +3483,8 @@ map.getPane('riskPane').style.mixBlendMode = 'screen';
 
 let riskLayer = null;
 let riskLayerLoaded = false;
-let riskOverlayOn = false;
+// 0 = off  |  1 = critical + severe only  |  2 = all levels
+let riskOverlayState = 0;
 
 // Shield icon SVG (used in the Leaflet control button)
 const RISK_ICON_SVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -3485,6 +3514,7 @@ const RiskControl = L.Control.extend({
     const btn = L.DomUtil.create('div', 'risk-ctrl-btn');
     btn.id = 'riskToggle';
     btn.innerHTML = RISK_ICON_SVG +
+      `<span class="risk-state-badge" id="riskBadge"></span>` +
       `<div class="risk-panel-tip">
          <div class="risk-panel-title">Safety &amp; Risk Indicator</div>
          ${_riskLegendHtml}
@@ -3511,6 +3541,10 @@ function _riskStyle(feature) {
   const name = feature.properties.ADMIN || feature.properties.name || '';
   const score = _riskScore(name);
   const isDark = !document.body.classList.contains('map-light');
+  // In filtered mode (state 1) hide anything below Critical/Severe
+  if (riskOverlayState === 1 && (!score || score < 5)) {
+    return { fillOpacity:0, weight:0, opacity:0 };
+  }
   if (!score || !RISK_LEVELS[score]) {
     return { fillOpacity:0, color: isDark ? 'rgba(255,255,255,0.15)' : '#6b7280', weight:0.4, opacity:0.35 };
   }
@@ -3545,34 +3579,51 @@ function _buildRiskLayer(geojson) {
   });
 }
 
+function _applyRiskState() {
+  const btn   = document.getElementById('riskToggle');
+  const badge = document.getElementById('riskBadge');
+  // Update button classes
+  btn.classList.remove('active', 'active-filtered');
+  if (riskOverlayState === 1) {
+    btn.classList.add('active-filtered');
+    if (badge) badge.textContent = '!';
+  } else if (riskOverlayState === 2) {
+    btn.classList.add('active');
+    if (badge) badge.textContent = '●';
+  }
+  // Refresh layer visibility / style
+  if (riskOverlayState === 0) {
+    if (riskLayer) map.removeLayer(riskLayer);
+  } else {
+    if (riskLayerLoaded && riskLayer) {
+      if (!map.hasLayer(riskLayer)) { riskLayer.addTo(map); riskLayer.bringToBack(); }
+      riskLayer.setStyle(_riskStyle);
+    }
+  }
+}
+
 function toggleRiskOverlay() {
   const btn = document.getElementById('riskToggle');
-  riskOverlayOn = !riskOverlayOn;
-  btn.classList.toggle('active', riskOverlayOn);
+  // Advance state: 0 → 1 → 2 → 0
+  riskOverlayState = (riskOverlayState + 1) % 3;
 
-  if (riskOverlayOn) {
-    if (riskLayerLoaded && riskLayer) {
-      riskLayer.addTo(map);
-      riskLayer.bringToBack();
-    } else {
-      // CSS spinner via .loading class — icon spins, panel tip still accessible
-      btn.classList.add('loading');
-      fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          _buildRiskLayer(data);
-          riskLayerLoaded = true;
-          btn.classList.remove('loading');
-          riskLayer.addTo(map);
-          riskLayer.bringToBack();
-        })
-        .catch(function() {
-          riskOverlayOn = false;
-          btn.classList.remove('active', 'loading');
-        });
-    }
+  if (riskOverlayState > 0 && !riskLayerLoaded) {
+    // First activation — fetch GeoJSON, then apply state
+    btn.classList.add('loading');
+    fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        _buildRiskLayer(data);
+        riskLayerLoaded = true;
+        btn.classList.remove('loading');
+        _applyRiskState();
+      })
+      .catch(function() {
+        riskOverlayState = 0;
+        btn.classList.remove('loading', 'active', 'active-filtered');
+      });
   } else {
-    if (riskLayer) map.removeLayer(riskLayer);
+    _applyRiskState();
   }
 }
 
