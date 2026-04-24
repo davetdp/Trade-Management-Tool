@@ -2980,20 +2980,40 @@ const ports = [
   });
 }
 
-// ── PORT ICON (tier-aware) ────────────────────────────────────
-function portIcon(tier) {
+// ── PORT ICON (tier-aware, alert-aware) ──────────────────────
+function portMaxSailings(p) {
+  if (!p.dwellingLaden || !p.dwellingLaden.length) return 0;
+  let max = 0;
+  for (const svc of p.dwellingLaden) {
+    for (const d of svc.directions) {
+      const teu = d.teu20 + d.teu40 * 2;
+      let rem = teu, sailings = 0;
+      for (const v of d.vessels) {
+        if (rem <= 0) break;
+        rem -= Math.min(rem, v.alloc);
+        sailings++;
+      }
+      if (sailings > max) max = sailings;
+    }
+  }
+  return max;
+}
+
+function portIcon(tier, alert) {
   const sizes  = { 1: [22,9], 2: [16,6], 3: [12,4] };
   const [outer, inner] = sizes[tier] || [12,4];
   const half = outer / 2;
+  const rgb  = alert ? '255,77,106'  : '255,184,48';
+  const hex  = alert ? '#ff4d6a'     : '#ffb830';
   return L.divIcon({
     html: `<div class="port-marker" style="width:${outer}px;height:${outer}px;border-radius:50%;
-             background:rgba(255,184,48,${tier===1?0.15:tier===2?0.10:0.06});
-             border:${tier===1?1.5:1}px solid rgba(255,184,48,${tier===1?0.65:tier===2?0.45:0.30});
+             background:rgba(${rgb},${tier===1?0.15:tier===2?0.10:0.06});
+             border:${tier===1?1.5:1}px solid rgba(${rgb},${tier===1?0.65:tier===2?0.45:0.30});
              display:flex;align-items:center;justify-content:center;
-             box-shadow:0 0 ${tier===1?10:tier===2?6:3}px rgba(255,184,48,${tier===1?0.4:tier===2?0.25:0.15});">
+             box-shadow:0 0 ${tier===1?10:tier===2?6:3}px rgba(${rgb},${tier===1?0.4:tier===2?0.25:0.15});">
              <div style="width:${inner}px;height:${inner}px;border-radius:50%;
-               background:#ffb830;opacity:${tier===1?1:tier===2?0.8:0.6};
-               box-shadow:0 0 ${tier===1?6:4}px #ffb830;"></div>
+               background:${hex};opacity:${tier===1?1:tier===2?0.8:0.6};
+               box-shadow:0 0 ${tier===1?6:4}px ${hex};"></div>
            </div>`,
     className: '',
     iconSize:   [outer, outer],
@@ -3225,7 +3245,7 @@ function buildPortPopup(p) {
 const portLayers = { 1: L.layerGroup(), 2: L.layerGroup(), 3: L.layerGroup() };
 
 ports.forEach(p => {
-  const marker = L.marker(p.position, { icon: portIcon(p.tier) });
+  const marker = L.marker(p.position, { icon: portIcon(p.tier, portMaxSailings(p) >= 3) });
   const popup = L.popup({
     maxWidth: 275, minWidth: 270,
     className: 'vessel-popup-wrapper',
