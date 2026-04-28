@@ -2979,7 +2979,12 @@ function buildPartnerPopup(v) {
   const laneRgb  = _h2r(laneColor);
   const badgeHex = v.badgeClass==='badge-arrived'?'#00e5a0':v.badgeClass==='badge-loading'?'#ffb830':'#00b4ff';
   const badgeRgb = _h2r(badgeHex);
-  const badgeLbl = v.badgeClass==='badge-arrived'?'IN PORT':v.badgeClass==='badge-loading'?'ANCHORED':'TRANSIT';
+  // Multi-line badge text matching PIL popup style
+  const badgeLbl = v.badgeClass==='badge-arrived'
+    ? `IN PORT AT ${v.nextPort.toUpperCase()}`
+    : v.badgeClass==='badge-loading'
+    ? `ANCHORED OFF ${v.nextPort.toUpperCase()}`
+    : `ON ROUTE TO ${v.nextPort.toUpperCase()}`;
   let laneName = '';
   Object.entries(tradeLanes).forEach(([n,{services}])=>{ if(services.includes(v.service)) laneName=n; });
   const logoKey = (v.fleet||'').toLowerCase();
@@ -2989,24 +2994,21 @@ function buildPartnerPopup(v) {
   return `
   <div class="vessel-popup" style="box-shadow:0 16px 48px rgba(0,0,0,0.7),0 0 24px rgba(${laneRgb},0.2),inset 0 1px 0 rgba(255,255,255,0.07);">
     <div class="popup-header" style="background:linear-gradient(135deg,rgba(${laneRgb},0.35),rgba(${laneRgb},0.12));">
-      <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px;">
-        ${logoSrc?`<img src="${logoSrc}" style="height:22px;width:auto;max-width:72px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6));">`:``}
-        <div style="flex:1;min-width:0;">
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
+          ${logoSrc?`<img src="${logoSrc}" style="height:20px;width:auto;max-width:68px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6));">`:``}
           <div class="popup-vessel-name" style="font-size:13px;">${v.name}</div>
-          <div style="display:flex;align-items:center;gap:5px;margin-top:2px;">
-            <span style="font-size:10px;font-weight:700;color:rgba(160,168,184,0.75);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.service}</span>
-            <span style="font-size:9px;padding:1px 5px;border-radius:8px;background:rgba(${laneRgb},0.18);color:${laneColor};border:1px solid rgba(${laneRgb},0.35);">${laneName}</span>
-          </div>
         </div>
-        <span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(${badgeRgb},0.15);color:${badgeHex};border:1px solid rgba(${badgeRgb},0.4);letter-spacing:0.5px;flex-shrink:0;">${badgeLbl}</span>
+        <div style="display:flex;align-items:center;gap:6px;margin:2px 0 3px;">
+          <span style="font-size:10px;font-weight:700;color:rgba(${laneRgb},0.85);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.service}</span>
+          <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(${laneRgb},0.15);color:${laneColor};border:1px solid rgba(${laneRgb},0.3);letter-spacing:0.5px;">${laneName}</span>
+        </div>
+        <div class="popup-route">→ <strong style="color:#fff;font-weight:700;">${v.nextPort}</strong></div>
       </div>
+      <span class="popup-badge ${v.badgeClass}" style="flex-shrink:0;margin-left:8px;">${badgeLbl}</span>
     </div>
     <div class="popup-body">
       <div class="detail-table" style="margin-bottom:6px;">
-        <div class="detail-row">
-          <span class="detail-label">Status</span>
-          <span class="detail-value" style="color:${badgeHex};text-align:right;max-width:60%;">${v.status}</span>
-        </div>
         <div class="detail-row">
           <span class="detail-label">Next Port</span>
           <span class="detail-value">${v.nextPort}</span>
@@ -3022,6 +3024,10 @@ function buildPartnerPopup(v) {
         <div class="detail-row">
           <span class="detail-label">Heading</span>
           <span class="detail-value">${v.heading}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Nav. State</span>
+          <span class="detail-value">${v.navState}</span>
         </div>
       </div>
       <div class="detail-table" style="margin-bottom:6px;">
@@ -4108,6 +4114,9 @@ function updatePortVisibility() {
 
 map.on('zoomend', updatePortVisibility);
 updatePortVisibility(); // run once on load
+
+// Ensure tile layer renders correctly after all controls are added
+setTimeout(() => { map.invalidateSize(); activeTileLayer.redraw(); }, 400);
 
 // ── SIDEBAR TOGGLE ───────────────────────────────────────────
 function toggleSidebar() {
