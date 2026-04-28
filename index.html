@@ -4108,8 +4108,9 @@ window.mlToggle = function(bodyId, hdrEl) {
 
 initMapLayers();
 
-// Ensure tile layer renders correctly after all controls are added
+// Ensure tile layer renders correctly on load
 setTimeout(() => { map.invalidateSize(); activeTileLayer.redraw(); }, 400);
+setTimeout(() => { map.invalidateSize(); activeTileLayer.redraw(); }, 1200);
 
 // ── SIDEBAR TOGGLE ───────────────────────────────────────────
 function toggleSidebar() {
@@ -4117,8 +4118,8 @@ function toggleSidebar() {
   const toggle  = document.getElementById('sidebarToggle');
   const isCollapsed = sidebar.classList.toggle('collapsed');
   document.body.classList.toggle('sidebar-hidden', isCollapsed);
-  // Let Leaflet know the map size changed
-  setTimeout(() => map.invalidateSize(), 260);
+  // Let Leaflet know the map size changed, then redraw tiles
+  setTimeout(() => { map.invalidateSize(); activeTileLayer.redraw(); }, 280);
 }
 
 // ── P&L ANALYTICS PANEL ─────────────────────────────────────
