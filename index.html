@@ -362,9 +362,10 @@
     .rl-num  { font-size: 10px; color: var(--muted); font-family:'Space Grotesk',sans-serif; font-weight:600; }
 
     /* ── RISK COUNTRY TOOLTIP ── */
-    .leaflet-tooltip.risk-tt { background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important; }
+    /* ── RISK COUNTRY TOOLTIP ── */
+    .leaflet-tooltip.risk-tt { background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;white-space:normal!important; }
     .leaflet-tooltip.risk-tt::before { display:none!important; }
-    .risk-tt-inner { background:rgba(8,18,40,0.95);border:1px solid rgba(255,255,255,0.13);border-radius:10px;padding:8px 12px;font-family:'Inter',sans-serif;min-width:155px;box-shadow:0 4px 22px rgba(0,0,0,0.65);backdrop-filter:blur(14px);pointer-events:none; }
+    .risk-tt-inner { background:rgba(8,18,40,0.95);border:1px solid rgba(255,255,255,0.13);border-radius:10px;padding:8px 12px;font-family:'Inter',sans-serif;min-width:155px;max-width:220px;white-space:normal;word-wrap:break-word;box-shadow:0 4px 22px rgba(0,0,0,0.65);backdrop-filter:blur(14px);pointer-events:none; }
     .risk-tt-country { font-size:12px;font-weight:700;color:#e8f4ff;margin-bottom:5px; }
     .risk-tt-row { display:flex;align-items:center;gap:7px; }
     .risk-tt-dot { width:10px;height:10px;border-radius:50%;flex-shrink:0; }
@@ -3992,11 +3993,16 @@ function _buildRiskLayer(geojson) {
         ? `<div class="risk-tt-remark">${remark}</div>`
         : '';
       layer.bindTooltip(
-        `<div class="risk-tt-inner" style="${remark ? 'max-width:240px;' : ''}"><div class="risk-tt-country">${name}</div>
+        `<div class="risk-tt-inner"><div class="risk-tt-country">${name}</div>
          <div class="risk-tt-row"><div class="risk-tt-dot" style="background:${dot}"></div>${levelHtml}</div>${remarkHtml}</div>`,
         { sticky:true, direction:'right', className:'risk-tt', opacity:1 }
       );
       layer.on('mouseover', function() {
+        // Only show tooltip & highlight for levels the user has switched on
+        if (!score || !selectedRiskLevels.has(score)) {
+          layer.closeTooltip();
+          return;
+        }
         layer.setStyle({ fillOpacity:Math.min((info ? 0.42 : 0) + 0.22, 0.70), weight:1.2, color:'rgba(255,255,255,0.28)' });
       });
       layer.on('mouseout', function() { riskLayer.resetStyle(layer); });
