@@ -2919,12 +2919,14 @@ const partnerVessels = [
     speed:'12.5 kts', heading:'E',  navState:'Under way',
     nextPort:'Puerto Quetzal', status:'On route to Puerto Quetzal',
     badgeClass:'badge-transit', eta:'29 Apr 2026', flag:'🇱🇷', teu:5551, built:2000,
+    route:'Ningbo → Shanghai → Qingdao → Busan → Ensenada → Manzanillo → Lázaro Cárdenas → Puerto Quetzal → Buenaventura → Callao → San Antonio',
     // Coastal Pacific route hugging Guatemala coastline — stays well offshore
     routeCoords:[[14.8682,-95.1491],[14.5,-93.5],[14.1,-92.2],[13.9153,-90.7910]] },
   { name:'WAN HAI 611',         fleet:'WanHai',    service:'WS6', position:[32.4067,137.9321],
     speed:'15.4 kts', heading:'E',  navState:'Under way',
     nextPort:'Ensenada', status:'On route to Ensenada',
     badgeClass:'badge-transit', eta:'12 May 2026', flag:'🇱🇷', teu:5608, built:2001,
+    route:'Ningbo → Shanghai → Qingdao → Busan → Ensenada → Manzanillo → Lázaro Cárdenas → Puerto Quetzal → Buenaventura → Callao → San Antonio',
     // Trans-Pacific eastward via great circle — longitudes >180 force correct eastward rendering past antimeridian
     routeCoords:[[32.4067,137.9321],[38,150],[44,170],[48,195],[44,218],[38,235],[32,243],[31.8583,243.4]] },
   // ES1 — ECSA
@@ -2932,30 +2934,35 @@ const partnerVessels = [
     speed:'18.8 kts', heading:'SW', navState:'Under way',
     nextPort:'Rio de Janeiro', status:'On route to Rio de Janeiro',
     badgeClass:'badge-transit', eta:'13 May 2026', flag:'🇲🇹', teu:9448, built:2015,
+    route:'Shanghai → Ningbo → Yantian → Hong Kong → Singapore → Rio de Janeiro → Santos → Navegantes → Montevideo → Buenos Aires → Paranaguá → Santos → Singapore → Hong Kong → Shanghai',
     // Indian Ocean → south around Cape of Good Hope → across South Atlantic to Brazil
     routeCoords:[[-8.4401,74.3175],[-18,62],[-28,48],[-35,32],[-40,22],[-38,12],[-32,2],[-26,-14],[-22.9068,-43.1729]] },
   { name:'EVER FORTUNE',        fleet:'Evergreen', service:'ES1', position:[-24.2362,-46.2469],
     speed:'0.1 kts',  heading:'SW', navState:'Anchored',
     nextPort:'Santos', status:'Anchored at Santos',
-    badgeClass:'badge-loading', eta:'27 Apr 2026', flag:'🇸🇬', teu:12118, built:2020 },
+    badgeClass:'badge-loading', eta:'27 Apr 2026', flag:'🇸🇬', teu:12118, built:2020,
+    route:'Shanghai → Ningbo → Yantian → Hong Kong → Singapore → Rio de Janeiro → Santos → Navegantes → Montevideo → Buenos Aires → Paranaguá → Santos → Singapore → Hong Kong → Shanghai' },
   // KCS — Intra Asia
   { name:'NYK ISABEL',          fleet:'NYK',       service:'KCS', position:[23.5864,117.9444],
     speed:'16.1 kts', heading:'SW', navState:'Under way',
     nextPort:'Singapore', status:'On route to Singapore',
     badgeClass:'badge-transit', eta:'02 Apr 2026', flag:'🇸🇬', teu:2664, built:2008,
+    route:'Busan → Incheon → Qingdao → Shanghai → Singapore → Port Klang → Ho Chi Minh City → Shekou → Busan',
     // South China Sea route — stays in open water west of Philippines
     routeCoords:[[23.5864,117.9444],[20,115.5],[16,113],[12,111],[8,109.5],[4,107.5],[1.2897,103.8501]] },
   { name:'KMTC PENANG',         fleet:'KMTC',      service:'KCS', position:[5.4120,106.6901],
     speed:'14.3 kts', heading:'NE', navState:'Under way',
     nextPort:'Ho Chi Minh City', status:'On route to Ho Chi Minh City',
     badgeClass:'badge-transit', eta:'29 Apr 2026', flag:'🇵🇦', teu:2806, built:2018,
+    route:'Busan → Incheon → Qingdao → Shanghai → Singapore → Port Klang → Ho Chi Minh City → Shekou → Busan',
     // Short northward route along Vietnam coast — slight offshore curve
     routeCoords:[[5.4120,106.6901],[7.5,107.2],[9.5,107.4],[10.7769,106.7009]] },
   // EAS — Africa
   { name:'ONE ATLAS',           fleet:'ONE',       service:'EAS', position:[-36.8445,174.7841],
     speed:'0.0 kts',  heading:'N',  navState:'Moored',
-    nextPort:'Lyttelton', status:'Arrived at Lyttelton',
-    badgeClass:'badge-arrived', eta:'03 May 2026', flag:'🇸🇬', teu:4253, built:2005 },
+    nextPort:'Mombasa', status:'Arrived at Mombasa',
+    badgeClass:'badge-arrived', eta:'03 May 2026', flag:'🇸🇬', teu:4253, built:2005,
+    route:'Qingdao → Shanghai → Ningbo → Nansha → Singapore → Port Kelang → Mombasa → Port Kelang → Singapore → Nansha → Qingdao' },
 ];
 
 // Populate partner lane counts now that partnerVessels is defined
@@ -2991,6 +2998,9 @@ function buildPartnerPopup(v) {
   const svgFleets = ['evergreen','nyk'];
   const logoExt = svgFleets.includes(logoKey) ? 'svg' : 'png';
   const logoSrc = logoKey ? 'logos/'+logoKey+'-logo.'+logoExt : '';
+  const routeHtml = v.route
+    ? v.route.replace(v.nextPort, '<strong style="color:#fff;font-weight:700;">'+v.nextPort+'</strong>')
+    : '→ <strong style="color:#fff;font-weight:700;">'+v.nextPort+'</strong>';
   return `
   <div class="vessel-popup" style="box-shadow:0 16px 48px rgba(0,0,0,0.7),0 0 24px rgba(${laneRgb},0.2),inset 0 1px 0 rgba(255,255,255,0.07);">
     <div class="popup-header" style="background:linear-gradient(135deg,rgba(${laneRgb},0.35),rgba(${laneRgb},0.12));">
@@ -3003,7 +3013,7 @@ function buildPartnerPopup(v) {
           <span style="font-size:10px;font-weight:700;color:rgba(${laneRgb},0.85);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.service}</span>
           <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(${laneRgb},0.15);color:${laneColor};border:1px solid rgba(${laneRgb},0.3);letter-spacing:0.5px;">${laneName}</span>
         </div>
-        <div class="popup-route">→ <strong style="color:#fff;font-weight:700;">${v.nextPort}</strong></div>
+        <div class="popup-route">${routeHtml}</div>
       </div>
       <span class="popup-badge ${v.badgeClass}" style="flex-shrink:0;margin-left:8px;">${badgeLbl}</span>
     </div>
@@ -3044,7 +3054,7 @@ function buildPartnerPopup(v) {
           <span class="detail-value">${v.built}</span>
         </div>
       </div>
-      <div style="padding-top:6px;font-size:9px;color:#4a6280;text-align:center;letter-spacing:0.4px;">Partner vessel · AIS data via Alphaliner</div>
+      <div style="padding-top:6px;font-size:9px;color:rgba(255,255,255,0.55);text-align:center;letter-spacing:0.4px;">Partner vessel · AIS data via <span style="color:#fff;font-weight:600;">Alphaliner</span></div>
     </div>
   </div>`;
 }
