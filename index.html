@@ -3002,19 +3002,43 @@ function buildPartnerPopup(v) {
       </div>
     </div>
     <div class="popup-body">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:7px;">
-        <div class="popup-stat-card" style="grid-column:1/-1;"><div class="popup-stat-label">Status</div><div class="popup-stat-value" style="font-size:11px;">${v.status}</div></div>
-        <div class="popup-stat-card"><div class="popup-stat-label">Next Port</div><div class="popup-stat-value">${v.nextPort}</div></div>
-        <div class="popup-stat-card"><div class="popup-stat-label">ETA</div><div class="popup-stat-value">${v.eta}</div></div>
-        <div class="popup-stat-card"><div class="popup-stat-label">Speed</div><div class="popup-stat-value">${v.speed}</div></div>
-        <div class="popup-stat-card"><div class="popup-stat-label">Heading</div><div class="popup-stat-value">${v.heading}</div></div>
+      <div class="detail-table" style="margin-bottom:6px;">
+        <div class="detail-row">
+          <span class="detail-label">Status</span>
+          <span class="detail-value" style="color:${badgeHex};text-align:right;max-width:60%;">${v.status}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Next Port</span>
+          <span class="detail-value">${v.nextPort}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">ETA</span>
+          <span class="detail-value">${v.eta}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Speed</span>
+          <span class="detail-value">${v.speed}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Heading</span>
+          <span class="detail-value">${v.heading}</span>
+        </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;">
-        <div class="popup-stat-card"><div class="popup-stat-label">TEU Cap.</div><div class="popup-stat-value">${v.teu.toLocaleString()}</div></div>
-        <div class="popup-stat-card"><div class="popup-stat-label">Flag</div><div class="popup-stat-value">${v.flag}</div></div>
-        <div class="popup-stat-card"><div class="popup-stat-label">Built</div><div class="popup-stat-value">${v.built}</div></div>
+      <div class="detail-table" style="margin-bottom:6px;">
+        <div class="detail-row">
+          <span class="detail-label">TEU Capacity</span>
+          <span class="detail-value">${v.teu.toLocaleString()} TEU</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Flag</span>
+          <span class="detail-value">${v.flag}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Year Built</span>
+          <span class="detail-value">${v.built}</span>
+        </div>
       </div>
-      <div style="padding-top:7px;border-top:1px solid rgba(0,180,255,0.08);font-size:9px;color:#6a8aaa;text-align:center;letter-spacing:0.4px;">Partner vessel · AIS data via Alphaliner</div>
+      <div style="padding-top:6px;font-size:9px;color:#4a6280;text-align:center;letter-spacing:0.4px;">Partner vessel · AIS data via Alphaliner</div>
     </div>
   </div>`;
 }
