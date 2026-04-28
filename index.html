@@ -1487,8 +1487,26 @@ L.control.zoom({ position: 'topright' }).addTo(map);
 const TILE_DARK  = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
+// Shared tile options — crossOrigin prevents CORS issues; keepBuffer keeps
+// already-loaded tiles in memory when the map pans/resizes
+const TILE_OPTS = { subdomains: 'abcd', maxZoom: 19, crossOrigin: '', keepBuffer: 4 };
+
+function _makeTileLayer(url) {
+  const layer = L.tileLayer(url, TILE_OPTS);
+  // Auto-retry any tile that 404s or times out (network hiccup recovery)
+  layer.on('tileerror', function(e) {
+    const tile = e.tile;
+    if (!tile._retries) tile._retries = 0;
+    if (tile._retries < 3) {
+      tile._retries++;
+      setTimeout(function() { tile.src = tile.src.split('?')[0] + '?r=' + tile._retries; }, 800 * tile._retries);
+    }
+  });
+  return layer;
+}
+
 // Default: dark mode
-let activeTileLayer = L.tileLayer(TILE_DARK, { subdomains: 'abcd', maxZoom: 19 }).addTo(map);
+let activeTileLayer = _makeTileLayer(TILE_DARK).addTo(map);
 
 function setMapMode(mode) {
   const isDark = mode === 'dark';
@@ -1496,9 +1514,7 @@ function setMapMode(mode) {
   document.getElementById('btnLight').classList.toggle('active', !isDark);
   document.body.classList.toggle('map-light', !isDark);
   map.removeLayer(activeTileLayer);
-  activeTileLayer = isDark
-    ? L.tileLayer(TILE_DARK,  { subdomains: 'abcd', maxZoom: 19 }).addTo(map)
-    : L.tileLayer(TILE_LIGHT, { subdomains: 'abcd', maxZoom: 19 }).addTo(map);
+  activeTileLayer = _makeTileLayer(isDark ? TILE_DARK : TILE_LIGHT).addTo(map);
   // Push tile layer behind vessel markers
   activeTileLayer.bringToBack();
   // Toggle screen blend mode: looks great on dark tiles, revert to normal on light
@@ -4136,9 +4152,11 @@ window.mlToggle = function(bodyId, hdrEl) {
 
 initMapLayers();
 
-// Ensure tile layer renders correctly on load
-setTimeout(() => { map.invalidateSize(); activeTileLayer.redraw(); }, 400);
-setTimeout(() => { map.invalidateSize(); activeTileLayer.redraw(); }, 1200);
+// Ensure tile layer renders correctly on load — staggered redraws handle
+// sidebar-width transitions and slow CDN responses
+[200, 600, 1400, 3000].forEach(function(ms) {
+  setTimeout(function() { map.invalidateSize(); activeTileLayer.redraw(); }, ms);
+});
 
 // ── SIDEBAR TOGGLE ───────────────────────────────────────────
 function toggleSidebar() {
