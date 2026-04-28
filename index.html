@@ -377,32 +377,48 @@
       max-width: 36px !important;
     }
 
-    /* ── FLEET FILTER TOGGLE (separate panel above trade lane legend) ── */
-    .fleet-toggle-wrap {
-      display: flex; gap: 5px;
-      margin-bottom: 10px; padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0,180,255,0.12);
+    /* ── FLEET PANEL checkboxes ── */
+    .fleet-chk-row {
+      display: flex; align-items: center; gap: 7px;
+      padding: 3px 0; cursor: pointer; user-select: none;
     }
-    .fleet-toggle-btn {
-      flex: 1; padding: 4px 6px;
-      border-radius: 8px;
-      border: 1px solid rgba(0,180,255,0.2);
-      background: transparent;
-      color: #6a8aaa;
-      font-size: clamp(9px,0.6vw,11px); font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
-      text-align: center; letter-spacing: 0.3px;
-      white-space: nowrap;
+    .fleet-chk-row input[type="checkbox"] {
+      appearance: none; -webkit-appearance: none;
+      width: 13px; height: 13px; flex-shrink: 0;
+      border: 1.5px solid rgba(0,180,255,0.45);
+      border-radius: 3px; background: transparent;
+      cursor: pointer; position: relative; transition: all 0.15s;
     }
-    .fleet-toggle-btn.ft-active {
-      background: rgba(0,180,255,0.14);
-      border-color: rgba(0,180,255,0.5);
-      color: #00b4ff;
+    .fleet-chk-row input[type="checkbox"]:checked {
+      background: rgba(0,180,255,0.22);
+      border-color: #00b4ff;
     }
-    .fleet-toggle-btn:hover:not(.ft-active) {
-      background: rgba(0,180,255,0.07);
-      border-color: rgba(0,180,255,0.35);
+    .fleet-chk-row input[type="checkbox"]:checked::after {
+      content: ''; position: absolute;
+      left: 3px; top: 0px; width: 5px; height: 8px;
+      border: 2px solid #00b4ff; border-top: none; border-left: none;
+      transform: rotate(45deg);
+    }
+    .fleet-chk-row input[type="checkbox"]:indeterminate {
+      background: rgba(0,180,255,0.22); border-color: #00b4ff;
+    }
+    .fleet-chk-row input[type="checkbox"]:indeterminate::after {
+      content: ''; position: absolute;
+      left: 2px; top: 4px; width: 7px; height: 2px;
+      background: #00b4ff;
+    }
+    .fleet-chk-label {
+      font-size: clamp(9px,0.6vw,12px); font-weight: 600;
+      color: #c8daf0; letter-spacing: 0.3px;
+    }
+    .fleet-partner-list {
+      margin-left: 20px; margin-top: 3px;
+      border-left: 1px solid rgba(0,180,255,0.12);
+      padding-left: 8px;
+    }
+    .fleet-partner-list .fleet-chk-row { padding: 2px 0; }
+    .fleet-partner-list .fleet-chk-label {
+      font-size: clamp(8px,0.55vw,11px); font-weight: 500; color: #8aa8c8;
     }
 
     /* ── POPUP CARD ── */
@@ -2572,6 +2588,17 @@ legendEl.onAdd = function () {
 legendEl.addTo(map);
 
 // ── FLEET FILTER PANEL (separate, above trade lane legend) ────
+// Partner display names (alphabetical order)
+const PARTNER_DISPLAY = [
+  { fleet:'CMACGM',    label:'CMA CGM'   },
+  { fleet:'Evergreen', label:'Evergreen' },
+  { fleet:'KMTC',      label:'KMTC'      },
+  { fleet:'NYK',       label:'NYK'       },
+  { fleet:'ONE',       label:'ONE'       },
+  { fleet:'WanHai',    label:'Wan Hai'   },
+  { fleet:'YangMing',  label:'Yang Ming' },
+];
+
 const fleetPanelEl = L.control({ position: 'bottomright' });
 fleetPanelEl.onAdd = function () {
   const div = L.DomUtil.create('div');
@@ -2584,10 +2611,27 @@ fleetPanelEl.onAdd = function () {
     min-width: clamp(190px,15vw,300px); margin-bottom: 6px;
   `;
   div.innerHTML = `
-    <div style="font-size:clamp(9px,0.55vw,12px);font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Fleet View</div>
-    <div class="fleet-toggle-wrap" style="margin-bottom:0;padding-bottom:0;border-bottom:none;">
-      <button class="fleet-toggle-btn ft-active" id="fleetBtnPIL" onclick="window.setFleet('pil')">PIL Only</button>
-      <button class="fleet-toggle-btn" id="fleetBtnAll" onclick="window.setFleet('all')">PIL + Partners</button>
+    <div onclick="(function(el){var items=document.getElementById('fleetItems');var chev=el.querySelector('.fleet-chev');var collapsed=items.style.display==='none';items.style.display=collapsed?'block':'none';chev.style.transform=collapsed?'rotate(0deg)':'rotate(-90deg)';})(this)"
+         style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:clamp(6px,0.5vw,10px);">
+      <span style="font-size:clamp(9px,0.55vw,12px);font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;">Fleet View</span>
+      <span class="fleet-chev" style="color:#6a8aaa;font-size:clamp(9px,0.55vw,12px);transition:transform 0.2s;transform:rotate(0deg);margin-left:8px;">&#9650;</span>
+    </div>
+    <div id="fleetItems">
+      <label class="fleet-chk-row">
+        <input type="checkbox" id="chk-pil" checked onchange="window.onPilCheck(this)">
+        <span class="fleet-chk-label">PIL</span>
+      </label>
+      <label class="fleet-chk-row" style="margin-top:4px;">
+        <input type="checkbox" id="chk-partner" onchange="window.onPartnerMasterCheck(this)">
+        <span class="fleet-chk-label">Partner</span>
+      </label>
+      <div id="fleetPartnerList" style="display:none;" class="fleet-partner-list">
+        ${PARTNER_DISPLAY.map(p => `
+        <label class="fleet-chk-row">
+          <input type="checkbox" class="chk-partner-item" data-fleet="${p.fleet}" checked onchange="window.onPartnerItemCheck(this)">
+          <span class="fleet-chk-label">${p.label}</span>
+        </label>`).join('')}
+      </div>
     </div>
   `;
   L.DomEvent.disableClickPropagation(div);
@@ -2785,14 +2829,15 @@ window.pilFilter = function(laneName) {
   });
 
   // Update partner vessel visibility to match trade lane filter
-  if (showPartners) {
-    partnerMarkers.forEach(({ marker, v, baseColor, routeLine }) => {
-      const active = !activeServices || activeServices.includes(v.service);
-      marker.setOpacity(active ? 0.85 : 0.15);
-      marker.setIcon(shipIcon(active ? baseColor : '#2e3a4a', v.fleet));
-      if (routeLine) routeLine.setStyle({ opacity: active ? 0.55 : 0.1 });
-    });
-  }
+  partnerMarkers.forEach(({ marker, v, baseColor, routeLine }) => {
+    const masterOk = partnerVisible && visiblePartners.has(v.fleet);
+    const active = !activeServices || activeServices.includes(v.service);
+    const show = masterOk && active;
+    marker.setOpacity(show ? 0.85 : (masterOk ? 0.15 : 0));
+    if (masterOk) marker.setIcon(shipIcon(active ? baseColor : '#2e3a4a', v.fleet));
+    if (routeLine) routeLine.setStyle({ opacity: show ? 0.55 : (masterOk ? 0.1 : 0) });
+  });
+  _updatePartnerLegend();
 
   // Recalculate all KPIs for the current filter state
   pilUpdateKPIs();
@@ -2819,14 +2864,15 @@ map.on('click', function() {
       el.style.background = '';
       el.style.boxShadow = '';
     });
-    // Reset partner markers to full opacity
-    if (showPartners) {
-      partnerMarkers.forEach(({ marker, v, baseColor, routeLine }) => {
-        marker.setOpacity(0.85);
-        marker.setIcon(shipIcon(baseColor, v.fleet));
-        if (routeLine) routeLine.setStyle({ opacity: 0.55 });
-      });
-    }
+    // Reset partner markers to full opacity (respecting individual visibility)
+    partnerMarkers.forEach(({ marker, v, baseColor, routeLine }) => {
+      const show = partnerVisible && visiblePartners.has(v.fleet);
+      marker.setOpacity(show ? 0.85 : 0);
+      marker.options.interactive = show;
+      if (show) marker.setIcon(shipIcon(baseColor, v.fleet));
+      if (routeLine) routeLine.setStyle({ opacity: show ? 0.55 : 0 });
+    });
+    _updatePartnerLegend();
     pilUpdateKPIs();
   }
 });
@@ -2974,7 +3020,7 @@ function buildPartnerPopup(v) {
 }
 
 // ── FLEET TOGGLE STATE ────────────────────────────────────────
-let showPartners = false;
+// showPartners removed — use partnerVisible + visiblePartners instead
 const partnerMarkers = [];
 const partnerRouteLines = []; // dotted heading lines for underway partner vessels
 
@@ -3007,36 +3053,119 @@ partnerVessels.forEach(v => {
   partnerMarkers.push({ marker, v, baseColor, routeLine });
 });
 
-window.setFleet = function(mode) {
-  showPartners = (mode === 'all');
-  document.getElementById('fleetBtnPIL').classList.toggle('ft-active', !showPartners);
-  document.getElementById('fleetBtnAll').classList.toggle('ft-active',  showPartners);
+// ── FLEET VISIBILITY STATE ────────────────────────────────────
+let pilVisible = true;
+let partnerVisible = false;  // partner master toggle
+const visiblePartners = new Set(PARTNER_DISPLAY.map(p => p.fleet)); // all on by default
 
-  // Show/hide partner count badges + header in legend
-  const ptrDisplay = showPartners ? 'inline-block' : 'none';
-  document.querySelectorAll('.leg-ptr-cnt').forEach(el => { el.style.display = ptrDisplay; });
-  const hdr = document.getElementById('leg-hdr-ptr');
-  if (hdr) hdr.style.display = ptrDisplay;
-
-  // Build active services from current trade lane filter
+// Central function — applies all current state to the map
+function applyFleetVisibility() {
   const activeServices = pilActiveFilters.size > 0
     ? [...pilActiveFilters].flatMap(lane => tradeLanes[lane]?.services || [])
     : null;
 
-  partnerMarkers.forEach(({ marker, v, baseColor, routeLine }) => {
-    if (!showPartners) {
-      marker.setOpacity(0);
-      marker.options.interactive = false;
-      if (routeLine) routeLine.setStyle({ opacity: 0 });
-      return;
-    }
-    const active = !activeServices || activeServices.includes(v.service);
-    marker.setOpacity(active ? 0.85 : 0.15);
-    marker.options.interactive = true;
-    marker.setIcon(shipIcon(active ? baseColor : '#2e3a4a', v.fleet));
-    if (routeLine) routeLine.setStyle({ opacity: active ? 0.55 : 0.1 });
+  // PIL vessels
+  vesselMarkers.forEach(({ marker, pingMarker, v, baseColor }) => {
+    if (v.isDryDock) return;
+    const svcOk = !activeServices || activeServices.includes(v.service);
+    const show = pilVisible && svcOk;
+    marker.setOpacity(show ? 1 : 0);
+    marker.options.interactive = show;
+    if (pingMarker) pingMarker.setOpacity(show ? 1 : 0);
   });
+
+  // Partner vessels
+  partnerMarkers.forEach(({ marker, v, baseColor, routeLine }) => {
+    const masterOk = partnerVisible && visiblePartners.has(v.fleet);
+    const svcOk = !activeServices || activeServices.includes(v.service);
+    const show = masterOk && svcOk;
+    marker.setOpacity(show ? 0.85 : 0);
+    marker.options.interactive = show;
+    if (show) marker.setIcon(shipIcon(baseColor, v.fleet));
+    if (routeLine) routeLine.setStyle({ opacity: show ? 0.55 : 0 });
+  });
+
+  // Update legend partner counts + visibility
+  _updatePartnerLegend();
+}
+
+function _updatePartnerLegend() {
+  // Recalculate partner counts for currently visible partners
+  const counts = {};
+  Object.keys(tradeLanes).forEach(k => counts[k] = 0);
+  if (partnerVisible) {
+    partnerVessels.forEach(v => {
+      if (!visiblePartners.has(v.fleet)) return;
+      Object.entries(tradeLanes).forEach(([name, { services }]) => {
+        if (services.includes(v.service)) counts[name]++;
+      });
+    });
+  }
+  document.querySelectorAll('.leg-ptr-cnt[data-lane]').forEach(el => {
+    el.textContent = counts[el.dataset.lane] ?? 0;
+  });
+
+  // Show/hide partner badges + header
+  const show = partnerVisible ? 'inline-block' : 'none';
+  document.querySelectorAll('.leg-ptr-cnt').forEach(el => { el.style.display = show; });
+  const hdr = document.getElementById('leg-hdr-ptr');
+  if (hdr) hdr.style.display = show;
+}
+
+// Update master Partner checkbox visual state (checked / indeterminate / unchecked)
+function _syncPartnerMasterCheckbox() {
+  const chk = document.getElementById('chk-partner');
+  if (!chk) return;
+  const all = PARTNER_DISPLAY.length;
+  const checked = [...visiblePartners].length;
+  chk.checked = checked === all;
+  chk.indeterminate = checked > 0 && checked < all;
+}
+
+// ── PIL checkbox handler ──────────────────────────────────────
+window.onPilCheck = function(el) {
+  pilVisible = el.checked;
+  applyFleetVisibility();
 };
+
+// ── Partner MASTER checkbox handler ──────────────────────────
+window.onPartnerMasterCheck = function(el) {
+  partnerVisible = el.checked;
+  // Sync all sub-checkboxes
+  document.querySelectorAll('.chk-partner-item').forEach(c => { c.checked = el.checked; });
+  if (el.checked) {
+    PARTNER_DISPLAY.forEach(p => visiblePartners.add(p.fleet));
+  } else {
+    visiblePartners.clear();
+  }
+  // Show/hide the partner sub-list
+  const list = document.getElementById('fleetPartnerList');
+  if (list) list.style.display = el.checked ? 'block' : 'none';
+  applyFleetVisibility();
+};
+
+// ── Individual partner checkbox handler ───────────────────────
+window.onPartnerItemCheck = function(el) {
+  const fleet = el.dataset.fleet;
+  if (el.checked) {
+    visiblePartners.add(fleet);
+  } else {
+    visiblePartners.delete(fleet);
+  }
+  // If any individual partner is checked, master is on
+  if (visiblePartners.size > 0 && !partnerVisible) {
+    partnerVisible = true;
+    const masterChk = document.getElementById('chk-partner');
+    if (masterChk) { masterChk.checked = true; masterChk.indeterminate = false; }
+    const list = document.getElementById('fleetPartnerList');
+    if (list) list.style.display = 'block';
+  }
+  _syncPartnerMasterCheckbox();
+  applyFleetVisibility();
+};
+
+// Keep backward-compat stub (pilFilter uses applyFleetVisibility internally)
+window.setFleet = function() {};
 
 // ── PORT DATA ─────────────────────────────────────────────────
 // tier 1 = major hubs (visible zoom 2+)
