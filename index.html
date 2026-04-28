@@ -2506,7 +2506,7 @@ function vesselColor(service) {
 }
 
 // ── MAP LEGEND ───────────────────────────────────────────────
-// Count active (non-drydock) vessels per trade lane
+// Count active (non-drydock) PIL vessels per trade lane
 const laneVesselCount = {};
 Object.keys(tradeLanes).forEach(k => laneVesselCount[k] = 0);
 vessels.forEach(v => {
@@ -2515,6 +2515,11 @@ vessels.forEach(v => {
     if (services.includes(v.service)) laneVesselCount[name]++;
   });
 });
+
+// Partner count per lane — declared here (zeros) so legend can reference it;
+// populated after partnerVessels is defined below
+const partnerLaneCount = {};
+Object.keys(tradeLanes).forEach(k => partnerLaneCount[k] = 0);
 
 const legendEl = L.control({ position: 'bottomright' });
 legendEl.onAdd = function () {
@@ -2903,9 +2908,7 @@ const partnerVessels = [
     badgeClass:'badge-arrived', eta:'03 May 2026', flag:'🇸🇬', teu:4253, built:2005 },
 ];
 
-// Partner vessel count per trade lane (for dual count legend)
-const partnerLaneCount = {};
-Object.keys(tradeLanes).forEach(k => partnerLaneCount[k] = 0);
+// Populate partner lane counts now that partnerVessels is defined
 partnerVessels.forEach(v => {
   Object.entries(tradeLanes).forEach(([name, { services }]) => {
     if (services.includes(v.service)) partnerLaneCount[name]++;
