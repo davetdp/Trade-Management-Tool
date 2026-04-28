@@ -370,6 +370,7 @@
     .risk-tt-dot { width:10px;height:10px;border-radius:50%;flex-shrink:0; }
     .risk-tt-level { font-size:11px;font-weight:600; }
     .risk-tt-score { font-size:10px;color:var(--muted); }
+    .risk-tt-remark { font-size:10px;color:rgba(200,220,255,0.75);margin-top:6px;line-height:1.45;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px; }
 
     /* ── VESSEL MARKER ── */
     .vessel-marker {
@@ -3942,6 +3943,21 @@ function _riskScore(geoName) {
   return null;
 }
 
+// Country-specific remarks (from DJ source file, column C)
+const RISK_REMARKS = {
+  'Brazil':    'A generally or often unsafe and insecure environment for business travel and operations. There is a reasonably high probability of exposure to moderate or more serious threats, risks or hazards to personnel and assets unless routine to advanced mitigation is in place.',
+  'Libya':     'An extremely dangerous environment for business travel and operations, with a very high probability of exposure to threats unless intensive mitigation is in place.',
+  'Sudan':     'An extremely dangerous environment for business travel and operations, with a very high probability of exposure to threats unless intensive mitigation is in place.',
+  'Venezuela': 'An extremely dangerous environment for business travel and operations, with a very high probability of exposure to threats unless intensive mitigation is in place.'
+};
+
+function _riskRemark(geoName) {
+  if (RISK_REMARKS[geoName]) return RISK_REMARKS[geoName];
+  const alias = RISK_ALIAS[geoName];
+  if (alias && RISK_REMARKS[alias]) return RISK_REMARKS[alias];
+  return null;
+}
+
 function _riskStyle(feature) {
   const name = feature.properties.ADMIN || feature.properties.name || '';
   const score = _riskScore(name);
@@ -3971,9 +3987,13 @@ function _buildRiskLayer(geojson) {
       const levelHtml = info
         ? `<span class="risk-tt-level" style="color:${dot}">${info.label}</span><span class="risk-tt-score"> · ${score}/6</span>`
         : `<span class="risk-tt-level" style="color:#6b7280">No Data</span>`;
+      const remark = _riskRemark(name);
+      const remarkHtml = remark
+        ? `<div class="risk-tt-remark">${remark}</div>`
+        : '';
       layer.bindTooltip(
-        `<div class="risk-tt-inner"><div class="risk-tt-country">${name}</div>
-         <div class="risk-tt-row"><div class="risk-tt-dot" style="background:${dot}"></div>${levelHtml}</div></div>`,
+        `<div class="risk-tt-inner" style="${remark ? 'max-width:240px;' : ''}"><div class="risk-tt-country">${name}</div>
+         <div class="risk-tt-row"><div class="risk-tt-dot" style="background:${dot}"></div>${levelHtml}</div>${remarkHtml}</div>`,
         { sticky:true, direction:'right', className:'risk-tt', opacity:1 }
       );
       layer.on('mouseover', function() {
