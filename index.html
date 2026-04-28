@@ -357,9 +357,40 @@
     }
     .vessel-fleet-badge img {
       display: block;
-      height: 9px;   /* small — proportional to vessel icon */
+      height: 9px;
       width: auto;
+      max-width: 30px;
+      object-fit: contain;
+      object-position: left center;
       filter: drop-shadow(0 1px 3px rgba(0,0,0,0.95));
+    }
+
+    /* ── FLEET FILTER TOGGLE (above trade lane legend) ── */
+    .fleet-toggle-wrap {
+      display: flex; gap: 5px;
+      margin-bottom: 10px; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0,180,255,0.12);
+    }
+    .fleet-toggle-btn {
+      flex: 1; padding: 4px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,180,255,0.2);
+      background: transparent;
+      color: #6a8aaa;
+      font-size: clamp(9px,0.6vw,11px); font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      text-align: center; letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+    .fleet-toggle-btn.ft-active {
+      background: rgba(0,180,255,0.14);
+      border-color: rgba(0,180,255,0.5);
+      color: #00b4ff;
+    }
+    .fleet-toggle-btn:hover:not(.ft-active) {
+      background: rgba(0,180,255,0.07);
+      border-color: rgba(0,180,255,0.35);
     }
 
     /* ── POPUP CARD ── */
@@ -2024,10 +2055,16 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
 }
 
 // ── SHIP SVG ICON ────────────────────────────────────────────
-// fleet: 'PIL' | 'partner' | 'competitor' | null  (badge shown for known fleets)
-// Badge uses PNG logo with CSS clip-path for pennant/flag shape — no background
+// fleet key → badge HTML (img tag using logo file)
 const FLEET_BADGES = {
-  PIL: `<img src="pil-logo.png" alt="PIL" />`
+  PIL:       `<img src="pil-logo.png" alt="PIL" />`,
+  YangMing:  `<img src="logos/yangming-logo.png" alt="YM" />`,
+  WanHai:    `<img src="logos/wanhai-logo.png" alt="WH" />`,
+  CMACGM:    `<img src="logos/cmacgm-logo.png" alt="CMA CGM" />`,
+  Evergreen: `<img src="logos/evergreen-logo.png" alt="Evergreen" />`,
+  NYK:       `<img src="logos/nyk-logo.png" alt="NYK" />`,
+  KMTC:      `<img src="logos/kmtc-logo.png" alt="KMTC" />`,
+  ONE:       `<img src="logos/one-logo.png" alt="ONE" />`,
 };
 
 function shipIcon(color = '#00b4ff', fleet = 'PIL') {
@@ -2439,8 +2476,8 @@ function buildPopup(v, laneColor) {
 const tradeLanes = {
   'Africa':                      { color: '#ef4444', services: ['SWS','WA3','EAS','ASA'] },
   'ECSA':                        { color: '#ec4899', services: ['ES1'] },
-  'WCSA':                        { color: '#a78bfa', services: ['WSA'] },
-  'Intra Asia':                  { color: '#00b4ff', services: ['CCS'] },
+  'WCSA':                        { color: '#a78bfa', services: ['WSA','WS6'] },
+  'Intra Asia':                  { color: '#00b4ff', services: ['CCS','KCS'] },
   'Middle East & S. Asia':       { color: '#f97316', services: ['GCS','CSE','RGS'] },
   'Oceania':                     { color: '#00e5a0', services: ['AA2','NZS','ANA','MSP'] },
 };
@@ -2478,6 +2515,10 @@ legendEl.onAdd = function () {
     min-width: clamp(190px,15vw,300px); margin-bottom: 8px;
   `;
   div.innerHTML = `
+    <div class="fleet-toggle-wrap">
+      <button class="fleet-toggle-btn ft-active" id="fleetBtnPIL" onclick="window.setFleet('pil')">PIL Only</button>
+      <button class="fleet-toggle-btn" id="fleetBtnAll" onclick="window.setFleet('all')">PIL + Partners</button>
+    </div>
     <div onclick="(function(el){var items=document.getElementById('legendItems');var chev=el.querySelector('.leg-chev');var collapsed=items.style.display==='none';items.style.display=collapsed?'block':'none';chev.style.transform=collapsed?'rotate(0deg)':'rotate(-90deg)';})(this)"
          style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:clamp(6px,0.5vw,10px);">
       <span style="font-size:clamp(9px,0.55vw,12px);font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;">Trade Lanes</span>
@@ -2699,6 +2740,15 @@ window.pilFilter = function(laneName) {
     el.style.boxShadow  = selected ? '0 0 14px rgba(' + hexToRgb(color) + ',0.55), inset 0 0 0 1px rgba(' + hexToRgb(color) + ',0.5)' : '';
   });
 
+  // Update partner vessel visibility to match trade lane filter
+  if (showPartners) {
+    partnerMarkers.forEach(({ marker, v, baseColor }) => {
+      const active = !activeServices || activeServices.includes(v.service);
+      marker.setOpacity(active ? 0.85 : 0.15);
+      marker.setIcon(shipIcon(active ? baseColor : '#2e3a4a', v.fleet));
+    });
+  }
+
   // Recalculate all KPIs for the current filter state
   pilUpdateKPIs();
 };
@@ -2724,6 +2774,13 @@ map.on('click', function() {
       el.style.background = '';
       el.style.boxShadow = '';
     });
+    // Reset partner markers to full opacity
+    if (showPartners) {
+      partnerMarkers.forEach(({ marker, v, baseColor }) => {
+        marker.setOpacity(0.85);
+        marker.setIcon(shipIcon(baseColor, v.fleet));
+      });
+    }
     pilUpdateKPIs();
   }
 });
@@ -2761,6 +2818,132 @@ vessels.forEach((v, i) => {
 
   vesselMarkers.push({ marker, pingMarker, v, baseColor });
 });
+
+// ── PARTNER VESSEL DATA ───────────────────────────────────────
+const partnerVessels = [
+  // WS6 — WCSA
+  { name:'YM ORCHID',           fleet:'YangMing',  service:'WS6', position:[14.8682,-95.1491],
+    speed:'12.5 kts', heading:'E',  navState:'Under way',
+    nextPort:'Puerto Quetzal', status:'On route to Puerto Quetzal',
+    badgeClass:'badge-transit', eta:'29 Apr 2026', flag:'🇱🇷', teu:5551, built:2000 },
+  { name:'WAN HAI 611',         fleet:'WanHai',    service:'WS6', position:[32.4067,137.9321],
+    speed:'15.4 kts', heading:'E',  navState:'Under way',
+    nextPort:'Ensenada', status:'On route to Ensenada',
+    badgeClass:'badge-transit', eta:'12 May 2026', flag:'🇱🇷', teu:5608, built:2001 },
+  // ES1 — ECSA
+  { name:'CMA CGM MISSISSIPPI', fleet:'CMACGM',    service:'ES1', position:[-8.4401,74.3175],
+    speed:'18.8 kts', heading:'SW', navState:'Under way',
+    nextPort:'Rio de Janeiro', status:'On route to Rio de Janeiro',
+    badgeClass:'badge-transit', eta:'13 May 2026', flag:'🇲🇹', teu:9448, built:2015 },
+  { name:'EVER FORTUNE',        fleet:'Evergreen', service:'ES1', position:[-24.2362,-46.2469],
+    speed:'0.1 kts',  heading:'SW', navState:'Anchored',
+    nextPort:'Santos', status:'Anchored at Santos',
+    badgeClass:'badge-loading', eta:'27 Apr 2026', flag:'🇸🇬', teu:12118, built:2020 },
+  // KCS — Intra Asia
+  { name:'NYK ISABEL',          fleet:'NYK',       service:'KCS', position:[23.5864,117.9444],
+    speed:'16.1 kts', heading:'SW', navState:'Under way',
+    nextPort:'Singapore', status:'On route to Singapore',
+    badgeClass:'badge-transit', eta:'02 Apr 2026', flag:'🇸🇬', teu:2664, built:2008 },
+  { name:'KMTC PENANG',         fleet:'KMTC',      service:'KCS', position:[5.4120,106.6901],
+    speed:'14.3 kts', heading:'NE', navState:'Under way',
+    nextPort:'Ho Chi Minh City', status:'On route to Ho Chi Minh City',
+    badgeClass:'badge-transit', eta:'29 Apr 2026', flag:'🇵🇦', teu:2806, built:2018 },
+  // EAS — Africa
+  { name:'ONE ATLAS',           fleet:'ONE',       service:'EAS', position:[-36.8445,174.7841],
+    speed:'0.0 kts',  heading:'N',  navState:'Moored',
+    nextPort:'Lyttelton', status:'Arrived at Lyttelton',
+    badgeClass:'badge-arrived', eta:'03 May 2026', flag:'🇸🇬', teu:4253, built:2005 },
+];
+
+// ── PARTNER POPUP ─────────────────────────────────────────────
+function buildPartnerPopup(v) {
+  const laneColor = serviceColor[v.service] || '#00b4ff';
+  function _h2r(hex) {
+    return parseInt(hex.slice(1,3),16)+','+parseInt(hex.slice(3,5),16)+','+parseInt(hex.slice(5,7),16);
+  }
+  const laneRgb  = _h2r(laneColor);
+  const badgeHex = v.badgeClass==='badge-arrived'?'#00e5a0':v.badgeClass==='badge-loading'?'#ffb830':'#00b4ff';
+  const badgeRgb = _h2r(badgeHex);
+  const badgeLbl = v.badgeClass==='badge-arrived'?'IN PORT':v.badgeClass==='badge-loading'?'ANCHORED':'TRANSIT';
+  let laneName = '';
+  Object.entries(tradeLanes).forEach(([n,{services}])=>{ if(services.includes(v.service)) laneName=n; });
+  const logoKey = (v.fleet||'').toLowerCase();
+  const logoSrc = logoKey ? 'logos/'+logoKey+'-logo.png' : '';
+  return `
+  <div class="vessel-popup" style="box-shadow:0 16px 48px rgba(0,0,0,0.7),0 0 24px rgba(${laneRgb},0.2),inset 0 1px 0 rgba(255,255,255,0.07);">
+    <div class="popup-header" style="background:linear-gradient(135deg,rgba(${laneRgb},0.35),rgba(${laneRgb},0.12));">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px;">
+        ${logoSrc?`<img src="${logoSrc}" style="height:22px;width:auto;max-width:72px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6));">`:``}
+        <div style="flex:1;min-width:0;">
+          <div class="popup-vessel-name" style="font-size:13px;">${v.name}</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:2px;">
+            <span style="font-size:10px;font-weight:700;color:rgba(160,168,184,0.75);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.service}</span>
+            <span style="font-size:9px;padding:1px 5px;border-radius:8px;background:rgba(${laneRgb},0.18);color:${laneColor};border:1px solid rgba(${laneRgb},0.35);">${laneName}</span>
+          </div>
+        </div>
+        <span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(${badgeRgb},0.15);color:${badgeHex};border:1px solid rgba(${badgeRgb},0.4);letter-spacing:0.5px;flex-shrink:0;">${badgeLbl}</span>
+      </div>
+    </div>
+    <div class="popup-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:7px;">
+        <div class="popup-stat-card" style="grid-column:1/-1;"><div class="popup-stat-label">Status</div><div class="popup-stat-value" style="font-size:11px;">${v.status}</div></div>
+        <div class="popup-stat-card"><div class="popup-stat-label">Next Port</div><div class="popup-stat-value">${v.nextPort}</div></div>
+        <div class="popup-stat-card"><div class="popup-stat-label">ETA</div><div class="popup-stat-value">${v.eta}</div></div>
+        <div class="popup-stat-card"><div class="popup-stat-label">Speed</div><div class="popup-stat-value">${v.speed}</div></div>
+        <div class="popup-stat-card"><div class="popup-stat-label">Heading</div><div class="popup-stat-value">${v.heading}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;">
+        <div class="popup-stat-card"><div class="popup-stat-label">TEU Cap.</div><div class="popup-stat-value">${v.teu.toLocaleString()}</div></div>
+        <div class="popup-stat-card"><div class="popup-stat-label">Flag</div><div class="popup-stat-value">${v.flag}</div></div>
+        <div class="popup-stat-card"><div class="popup-stat-label">Built</div><div class="popup-stat-value">${v.built}</div></div>
+      </div>
+      <div style="padding-top:7px;border-top:1px solid rgba(0,180,255,0.08);font-size:9px;color:#6a8aaa;text-align:center;letter-spacing:0.4px;">Partner vessel · AIS data via Alphaliner</div>
+    </div>
+  </div>`;
+}
+
+// ── FLEET TOGGLE STATE ────────────────────────────────────────
+let showPartners = false;
+const partnerMarkers = [];
+
+// Render partner vessels (hidden by default, shown when showPartners = true)
+partnerVessels.forEach(v => {
+  const baseColor = vesselColor(v.service);
+  const icon = shipIcon(baseColor, v.fleet);
+  const marker = L.marker(v.position, { icon, opacity: 0 }).addTo(map);
+
+  const popup = L.popup({
+    maxWidth: 255, minWidth: 250,
+    className: 'vessel-popup-wrapper',
+    offset: [0,-10], autoPan: false, closeOnClick: false
+  }).setContent(buildPartnerPopup(v));
+
+  bindSmartPopup(marker, popup, 255, 320);
+  partnerMarkers.push({ marker, v, baseColor });
+});
+
+window.setFleet = function(mode) {
+  showPartners = (mode === 'all');
+  document.getElementById('fleetBtnPIL').classList.toggle('ft-active', !showPartners);
+  document.getElementById('fleetBtnAll').classList.toggle('ft-active',  showPartners);
+
+  // Build active services from current trade lane filter
+  const activeServices = pilActiveFilters.size > 0
+    ? [...pilActiveFilters].flatMap(lane => tradeLanes[lane]?.services || [])
+    : null;
+
+  partnerMarkers.forEach(({ marker, v, baseColor }) => {
+    if (!showPartners) {
+      marker.setOpacity(0);
+      marker.options.interactive = false;
+      return;
+    }
+    const active = !activeServices || activeServices.includes(v.service);
+    marker.setOpacity(active ? 0.85 : 0.15);
+    marker.options.interactive = true;
+    marker.setIcon(shipIcon(active ? baseColor : '#2e3a4a', v.fleet));
+  });
+};
 
 // ── PORT DATA ─────────────────────────────────────────────────
 // tier 1 = major hubs (visible zoom 2+)
