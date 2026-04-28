@@ -2756,8 +2756,9 @@ window.pilFilter = function(laneName) {
     const active = !activeServices || activeServices.includes(v.service);
     const displayColor = active ? baseColor : '#2e3a4a';
     marker.setIcon(shipIcon(displayColor));
+    marker.setOpacity(pilVisible ? 1 : 0);
     const pingEl = pingMarker.getElement();
-    if (pingEl) pingEl.style.opacity = active ? '1' : '0.15';
+    if (pingEl) pingEl.style.opacity = pilVisible ? (active ? '1' : '0.15') : '0';
   });
 
   // Update route line styles
@@ -2812,8 +2813,9 @@ map.on('click', function() {
     vesselMarkers.forEach(({ marker, pingMarker, v, baseColor }) => {
       if (v.isDryDock) return;
       marker.setIcon(shipIcon(baseColor));
+      marker.setOpacity(pilVisible ? 1 : 0);
       const pingEl = pingMarker.getElement();
-      if (pingEl) pingEl.style.opacity = '1';
+      if (pingEl) pingEl.style.opacity = pilVisible ? '1' : '0';
     });
     routeLines.forEach(({ line }) => {
       line.setStyle({ weight: 2, opacity: 0.6 });
