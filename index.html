@@ -2072,7 +2072,7 @@ const FLEET_BADGES = {
   PIL:       `<img src="pil-logo.png" alt="PIL" />`,
   YangMing:  `<img src="logos/yangming-logo.png" alt="YM" />`,
   WanHai:    `<img src="logos/wanhai-logo.png" alt="WH" />`,
-  CMACGM:    `<img src="logos/cmacgm-logo.svg" alt="CMA CGM" />`,
+  CMACGM:    `<img src="logos/cmacgm-logo.png" alt="CMA CGM" />`,
   Evergreen: `<img src="logos/evergreen-logo.svg" alt="Evergreen" />`,
   NYK:       `<img src="logos/nyk-logo.svg" alt="NYK" />`,
   KMTC:      `<img src="logos/kmtc-logo.png" alt="KMTC" />`,
@@ -2937,7 +2937,7 @@ function buildPartnerPopup(v) {
   let laneName = '';
   Object.entries(tradeLanes).forEach(([n,{services}])=>{ if(services.includes(v.service)) laneName=n; });
   const logoKey = (v.fleet||'').toLowerCase();
-  const svgFleets = ['cmacgm','evergreen','nyk'];
+  const svgFleets = ['evergreen','nyk'];
   const logoExt = svgFleets.includes(logoKey) ? 'svg' : 'png';
   const logoSrc = logoKey ? 'logos/'+logoKey+'-logo.'+logoExt : '';
   return `
