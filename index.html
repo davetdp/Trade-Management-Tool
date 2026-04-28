@@ -2072,9 +2072,9 @@ const FLEET_BADGES = {
   PIL:       `<img src="pil-logo.png" alt="PIL" />`,
   YangMing:  `<img src="logos/yangming-logo.png" alt="YM" />`,
   WanHai:    `<img src="logos/wanhai-logo.png" alt="WH" />`,
-  CMACGM:    `<img src="logos/cmacgm-logo.png" alt="CMA CGM" />`,
-  Evergreen: `<img src="logos/evergreen-logo.png" alt="Evergreen" />`,
-  NYK:       `<img src="logos/nyk-logo.png" alt="NYK" />`,
+  CMACGM:    `<img src="logos/cmacgm-logo.svg" alt="CMA CGM" />`,
+  Evergreen: `<img src="logos/evergreen-logo.svg" alt="Evergreen" />`,
+  NYK:       `<img src="logos/nyk-logo.svg" alt="NYK" />`,
   KMTC:      `<img src="logos/kmtc-logo.png" alt="KMTC" />`,
   ONE:       `<img src="logos/one-logo.png" alt="ONE" />`,
 };
@@ -2539,9 +2539,13 @@ legendEl.onAdd = function () {
       <span class="leg-chev" style="color:#6a8aaa;font-size:clamp(9px,0.55vw,12px);transition:transform 0.2s;transform:rotate(0deg);margin-left:8px;">&#9650;</span>
     </div>
     <div id="legendItems">
+      <div style="display:flex;align-items:center;gap:clamp(6px,0.45vw,10px);margin-bottom:4px;padding:0 clamp(3px,0.25vw,6px);">
+        <span style="flex:1;"></span>
+        <span style="font-size:clamp(7px,0.5vw,10px);font-weight:700;color:#6a8aaa;text-align:center;min-width:clamp(16px,1.2vw,22px);letter-spacing:0.5px;">PIL</span>
+        <span id="leg-hdr-ptr" style="display:none;font-size:clamp(7px,0.5vw,10px);font-weight:700;color:#6a8aaa;text-align:center;min-width:clamp(16px,1.2vw,22px);letter-spacing:0.5px;">PTR</span>
+      </div>
       ${Object.entries(tradeLanes).map(([name, { color }]) => {
         const pilCount = laneVesselCount[name] || 0;
-        const ptrCount = partnerLaneCount[name] || 0;
         return `
         <div class="leg-lane-row" data-lane="${name}" data-color="${color}"
              onclick="window.pilFilter('${name}')"
@@ -2557,7 +2561,7 @@ legendEl.onAdd = function () {
           </svg>
           <span style="font-size:clamp(10px,0.7vw,14px);color:#e8f4ff;flex:1;">${name}</span>
           <span style="font-size:clamp(9px,0.6vw,13px);font-weight:700;padding:1px clamp(4px,0.4vw,8px);border-radius:8px;background:${color}22;color:${color};border:1px solid ${color}55;min-width:clamp(16px,1.2vw,22px);text-align:center;">${pilCount}</span>
-          <span class="leg-ptr-cnt" style="display:none;font-size:clamp(9px,0.6vw,13px);font-weight:700;padding:1px clamp(4px,0.4vw,8px);border-radius:8px;background:transparent;color:${color};border:2px dashed ${color}77;min-width:clamp(16px,1.2vw,22px);text-align:center;">${ptrCount}</span>
+          <span class="leg-ptr-cnt" data-lane="${name}" style="display:none;font-size:clamp(9px,0.6vw,13px);font-weight:700;padding:1px clamp(4px,0.4vw,8px);border-radius:8px;background:transparent;color:${color};border:2px dashed ${color}77;min-width:clamp(16px,1.2vw,22px);text-align:center;">0</span>
         </div>`;
       }).join('')}
     </div>
@@ -2914,6 +2918,11 @@ partnerVessels.forEach(v => {
     if (services.includes(v.service)) partnerLaneCount[name]++;
   });
 });
+// Update the legend DOM with actual partner counts (legend was rendered with zeros)
+document.querySelectorAll('.leg-ptr-cnt[data-lane]').forEach(el => {
+  const count = partnerLaneCount[el.dataset.lane];
+  if (count !== undefined) el.textContent = count;
+});
 
 // ── PARTNER POPUP ─────────────────────────────────────────────
 function buildPartnerPopup(v) {
@@ -2928,7 +2937,9 @@ function buildPartnerPopup(v) {
   let laneName = '';
   Object.entries(tradeLanes).forEach(([n,{services}])=>{ if(services.includes(v.service)) laneName=n; });
   const logoKey = (v.fleet||'').toLowerCase();
-  const logoSrc = logoKey ? 'logos/'+logoKey+'-logo.png' : '';
+  const svgFleets = ['cmacgm','evergreen','nyk'];
+  const logoExt = svgFleets.includes(logoKey) ? 'svg' : 'png';
+  const logoSrc = logoKey ? 'logos/'+logoKey+'-logo.'+logoExt : '';
   return `
   <div class="vessel-popup" style="box-shadow:0 16px 48px rgba(0,0,0,0.7),0 0 24px rgba(${laneRgb},0.2),inset 0 1px 0 rgba(255,255,255,0.07);">
     <div class="popup-header" style="background:linear-gradient(135deg,rgba(${laneRgb},0.35),rgba(${laneRgb},0.12));">
@@ -3001,10 +3012,11 @@ window.setFleet = function(mode) {
   document.getElementById('fleetBtnPIL').classList.toggle('ft-active', !showPartners);
   document.getElementById('fleetBtnAll').classList.toggle('ft-active',  showPartners);
 
-  // Show/hide partner count badges in legend
-  document.querySelectorAll('.leg-ptr-cnt').forEach(el => {
-    el.style.display = showPartners ? 'inline-block' : 'none';
-  });
+  // Show/hide partner count badges + header in legend
+  const ptrDisplay = showPartners ? 'inline-block' : 'none';
+  document.querySelectorAll('.leg-ptr-cnt').forEach(el => { el.style.display = ptrDisplay; });
+  const hdr = document.getElementById('leg-hdr-ptr');
+  if (hdr) hdr.style.display = ptrDisplay;
 
   // Build active services from current trade lane filter
   const activeServices = pilActiveFilters.size > 0
