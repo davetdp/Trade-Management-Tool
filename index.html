@@ -139,6 +139,39 @@
     .sidebar-item:hover { color: var(--text); background: rgba(0,180,255,0.08); }
     .sidebar-item.active { color: var(--accent); background: rgba(0,180,255,0.12); box-shadow: inset 0 0 0 1px rgba(0,180,255,0.2); }
     .sidebar-icon { width: 16px; height: 16px; opacity: 0.8; }
+    /* sidebar scrollable so Map Layers content doesn't overflow */
+    .sidebar { overflow-y: auto; padding-bottom: 72px; }
+    /* ── MAP LAYERS SECTIONS ── */
+    .ml-sep { margin: 8px 16px 2px; border: none; border-top: 1px solid rgba(0,180,255,0.1); }
+    .ml-hdr {
+      display: flex; align-items: center; gap: 9px;
+      padding: 7px 16px; cursor: pointer; user-select: none;
+      font-size: 11px; font-weight: 600; color: #6a8aaa;
+      transition: color 0.15s, background 0.15s;
+    }
+    .ml-hdr:hover { color: #c0d8f0; background: rgba(0,180,255,0.06); }
+    .ml-hdr .ml-icon { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.75; }
+    .ml-hdr .ml-chev { margin-left: auto; font-size: 9px; transition: transform 0.2s; }
+    .ml-body { padding: 0 10px 8px 14px; }
+    /* Risk overlay toggle button */
+    .ml-risk-toggle {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; margin-bottom: 8px;
+      cursor: pointer; border-radius: 8px;
+      font-size: 10px; font-weight: 600; color: #6a8aaa;
+      border: 1px solid rgba(0,180,255,0.15);
+      background: rgba(0,180,255,0.05);
+      transition: all 0.15s; user-select: none;
+    }
+    .ml-risk-toggle:hover { color: #c0d8f0; background: rgba(0,180,255,0.1); border-color: rgba(0,180,255,0.28); }
+    .ml-risk-toggle svg { width: 12px; height: 12px; flex-shrink: 0; }
+    .ml-risk-toggle.active { color: #f09050; background: rgba(240,130,50,0.12); border-color: rgba(240,130,50,0.4); }
+    .ml-risk-toggle.active-filtered { color: #ef4444; background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.4); }
+    .ml-risk-toggle.loading { opacity: 0.55; pointer-events: none; }
+    .ml-risk-toggle.loading svg { animation: riskSpin 0.9s linear infinite; }
+    /* trade lane rows inside sidebar — compact sizing */
+    .ml-body .leg-lane-row { padding: 3px 4px !important; margin-bottom: 1px !important; border-radius: 7px !important; }
+    .ml-body .leg-lane-row span:nth-child(2) { font-size: 11px !important; }
 
     /* ── KPI STRIP ── */
     .kpi-strip {
@@ -1039,6 +1072,47 @@
     Voyage Reports
   </div>
 
+  <!-- ── MAP LAYERS ── -->
+  <hr class="ml-sep">
+  <div class="sidebar-section" style="margin-top:4px;">Map Layers</div>
+
+  <!-- Trade Lanes -->
+  <div class="ml-section">
+    <div class="ml-hdr" onclick="mlToggle('mlTradeBody',this)">
+      <svg class="ml-icon" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z"/><rect x="13" y="14" width="10" height="9" rx="2" opacity="0.9"/><rect x="15" y="11" width="6" height="5" rx="1.5"/><rect x="17.5" y="8" width="2" height="5" rx="1" opacity="0.8"/><path d="M28 22 L32 24 L25 27 Z" opacity="0.7"/></svg>
+      <span>Trade Lanes</span>
+      <span class="ml-chev">▲</span>
+    </div>
+    <div id="mlTradeBody" class="ml-body"><!-- populated by initMapLayers() --></div>
+  </div>
+
+  <!-- Fleet View -->
+  <div class="ml-section">
+    <div class="ml-hdr" onclick="mlToggle('mlFleetBody',this)">
+      <svg class="ml-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 20h20M5 20V10l7-6 7 6v10"/></svg>
+      <span>Fleet View</span>
+      <span class="ml-chev" style="transform:rotate(-90deg)">▲</span>
+    </div>
+    <div id="mlFleetBody" class="ml-body" style="display:none;"><!-- populated by initMapLayers() --></div>
+  </div>
+
+  <!-- Safety & Risk -->
+  <div class="ml-section">
+    <div class="ml-hdr" onclick="mlToggle('mlRiskBody',this)">
+      <svg class="ml-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M8 1.5 L13.5 4.2 L13.5 8.8 C13.5 11.8 11 13.8 8 14.8 C5 13.8 2.5 11.8 2.5 8.8 L2.5 4.2 Z"/><path d="M5.5 8.2 L7.1 9.8 L10.5 6.4"/></svg>
+      <span>Safety &amp; Risk</span>
+      <span class="ml-chev" style="transform:rotate(-90deg)">▲</span>
+    </div>
+    <div id="mlRiskBody" class="ml-body" style="display:none;">
+      <div id="riskToggle" class="ml-risk-toggle" onclick="toggleRiskOverlay()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M8 1.5 L13.5 4.2 L13.5 8.8 C13.5 11.8 11 13.8 8 14.8 C5 13.8 2.5 11.8 2.5 8.8 L2.5 4.2 Z"/><path d="M5.5 8.2 L7.1 9.8 L10.5 6.4"/></svg>
+        <span id="mlRiskLabel">Overlay: Off</span>
+        <span class="risk-state-badge" id="riskBadge" style="position:static;width:auto;height:auto;border-radius:10px;padding:1px 5px;"></span>
+      </div>
+      <div id="mlRiskLegend"></div>
+    </div>
+  </div>
+
   <div style="position:fixed; bottom:0; left:0; width:220px; height:62px; border-top:1px solid rgba(0,180,255,0.1); display:flex; align-items:center; padding:0 16px; background:linear-gradient(180deg,rgba(7,16,36,0.97),rgba(5,13,26,0.98));">
     <div style="font-size:10px; color:#ffffff; line-height:1.5; opacity:0.7;">Developed by<br><span style="font-weight:700;">Trade Development and Planning</span></div>
   </div>
@@ -1453,7 +1527,7 @@ function setMapMode(mode) {
   // Update legend dots in the hover panel to match new mode
   const toggle = document.getElementById('riskToggle');
   if (toggle) {
-    const dots = toggle.querySelectorAll('.rl-dot');
+    const dots = document.querySelectorAll('.rl-dot');
     const scores = [6,5,4,3,2,1];
     dots.forEach(function(dot, i) {
       dot.style.background = isDark ? RISK_LEVELS[scores[i]].colorDark : RISK_LEVELS[scores[i]].color;
@@ -2537,58 +2611,7 @@ vessels.forEach(v => {
 const partnerLaneCount = {};
 Object.keys(tradeLanes).forEach(k => partnerLaneCount[k] = 0);
 
-const legendEl = L.control({ position: 'bottomright' });
-legendEl.onAdd = function () {
-  const div = L.DomUtil.create('div');
-  div.style.cssText = `
-    background: rgba(8,20,45,0.55); border: 1px solid rgba(0,180,255,0.18);
-    border-radius: clamp(10px,0.9vw,18px); padding: clamp(8px,0.6vw,14px) clamp(10px,0.8vw,18px);
-    font-family: 'Inter', sans-serif;
-    backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
-    min-width: clamp(190px,15vw,300px); margin-bottom: 8px;
-  `;
-  div.innerHTML = `
-    <div onclick="(function(el){var items=document.getElementById('legendItems');var chev=el.querySelector('.leg-chev');var collapsed=items.style.display==='none';items.style.display=collapsed?'block':'none';chev.style.transform=collapsed?'rotate(0deg)':'rotate(-90deg)';})(this)"
-         style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:clamp(6px,0.5vw,10px);">
-      <span style="font-size:clamp(9px,0.55vw,12px);font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;">Trade Lanes</span>
-      <span class="leg-chev" style="color:#6a8aaa;font-size:clamp(9px,0.55vw,12px);transition:transform 0.2s;transform:rotate(0deg);margin-left:8px;">&#9650;</span>
-    </div>
-    <div id="legendItems">
-      <div style="display:flex;align-items:center;gap:clamp(6px,0.45vw,10px);margin-bottom:4px;padding:0 clamp(3px,0.25vw,6px);">
-        <span style="flex:1;"></span>
-        <span style="font-size:clamp(7px,0.5vw,10px);font-weight:700;color:#6a8aaa;text-align:center;min-width:clamp(16px,1.2vw,22px);letter-spacing:0.5px;">PIL</span>
-        <span id="leg-hdr-ptr" style="display:none;font-size:clamp(7px,0.5vw,10px);font-weight:700;color:#6a8aaa;text-align:center;min-width:clamp(16px,1.2vw,22px);letter-spacing:0.5px;">PTR</span>
-      </div>
-      ${Object.entries(tradeLanes).map(([name, { color }]) => {
-        const pilCount = laneVesselCount[name] || 0;
-        return `
-        <div class="leg-lane-row" data-lane="${name}" data-color="${color}"
-             onclick="window.pilFilter('${name}')"
-             onmouseenter="legRowHover(this,true)"
-             onmouseleave="legRowHover(this,false)"
-             style="display:flex;align-items:center;gap:clamp(6px,0.45vw,10px);margin-bottom:clamp(2px,0.2vw,5px);cursor:pointer;padding:clamp(2px,0.2vw,5px) clamp(3px,0.25vw,6px);border-radius:8px;transition:opacity 0.2s,background 0.2s,box-shadow 0.2s;">
-          <svg width="clamp(12px,1vw,18px)" height="clamp(12px,1vw,18px)" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;width:clamp(12px,1vw,18px);height:clamp(12px,1vw,18px);">
-            <path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="${color}"/>
-            <rect x="13" y="14" width="10" height="9" rx="2" fill="${color}" opacity="0.9"/>
-            <rect x="15" y="11" width="6" height="5" rx="1.5" fill="${color}"/>
-            <rect x="17.5" y="8" width="2" height="5" rx="1" fill="${color}" opacity="0.8"/>
-            <path d="M28 22 L32 24 L25 27 Z" fill="${color}" opacity="0.7"/>
-          </svg>
-          <span style="font-size:clamp(10px,0.7vw,14px);color:#e8f4ff;flex:1;">${name}</span>
-          <span style="font-size:clamp(9px,0.6vw,13px);font-weight:700;padding:1px clamp(4px,0.4vw,8px);border-radius:8px;background:${color}22;color:${color};border:1px solid ${color}55;min-width:clamp(16px,1.2vw,22px);text-align:center;">${pilCount}</span>
-          <span class="leg-ptr-cnt" data-lane="${name}" style="display:none;font-size:clamp(9px,0.6vw,13px);font-weight:700;padding:1px clamp(4px,0.4vw,8px);border-radius:8px;background:transparent;color:${color};border:2px dashed ${color}77;min-width:clamp(16px,1.2vw,22px);text-align:center;">0</span>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
-  L.DomEvent.disableClickPropagation(div);
-  return div;
-};
-legendEl.addTo(map);
-
-// ── FLEET FILTER PANEL (separate, above trade lane legend) ────
-// Partner display names (alphabetical order)
+// ── PARTNER DISPLAY NAMES (alphabetical) ────────────────────
 const PARTNER_DISPLAY = [
   { fleet:'CMACGM',    label:'CMA CGM'   },
   { fleet:'Evergreen', label:'Evergreen' },
@@ -2598,46 +2621,6 @@ const PARTNER_DISPLAY = [
   { fleet:'WanHai',    label:'Wan Hai'   },
   { fleet:'YangMing',  label:'Yang Ming' },
 ];
-
-const fleetPanelEl = L.control({ position: 'bottomright' });
-fleetPanelEl.onAdd = function () {
-  const div = L.DomUtil.create('div');
-  div.style.cssText = `
-    background: rgba(8,20,45,0.55); border: 1px solid rgba(0,180,255,0.18);
-    border-radius: clamp(10px,0.9vw,18px); padding: clamp(7px,0.5vw,12px) clamp(10px,0.8vw,18px);
-    font-family: 'Inter', sans-serif;
-    backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
-    min-width: clamp(190px,15vw,300px); margin-bottom: 6px;
-  `;
-  div.innerHTML = `
-    <div onclick="(function(el){var items=document.getElementById('fleetItems');var chev=el.querySelector('.fleet-chev');var collapsed=items.style.display==='none';items.style.display=collapsed?'block':'none';chev.style.transform=collapsed?'rotate(0deg)':'rotate(-90deg)';})(this)"
-         style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:clamp(6px,0.5vw,10px);">
-      <span style="font-size:clamp(9px,0.55vw,12px);font-weight:700;color:#6a8aaa;text-transform:uppercase;letter-spacing:1px;">Fleet View</span>
-      <span class="fleet-chev" style="color:#6a8aaa;font-size:clamp(9px,0.55vw,12px);transition:transform 0.2s;transform:rotate(0deg);margin-left:8px;">&#9650;</span>
-    </div>
-    <div id="fleetItems">
-      <label class="fleet-chk-row">
-        <input type="checkbox" id="chk-pil" checked onchange="window.onPilCheck(this)">
-        <span class="fleet-chk-label">PIL</span>
-      </label>
-      <label class="fleet-chk-row" style="margin-top:4px;">
-        <input type="checkbox" id="chk-partner" onchange="window.onPartnerMasterCheck(this)">
-        <span class="fleet-chk-label">Partner</span>
-      </label>
-      <div id="fleetPartnerList" style="display:none;" class="fleet-partner-list">
-        ${PARTNER_DISPLAY.map(p => `
-        <label class="fleet-chk-row">
-          <input type="checkbox" class="chk-partner-item" data-fleet="${p.fleet}" checked onchange="window.onPartnerItemCheck(this)">
-          <span class="fleet-chk-label">${p.label}</span>
-        </label>`).join('')}
-      </div>
-    </div>
-  `;
-  L.DomEvent.disableClickPropagation(div);
-  return div;
-};
-fleetPanelEl.addTo(map);
 
 // ── RENDER VESSELS ───────────────────────────────────────────
 
@@ -3964,55 +3947,13 @@ let riskLayerLoaded = false;
 // 0 = off  |  1 = critical + severe only  |  2 = all levels
 let riskOverlayState = 0;
 
-// Shield icon SVG (used in the Leaflet control button)
-const RISK_ICON_SVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
-  stroke-linejoin="round" stroke-linecap="round">
-  <path d="M8 1.5 L13.5 4.2 L13.5 8.8 C13.5 11.8 11 13.8 8 14.8 C5 13.8 2.5 11.8 2.5 8.8 L2.5 4.2 Z"/>
-  <path d="M5.5 8.2 L7.1 9.8 L10.5 6.4"/>
-</svg>`;
-
 // Build the legend rows HTML from RISK_LEVELS (Critical → Negligible order)
-// Uses colorDark by default since dark map is the default mode
 function _riskLegendRowsHtml(useDark) {
   return [6,5,4,3,2,1].map(function(s) {
     const c = useDark ? RISK_LEVELS[s].colorDark : RISK_LEVELS[s].color;
-    return `<div class="risk-legend-row">
-    <span class="rl-dot" style="background:${c}"></span>
-    <span class="rl-name">${RISK_LEVELS[s].label}</span>
-    <span class="rl-num">${s}</span>
-  </div>`;
+    return '<div class="risk-legend-row"><span class="rl-dot" style="background:'+c+'"></span><span class="rl-name">'+RISK_LEVELS[s].label+'</span><span class="rl-num">'+s+'</span></div>';
   }).join('');
 }
-const _riskLegendHtml = _riskLegendRowsHtml(true); // dark is default at startup
-
-// ── Leaflet custom control — renders in topright, stacks below zoom ──
-// Uses leaflet-bar wrapper so width/height automatically matches the zoom control
-// (incl. touch-device overrides: .leaflet-touch .leaflet-bar a → 30×30)
-const RiskControl = L.Control.extend({
-  options: { position: 'topright' },
-  onAdd: function() {
-    const bar = L.DomUtil.create('div', 'leaflet-bar risk-ctrl-bar');
-    const btn = L.DomUtil.create('a', 'risk-ctrl-btn', bar);
-    btn.id = 'riskToggle';
-    btn.href = '#';
-    btn.setAttribute('role', 'button');
-    btn.innerHTML = RISK_ICON_SVG +
-      `<span class="risk-state-badge" id="riskBadge"></span>` +
-      `<div class="risk-panel-tip">
-         <div class="risk-panel-title">Safety &amp; Risk Indicator</div>
-         ${_riskLegendHtml}
-       </div>`;
-    L.DomEvent.on(btn, 'click', function(e) {
-      L.DomEvent.stopPropagation(e);
-      L.DomEvent.preventDefault(e);
-      toggleRiskOverlay();
-    });
-    L.DomEvent.disableClickPropagation(bar);
-    L.DomEvent.disableScrollPropagation(bar);
-    return bar;
-  }
-});
-new RiskControl().addTo(map);
 
 function _riskScore(geoName) {
   if (RISK_DATA[geoName] !== undefined) return RISK_DATA[geoName];
@@ -4066,14 +4007,19 @@ function _buildRiskLayer(geojson) {
 function _applyRiskState() {
   const btn   = document.getElementById('riskToggle');
   const badge = document.getElementById('riskBadge');
-  // Update button classes
+  // Update button classes and label
   btn.classList.remove('active', 'active-filtered');
+  const lbl = document.getElementById('mlRiskLabel');
   if (riskOverlayState === 1) {
     btn.classList.add('active-filtered');
     if (badge) badge.textContent = '!';
+    if (lbl) lbl.textContent = 'Critical & Severe';
   } else if (riskOverlayState === 2) {
     btn.classList.add('active');
     if (badge) badge.textContent = '●';
+    if (lbl) lbl.textContent = 'All Levels';
+  } else {
+    if (lbl) lbl.textContent = 'Overlay: Off';
   }
   // Refresh layer visibility / style
   if (riskOverlayState === 0) {
@@ -4124,6 +4070,69 @@ function updatePortVisibility() {
 
 map.on('zoomend', updatePortVisibility);
 updatePortVisibility(); // run once on load
+
+// ── MAP LAYERS SIDEBAR POPULATION ────────────────────────────
+function initMapLayers() {
+  // Trade Lanes
+  const tradeBody = document.getElementById('mlTradeBody');
+  if (tradeBody) {
+    tradeBody.innerHTML =
+      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;padding:0 2px;">' +
+        '<span style="flex:1;"></span>' +
+        '<span style="font-size:9px;font-weight:700;color:#6a8aaa;text-align:center;min-width:20px;letter-spacing:0.5px;">PIL</span>' +
+        '<span id="leg-hdr-ptr" style="display:none;font-size:9px;font-weight:700;color:#6a8aaa;text-align:center;min-width:20px;letter-spacing:0.5px;">PTR</span>' +
+      '</div>' +
+      Object.entries(tradeLanes).map(function([name, d]) {
+        const c = d.color, n = laneVesselCount[name] || 0;
+        return '<div class="leg-lane-row" data-lane="'+name+'" data-color="'+c+'"' +
+          ' onclick="window.pilFilter(\''+name+'\')"' +
+          ' onmouseenter="legRowHover(this,true)" onmouseleave="legRowHover(this,false)"' +
+          ' style="display:flex;align-items:center;gap:7px;margin-bottom:2px;cursor:pointer;padding:3px 4px;border-radius:7px;transition:opacity 0.2s,background 0.2s,box-shadow 0.2s;">' +
+          '<svg width="13" height="13" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">' +
+            '<path d="M8 22 Q18 20 28 22 L25 27 Q18 29 11 27 Z" fill="'+c+'"/>' +
+            '<rect x="13" y="14" width="10" height="9" rx="2" fill="'+c+'" opacity="0.9"/>' +
+            '<rect x="15" y="11" width="6" height="5" rx="1.5" fill="'+c+'"/>' +
+            '<rect x="17.5" y="8" width="2" height="5" rx="1" fill="'+c+'" opacity="0.8"/>' +
+            '<path d="M28 22 L32 24 L25 27 Z" fill="'+c+'" opacity="0.7"/>' +
+          '</svg>' +
+          '<span style="font-size:11px;color:#e8f4ff;flex:1;">'+name+'</span>' +
+          '<span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;background:'+c+'22;color:'+c+';border:1px solid '+c+'55;min-width:20px;text-align:center;">'+n+'</span>' +
+          '<span class="leg-ptr-cnt" data-lane="'+name+'" style="display:none;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;background:transparent;color:'+c+';border:2px dashed '+c+'77;min-width:20px;text-align:center;">0</span>' +
+        '</div>';
+      }).join('');
+  }
+  // Fleet View
+  const fleetBody = document.getElementById('mlFleetBody');
+  if (fleetBody) {
+    fleetBody.innerHTML =
+      '<div id="fleetItems">' +
+        '<label class="fleet-chk-row"><input type="checkbox" id="chk-pil" checked onchange="window.onPilCheck(this)"><span class="fleet-chk-label">PIL</span></label>' +
+        '<label class="fleet-chk-row" style="margin-top:4px;"><input type="checkbox" id="chk-partner" onchange="window.onPartnerMasterCheck(this)"><span class="fleet-chk-label">Partner</span></label>' +
+        '<div id="fleetPartnerList" style="display:none;" class="fleet-partner-list">' +
+          PARTNER_DISPLAY.map(function(p) {
+            return '<label class="fleet-chk-row"><input type="checkbox" class="chk-partner-item" data-fleet="'+p.fleet+'" checked onchange="window.onPartnerItemCheck(this)"><span class="fleet-chk-label">'+p.label+'</span></label>';
+          }).join('') +
+        '</div>' +
+      '</div>';
+  }
+  // Safety & Risk legend
+  const riskLegend = document.getElementById('mlRiskLegend');
+  if (riskLegend) {
+    riskLegend.innerHTML = _riskLegendRowsHtml(true);
+  }
+}
+
+// Sidebar section expand/collapse
+window.mlToggle = function(bodyId, hdrEl) {
+  const body = document.getElementById(bodyId);
+  if (!body) return;
+  const chev = hdrEl.querySelector('.ml-chev');
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : '';
+  if (chev) chev.style.transform = open ? 'rotate(-90deg)' : 'rotate(0deg)';
+};
+
+initMapLayers();
 
 // Ensure tile layer renders correctly after all controls are added
 setTimeout(() => { map.invalidateSize(); activeTileLayer.redraw(); }, 400);
