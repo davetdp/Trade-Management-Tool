@@ -2900,6 +2900,7 @@ const partnerVessels = [
     speed:'12.5 kts', heading:'E',  navState:'Under way',
     nextPort:'Puerto Quetzal', status:'On route to Puerto Quetzal',
     badgeClass:'badge-transit', eta:'29 Apr 2026', flag:'🇱🇷', teu:5551, built:2000,
+    lastPort:'Lázaro Cárdenas',
     route:'Ningbo → Shanghai → Qingdao → Busan → Ensenada → Manzanillo → Lázaro Cárdenas → Puerto Quetzal → Buenaventura → Callao → San Antonio',
     // Coastal Pacific route hugging Guatemala coastline — stays well offshore
     routeCoords:[[14.8682,-95.1491],[14.5,-93.5],[14.1,-92.2],[13.9153,-90.7910]] },
@@ -2907,6 +2908,7 @@ const partnerVessels = [
     speed:'15.4 kts', heading:'E',  navState:'Under way',
     nextPort:'Ensenada', status:'On route to Ensenada',
     badgeClass:'badge-transit', eta:'12 May 2026', flag:'🇱🇷', teu:5608, built:2001,
+    lastPort:'Qingdao',
     route:'Ningbo → Shanghai → Qingdao → Busan → Ensenada → Manzanillo → Lázaro Cárdenas → Puerto Quetzal → Buenaventura → Callao → San Antonio',
     // Trans-Pacific eastward via great circle — longitudes >180 force correct eastward rendering past antimeridian
     routeCoords:[[32.4067,137.9321],[38,150],[44,170],[48,195],[44,218],[38,235],[32,243],[31.8583,243.4]] },
@@ -2915,6 +2917,7 @@ const partnerVessels = [
     speed:'18.8 kts', heading:'SW', navState:'Under way',
     nextPort:'Rio de Janeiro', status:'On route to Rio de Janeiro',
     badgeClass:'badge-transit', eta:'13 May 2026', flag:'🇲🇹', teu:9448, built:2015,
+    lastPort:'Singapore',
     route:'Shanghai → Ningbo → Yantian → Hong Kong → Singapore → Rio de Janeiro → Santos → Navegantes → Montevideo → Buenos Aires → Paranaguá → Santos → Singapore → Hong Kong → Shanghai',
     // Indian Ocean → south around Cape of Good Hope → across South Atlantic to Brazil
     routeCoords:[[-8.4401,74.3175],[-18,62],[-28,48],[-35,32],[-40,22],[-38,12],[-32,2],[-26,-14],[-22.9068,-43.1729]] },
@@ -2922,12 +2925,14 @@ const partnerVessels = [
     speed:'0.1 kts',  heading:'SW', navState:'Anchored',
     nextPort:'Santos', status:'Anchored at Santos',
     badgeClass:'badge-loading', eta:'27 Apr 2026', flag:'🇸🇬', teu:12118, built:2020,
+    lastPort:'Paranaguá',
     route:'Shanghai → Ningbo → Yantian → Hong Kong → Singapore → Rio de Janeiro → Santos → Navegantes → Montevideo → Buenos Aires → Paranaguá → Santos → Singapore → Hong Kong → Shanghai' },
   // KCS — Intra Asia
   { name:'NYK ISABEL',          fleet:'NYK',       service:'KCS', position:[23.5864,117.9444],
     speed:'16.1 kts', heading:'SW', navState:'Under way',
     nextPort:'Singapore', status:'On route to Singapore',
     badgeClass:'badge-transit', eta:'02 Apr 2026', flag:'🇸🇬', teu:2664, built:2008,
+    lastPort:'Qingdao',
     route:'Busan → Incheon → Qingdao → Shanghai → Singapore → Port Klang → Ho Chi Minh City → Shekou → Busan',
     // South China Sea route — stays in open water west of Philippines
     routeCoords:[[23.5864,117.9444],[20,115.5],[16,113],[12,111],[8,109.5],[4,107.5],[1.2897,103.8501]] },
@@ -2935,6 +2940,7 @@ const partnerVessels = [
     speed:'14.3 kts', heading:'NE', navState:'Under way',
     nextPort:'Ho Chi Minh City', status:'On route to Ho Chi Minh City',
     badgeClass:'badge-transit', eta:'29 Apr 2026', flag:'🇵🇦', teu:2806, built:2018,
+    lastPort:'Port Klang',
     route:'Busan → Incheon → Qingdao → Shanghai → Singapore → Port Klang → Ho Chi Minh City → Shekou → Busan',
     // Short northward route along Vietnam coast — slight offshore curve
     routeCoords:[[5.4120,106.6901],[7.5,107.2],[9.5,107.4],[10.7769,106.7009]] },
@@ -2959,6 +2965,30 @@ document.querySelectorAll('.leg-ptr-cnt[data-lane]').forEach(el => {
 });
 
 // ── PARTNER POPUP ─────────────────────────────────────────────
+// Returns a full-cycle port array starting from nextPort.
+// Uses lastPort to disambiguate routes with the same port appearing twice
+// (e.g. Santos appears twice in ES1 — lastPort=Paranaguá resolves to the 2nd Santos).
+function _boundRoute(routeStr, lastPort, nextPort) {
+  const allPorts = routeStr.split(' → ');
+  // Circular routes repeat the origin at the end — deduplicate before wrapping
+  const ports = (allPorts[0] === allPorts[allPorts.length - 1])
+    ? allPorts.slice(0, -1)
+    : allPorts;
+  const n = ports.length;
+  // Locate lastPort so we can search for nextPort *after* it
+  let lastIdx = lastPort ? ports.indexOf(lastPort) : -1;
+  // Find nextPort starting from after lastPort (disambiguation)
+  let nextIdx = -1;
+  for (let i = lastIdx + 1; i < n; i++) {
+    if (ports[i] === nextPort) { nextIdx = i; break; }
+  }
+  // Fallback: search from the start if not found after lastPort
+  if (nextIdx === -1) nextIdx = ports.indexOf(nextPort);
+  if (nextIdx === -1) return ports; // nextPort not in route at all
+  // Return one full rotation starting from nextPort
+  return [...ports.slice(nextIdx), ...ports.slice(0, nextIdx)];
+}
+
 function buildPartnerPopup(v) {
   const laneColor = serviceColor[v.service] || '#00b4ff';
   function _h2r(hex) {
@@ -2979,9 +3009,18 @@ function buildPartnerPopup(v) {
   const svgFleets = ['evergreen','nyk'];
   const logoExt = svgFleets.includes(logoKey) ? 'svg' : 'png';
   const logoSrc = logoKey ? 'logos/'+logoKey+'-logo.'+logoExt : '';
-  const routeHtml = v.route
-    ? v.route.replace(v.nextPort, '<strong style="color:#fff;font-weight:700;">'+v.nextPort+'</strong>')
-    : '→ <strong style="color:#fff;font-weight:700;">'+v.nextPort+'</strong>';
+  // Build bound-aware rotation: full cycle from nextPort, with nextPort bolded
+  let routeHtml;
+  if (v.route) {
+    const boundPorts = _boundRoute(v.route, v.lastPort || null, v.nextPort);
+    routeHtml = boundPorts.map(function(p, i) {
+      return i === 0
+        ? '<strong style="color:#fff;font-weight:700;">' + p + '</strong>'
+        : p;
+    }).join(' → ');
+  } else {
+    routeHtml = '→ <strong style="color:#fff;font-weight:700;">' + v.nextPort + '</strong>';
+  }
   return `
   <div class="vessel-popup" style="box-shadow:0 16px 48px rgba(0,0,0,0.7),0 0 24px rgba(${laneRgb},0.2),inset 0 1px 0 rgba(255,255,255,0.07);">
     <div class="popup-header" style="background:linear-gradient(135deg,rgba(${laneRgb},0.35),rgba(${laneRgb},0.12));">
