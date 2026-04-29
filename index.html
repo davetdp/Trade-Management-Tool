@@ -2270,11 +2270,13 @@ function buildPopup(v, laneColor) {
             </svg>
             <div class="popup-vessel-name">${v.name}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;margin:2px 0 2px;">
+          <div style="margin:2px 0 2px;">
             <span style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</span>
-            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(0,180,255,0.15);color:var(--accent);border:1px solid rgba(0,180,255,0.3);letter-spacing:0.5px;">${v.service}</span>
           </div>
-          ${!v.isDryDock ? `<div style="margin:0;"><span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;letter-spacing:0.5px;${v.leg==='Backhaul'?'background:rgba(255,184,48,0.15);color:#ffb830;border:1px solid rgba(255,184,48,0.3);':'background:rgba(0,229,160,0.15);color:#00e5a0;border:1px solid rgba(0,229,160,0.3);'}">${v.leg==='Backhaul'?'BH':'HH'}</span></div>` : ''}
+          <div style="display:flex;align-items:center;gap:6px;margin:0;">
+            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(0,180,255,0.15);color:var(--accent);border:1px solid rgba(0,180,255,0.3);letter-spacing:0.5px;">${v.service}</span>
+            ${!v.isDryDock ? `<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;letter-spacing:0.5px;${v.leg==='Backhaul'?'background:rgba(255,184,48,0.15);color:#ffb830;border:1px solid rgba(255,184,48,0.3);':'background:rgba(0,229,160,0.15);color:#00e5a0;border:1px solid rgba(0,229,160,0.3);'}">${v.leg==='Backhaul'?'BH':'HH'}</span>` : ''}
+          </div>
         </div>
         <span class="popup-badge ${v.badgeClass}" style="flex-shrink:0;margin-left:8px;">${v.status}</span>
       </div>
