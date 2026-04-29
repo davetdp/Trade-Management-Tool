@@ -3042,20 +3042,22 @@ function buildPartnerPopup(v) {
   }).join(' → ');
   return `
   <div class="vessel-popup" style="box-shadow:0 16px 48px rgba(0,0,0,0.7),0 0 24px rgba(${laneRgb},0.2),inset 0 1px 0 rgba(255,255,255,0.07);">
-    <div class="popup-header" style="background:linear-gradient(135deg,rgba(${laneRgb},0.35),rgba(${laneRgb},0.12));">
-      <div style="flex:1;min-width:0;">
-        <div style="margin-bottom:4px;">
-          ${logoSrc?`<img src="${logoSrc}" style="height:20px;width:auto;max-width:68px;object-fit:contain;display:block;margin-bottom:4px;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6));">`:``}
-          <div class="popup-vessel-name" style="font-size:13px;">${v.name}</div>
+    <div class="popup-header" style="background:linear-gradient(135deg,rgba(${laneRgb},0.35),rgba(${laneRgb},0.12));flex-direction:column;">
+      <div style="display:flex;align-items:flex-start;width:100%;">
+        <div style="flex:1;min-width:0;">
+          <div style="margin-bottom:4px;">
+            ${logoSrc?`<img src="${logoSrc}" style="height:20px;width:auto;max-width:68px;object-fit:contain;display:block;margin-bottom:4px;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6));">`:``}
+            <div class="popup-vessel-name" style="font-size:13px;">${v.name}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin:2px 0 0;">
+            <span style="font-size:10px;font-weight:700;color:rgba(${laneRgb},0.85);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.service}</span>
+            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(${laneRgb},0.15);color:${laneColor};border:1px solid rgba(${laneRgb},0.3);letter-spacing:0.5px;">${laneName}</span>
+            ${boundLabel ? `<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:${boundLabel==='BH'?'rgba(255,184,48,0.15)':'rgba(0,229,160,0.15)'};color:${boundLabel==='BH'?'#ffb830':'#00e5a0'};border:1px solid ${boundLabel==='BH'?'rgba(255,184,48,0.3)':'rgba(0,229,160,0.3)'};letter-spacing:0.5px;">${boundLabel}</span>` : ''}
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:6px;margin:2px 0 3px;">
-          <span style="font-size:10px;font-weight:700;color:rgba(${laneRgb},0.85);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.service}</span>
-          <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(${laneRgb},0.15);color:${laneColor};border:1px solid rgba(${laneRgb},0.3);letter-spacing:0.5px;">${laneName}</span>
-          ${boundLabel ? `<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:${boundLabel==='BH'?'rgba(255,184,48,0.15)':'rgba(0,229,160,0.15)'};color:${boundLabel==='BH'?'#ffb830':'#00e5a0'};border:1px solid ${boundLabel==='BH'?'rgba(255,184,48,0.3)':'rgba(0,229,160,0.3)'};letter-spacing:0.5px;">${boundLabel}</span>` : ''}
-        </div>
-        <div class="popup-route">${routeHtml}</div>
+        <span class="popup-badge ${v.badgeClass}" style="flex-shrink:0;margin-left:8px;">${badgeLbl}</span>
       </div>
-      <span class="popup-badge ${v.badgeClass}" style="flex-shrink:0;margin-left:8px;">${badgeLbl}</span>
+      <div class="popup-route" style="width:100%;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.07);">${routeHtml}</div>
     </div>
     <div class="popup-body">
       <div class="detail-table" style="margin-bottom:6px;">
