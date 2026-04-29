@@ -2254,29 +2254,31 @@ function buildPopup(v, laneColor) {
 
   return `
   <div class="vessel-popup" style="box-shadow:${popupBoxShadow};">
-    <div class="popup-header" style="background:${headerGradient};">
-      <div>
-        <div style="display:flex;align-items:center;gap:7px;margin-bottom:1px;">
-          <svg width="38" height="22" viewBox="0 0 52 30" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
-            <!-- Wave 1 -->
-            <path d="M1 5 Q4.5 2 8 5 Q11.5 8 15 5 L15 8.5 Q11.5 11.5 8 8.5 Q4.5 5.5 1 8.5 Z" fill="#1a6abf"/>
-            <!-- Wave 2 -->
-            <path d="M1 11.5 Q4.5 8.5 8 11.5 Q11.5 14.5 15 11.5 L15 15 Q11.5 18 8 15 Q4.5 12 1 15 Z" fill="#1a6abf"/>
-            <!-- Wave 3 -->
-            <path d="M1 18 Q4.5 15 8 18 Q11.5 21 15 18 L15 21.5 Q11.5 24.5 8 21.5 Q4.5 18.5 1 21.5 Z" fill="#1a6abf"/>
-            <!-- PIL text -->
-            <text x="18" y="23" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="19" fill="#cc1a1a" letter-spacing="0.5">PIL</text>
-          </svg>
-          <div class="popup-vessel-name">${v.name}</div>
+    <div class="popup-header" style="background:${headerGradient};flex-direction:column;">
+      <div style="display:flex;align-items:flex-start;width:100%;">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:1px;">
+            <svg width="38" height="22" viewBox="0 0 52 30" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+              <!-- Wave 1 -->
+              <path d="M1 5 Q4.5 2 8 5 Q11.5 8 15 5 L15 8.5 Q11.5 11.5 8 8.5 Q4.5 5.5 1 8.5 Z" fill="#1a6abf"/>
+              <!-- Wave 2 -->
+              <path d="M1 11.5 Q4.5 8.5 8 11.5 Q11.5 14.5 15 11.5 L15 15 Q11.5 18 8 15 Q4.5 12 1 15 Z" fill="#1a6abf"/>
+              <!-- Wave 3 -->
+              <path d="M1 18 Q4.5 15 8 18 Q11.5 21 15 18 L15 21.5 Q11.5 24.5 8 21.5 Q4.5 18.5 1 21.5 Z" fill="#1a6abf"/>
+              <!-- PIL text -->
+              <text x="18" y="23" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="19" fill="#cc1a1a" letter-spacing="0.5">PIL</text>
+            </svg>
+            <div class="popup-vessel-name">${v.name}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin:2px 0 0;">
+            <span style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</span>
+            <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(0,180,255,0.15);color:var(--accent);border:1px solid rgba(0,180,255,0.3);letter-spacing:0.5px;">${v.service}</span>
+            ${!v.isDryDock ? `<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;letter-spacing:0.5px;${v.leg==='Backhaul'?'background:rgba(255,184,48,0.15);color:#ffb830;border:1px solid rgba(255,184,48,0.3);':'background:rgba(0,229,160,0.15);color:#00e5a0;border:1px solid rgba(0,229,160,0.3);'}">${v.leg==='Backhaul'?'BH':'HH'}</span>` : ''}
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:6px;margin:2px 0 3px;">
-          <span style="font-size:10px;font-weight:700;color:rgba(0,180,255,0.75);letter-spacing:1.5px;font-family:'Space Grotesk',sans-serif;">${v.vvd}</span>
-          <span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(0,180,255,0.15);color:var(--accent);border:1px solid rgba(0,180,255,0.3);letter-spacing:0.5px;">${v.service}</span>
-          ${!v.isDryDock ? `<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;letter-spacing:0.5px;${v.leg==='Backhaul'?'background:rgba(255,184,48,0.15);color:#ffb830;border:1px solid rgba(255,184,48,0.3);':'background:rgba(0,229,160,0.15);color:#00e5a0;border:1px solid rgba(0,229,160,0.3);'}">${v.leg==='Backhaul'?'BH':'HH'}</span>` : ''}
-        </div>
-        <div class="popup-route">${v.route.replace(v.nextPort, `<strong style="color:#fff;font-weight:700;">${v.nextPort}</strong>`)}</div>
+        <span class="popup-badge ${v.badgeClass}">${v.status}</span>
       </div>
-      <span class="popup-badge ${v.badgeClass}">${v.status}</span>
+      <div class="popup-route" style="width:100%;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.07);">${v.route.replace(v.nextPort, `<strong style="color:#fff;font-weight:700;">${v.nextPort}</strong>`)}</div>
     </div>
     <div class="popup-body">
 
