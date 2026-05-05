@@ -2770,8 +2770,10 @@ window.pilFilter = function(laneName) {
   vesselMarkers.forEach(({ marker, pingMarker, v, baseColor }) => {
     const active = !activeServices || activeServices.includes(v.service);
     if (v.isDryDock) {
-      // Dim the PIL badge on dry-dock vessels when a filter is active
-      if (activeServices) marker.setIcon(shipIcon(baseColor, 'PIL', !active));
+      if (activeServices) {
+        const displayColor = active ? baseColor : '#2e3a4a';
+        marker.setIcon(shipIcon(displayColor, 'PIL', !active));
+      }
       return;
     }
     const displayColor = active ? baseColor : '#2e3a4a';
