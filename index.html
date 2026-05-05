@@ -2768,8 +2768,12 @@ window.pilFilter = function(laneName) {
     : null;
 
   vesselMarkers.forEach(({ marker, pingMarker, v, baseColor }) => {
-    if (v.isDryDock) return;
     const active = !activeServices || activeServices.includes(v.service);
+    if (v.isDryDock) {
+      // Dim the PIL badge on dry-dock vessels when a filter is active
+      if (activeServices) marker.setIcon(shipIcon(baseColor, 'PIL', !active));
+      return;
+    }
     const displayColor = active ? baseColor : '#2e3a4a';
     marker.setIcon(shipIcon(displayColor, 'PIL', !active));
     marker.setOpacity(pilVisible ? 1 : 0);
@@ -2827,8 +2831,8 @@ map.on('click', function() {
     window.pilFilter = window.pilFilter; // no-op, just trigger re-render below
     // Reset markers and legend
     vesselMarkers.forEach(({ marker, pingMarker, v, baseColor }) => {
+      marker.setIcon(shipIcon(baseColor));  // restores full-opacity badge for all incl. dry dock
       if (v.isDryDock) return;
-      marker.setIcon(shipIcon(baseColor));
       marker.setOpacity(pilVisible ? 1 : 0);
       const pingEl = pingMarker.getElement();
       if (pingEl) pingEl.style.opacity = pilVisible ? '1' : '0';
