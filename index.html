@@ -2166,10 +2166,10 @@ const FLEET_BADGES = {
 };
 
 let _shipIconSeq = 0;
-function shipIcon(color = '#00b4ff', fleet = 'PIL') {
+function shipIcon(color = '#00b4ff', fleet = 'PIL', dimmed = false) {
   const badgeSvg = FLEET_BADGES[fleet] || '';
   const badgeClass = (fleet && fleet !== 'PIL') ? 'vessel-fleet-badge partner-fleet-badge' : 'vessel-fleet-badge';
-  const badge = badgeSvg ? `<div class="${badgeClass}">${badgeSvg}</div>` : '';
+  const badge = badgeSvg ? `<div class="${badgeClass}" style="${dimmed ? 'opacity:0.2;' : ''}">${badgeSvg}</div>` : '';
   // Parse hex color to 0–1 fractions for SVG feColorMatrix
   // The vessel PNG is black (R=G=B=0) on transparent; the matrix replaces all
   // pixels with the target color while preserving the original alpha channel.
@@ -2575,7 +2575,7 @@ const tradeLanes = {
   'ECSA':                        { color: '#ec4899', services: ['ES1'] },
   'WCSA':                        { color: '#a78bfa', services: ['WSA','WS6'] },
   'Intra Asia':                  { color: '#00b4ff', services: ['CCS','KCS'] },
-  'Middle East & S. Asia':       { color: '#f97316', services: ['GCS','CSE','RGS'] },
+  'Middle East':                 { color: '#f97316', services: ['GCS','CSE','RGS'] },
   'Oceania':                     { color: '#00e5a0', services: ['AA2','NZS','ANA','MSP'] },
 };
 
@@ -2771,7 +2771,7 @@ window.pilFilter = function(laneName) {
     if (v.isDryDock) return;
     const active = !activeServices || activeServices.includes(v.service);
     const displayColor = active ? baseColor : '#2e3a4a';
-    marker.setIcon(shipIcon(displayColor));
+    marker.setIcon(shipIcon(displayColor, 'PIL', !active));
     marker.setOpacity(pilVisible ? 1 : 0);
     const pingEl = pingMarker.getElement();
     if (pingEl) pingEl.style.opacity = pilVisible ? (active ? '1' : '0.15') : '0';
