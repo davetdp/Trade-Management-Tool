@@ -17,11 +17,19 @@ TIMEOUT=300   # seconds to wait for the new production deployment to go Ready
 
 cd "$(dirname "$0")"
 
-# 1. Push to origin/main
+# 1. Push to origin/main. Capture output so we can detect a no-op push.
 echo "→ Pushing to origin/main…"
-if ! git push origin main; then
+PUSH_OUTPUT="$(git push origin main 2>&1)"
+PUSH_EXIT=$?
+echo "$PUSH_OUTPUT"
+if [[ $PUSH_EXIT -ne 0 ]]; then
   echo "✗ git push failed." >&2
   exit 1
+fi
+if [[ "$PUSH_OUTPUT" == *"Everything up-to-date"* ]]; then
+  echo "→ No new commits — nothing for Vercel to deploy."
+  echo "  Current alias: https://$ALIAS"
+  exit 0
 fi
 
 # 2. Remember which deployment the alias currently points at, so we can tell
