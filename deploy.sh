@@ -26,7 +26,7 @@ fi
 
 # 2. Remember which deployment the alias currently points at, so we can tell
 #    when a NEW one has been promoted past it.
-OLD_TARGET="$(vercel inspect "$ALIAS" 2>/dev/null \
+OLD_TARGET="$(vercel inspect "$ALIAS" 2>&1 \
   | awk '/^[[:space:]]*url[[:space:]]/ {print $2; exit}')"
 echo "→ Current alias target: ${OLD_TARGET:-<none>}"
 
@@ -36,7 +36,7 @@ START=$(date +%s)
 NEW_URL=""
 
 while true; do
-  TOP_LINE="$(vercel ls --prod 2>/dev/null \
+  TOP_LINE="$(vercel ls --prod 2>&1 \
     | grep -E 'https://[^ ]+\.vercel\.app' \
     | head -1 || true)"
   TOP_URL="$(echo "$TOP_LINE" | grep -oE 'https://[^ ]+' | head -1 || true)"
