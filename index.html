@@ -979,6 +979,116 @@
     }
 
     /* ─────────────────────────────────────────────────────────
+       BOOKING VELOCITY — vessel popup section
+       ───────────────────────────────────────────────────────── */
+    .bv-section { margin-top: 4px; }
+    .bv-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 8px; gap: 8px;
+    }
+    .bv-pace-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .bv-pace-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px; font-weight: 800;
+      letter-spacing: 0.3px; line-height: 1;
+      animation: bv-pulse 3.2s ease-in-out infinite;
+    }
+    @keyframes bv-pulse {
+      0%, 100% { text-shadow: 0 0 0 transparent; opacity: 1; }
+      50%      { text-shadow: 0 0 14px currentColor; opacity: 0.92; }
+    }
+    .bv-pace-sub {
+      font-size: 9px; color: var(--muted); letter-spacing: 0.4px;
+      margin-top: 3px; text-transform: uppercase; font-weight: 600;
+    }
+    .bv-status-pill {
+      font-size: 8.5px; font-weight: 800; letter-spacing: 0.8px;
+      padding: 2px 7px; border-radius: 10px; line-height: 1.6;
+    }
+    .bv-status-strong { background: rgba(0,229,160,0.15); color: #00e5a0; border: 1px solid rgba(0,229,160,0.35); }
+    .bv-status-track  { background: rgba(0,180,255,0.15); color: #5fdfff; border: 1px solid rgba(0,180,255,0.35); }
+    .bv-status-slow   { background: rgba(255,184,48,0.15); color: #ffb830; border: 1px solid rgba(255,184,48,0.35); }
+    .bv-status-risk   { background: rgba(255,77,106,0.15); color: #ff4d6a; border: 1px solid rgba(255,77,106,0.35); }
+
+    .bv-meta {
+      text-align: right; font-size: 9px; color: var(--muted); line-height: 1.5;
+      flex-shrink: 0;
+    }
+    .bv-meta b { color: #e8f4ff; font-weight: 700; }
+    .bv-meta-live { display: inline-flex; align-items: center; gap: 4px; }
+    .bv-meta-live::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: #00e5a0; box-shadow: 0 0 6px #00e5a0;
+      animation: pulse 2s infinite;
+    }
+
+    .bv-curve-wrap {
+      position: relative;
+      background: rgba(0,180,255,0.03);
+      border: 1px solid rgba(0,180,255,0.10);
+      border-radius: 6px;
+      padding: 5px 6px 4px;
+      margin-bottom: 7px;
+    }
+    .bv-curve-svg { display: block; width: 100%; height: 68px; }
+    .bv-curve-axis {
+      display: flex; justify-content: space-between;
+      font-size: 8px; color: var(--muted);
+      letter-spacing: 0.4px; margin-top: 1px;
+      padding: 0 2px;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+    }
+
+    .bv-forecast-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 10px; margin-bottom: 8px; padding: 0 2px;
+    }
+    .bv-fc-label { color: var(--muted); }
+    .bv-fc-val { font-weight: 700; }
+
+    .bv-pod-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 9px; }
+    .bv-pod-row {
+      display: grid;
+      grid-template-columns: 2fr 44px 1fr 34px;
+      gap: 5px; align-items: center;
+      font-size: 9.5px;
+    }
+    .bv-pod-name {
+      color: #e8f4ff; font-weight: 600;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      font-size: 9px;
+    }
+    .bv-pod-teu  { color: var(--muted); font-size: 8.5px; text-align: right; }
+    .bv-pod-bar  { height: 5px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .bv-pod-bar-fill { height: 100%; border-radius: 2px; transition: width .5s ease; }
+    .bv-pod-delta {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 9px; text-align: right;
+    }
+
+    .bv-action {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 7px 9px;
+      background: linear-gradient(135deg, rgba(0,180,255,0.10), rgba(0,180,255,0.04));
+      border: 1px solid rgba(0,180,255,0.22);
+      border-radius: 6px;
+      font-size: 10px; line-height: 1.4;
+    }
+    .bv-action-icon {
+      width: 18px; height: 18px; flex-shrink: 0;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 900;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .bv-action-text { color: #e8f4ff; }
+    .bv-action-text b { color: #5fdfff; font-weight: 700; }
+    .bv-action-text .bv-action-hd {
+      display: block; font-size: 9px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700;
+      margin-bottom: 1px;
+    }
+
+    /* ─────────────────────────────────────────────────────────
        AISHA — AI Sea Hawk Agent (floating chatbot)
        ───────────────────────────────────────────────────────── */
     .aisha-fab {
@@ -2609,14 +2719,15 @@ const VESSEL_SECTION_LABELS = {
   utilisation:  'Vessel Utilisation',
   cargoOnboard: 'Cargo Onboard',
   pricing:      'Pricing Breakdown',
+  velocity:     'Booking Velocity',
 };
 const VESSEL_SECTION_ORDER_PNL       = ['pnl','costs','details','utilisation'];
-const VESSEL_SECTION_ORDER_CARGOFLOW = ['utilisation','cargoOnboard','pricing'];
-const VESSEL_SECTION_FALLBACK        = ['pnl','costs','details','utilisation','cargoOnboard','pricing'];
+const VESSEL_SECTION_ORDER_CARGOFLOW = ['utilisation','velocity','cargoOnboard','pricing'];
+const VESSEL_SECTION_FALLBACK        = ['pnl','costs','details','utilisation','velocity','cargoOnboard','pricing'];
 
 const VESSEL_SECTION_DEFAULTS = {
-  pnl:       { pnl:true,  costs:true,  details:true,  utilisation:true, cargoOnboard:false, pricing:false },
-  cargoflow: { pnl:false, costs:false, details:false, utilisation:true, cargoOnboard:true,  pricing:true  },
+  pnl:       { pnl:true,  costs:true,  details:true,  utilisation:true, cargoOnboard:false, pricing:false, velocity:false },
+  cargoflow: { pnl:false, costs:false, details:false, utilisation:true, cargoOnboard:true,  pricing:true,  velocity:true  },
 };
 
 const PORT_SECTION_LABELS = {
@@ -2921,6 +3032,199 @@ function _vesselSecPricing(v) {
     <div class="flow-tbl">${flowsHtml}</div>`;
 }
 
+function _vesselSecVelocity(v) {
+  // Deterministic per-vessel mock data, seeded by vessel name so each
+  // vessel always shows the same numbers across renders.
+  let seed = 0;
+  for (let i=0; i<v.name.length; i++) seed = (seed*31 + v.name.charCodeAt(i)) >>> 0;
+  const rng = () => { seed = (seed * 1103515245 + 12345) >>> 0; return seed / 4294967296; };
+
+  const WINDOW = 14;
+  const capacity = v.teu;
+  const currentBooked = Math.round(v.teuLoaded * (0.86 + rng()*0.18));
+  const currentUtil = Math.round(currentBooked / capacity * 100);
+
+  // Days/hours to cutoff — deterministic but feels live
+  const daysToCutoff = 1 + Math.floor(rng() * WINDOW);
+  const hoursToCutoff = Math.floor(rng() * 24);
+
+  // Pace delta (percentage points ahead/behind baseline pace)
+  const paceDelta = Math.round((rng() - 0.45) * 50);
+
+  // Forecast utilization at cutoff (clamp 40..118)
+  const remaining = capacity * 0.95 - currentBooked;
+  const dailyExpected = remaining / Math.max(daysToCutoff, 1);
+  const dailyActual = dailyExpected * (1 + paceDelta/40);
+  const forecastUtil = Math.min(118, Math.max(40,
+    Math.round((currentBooked + dailyActual * daysToCutoff) / capacity * 100)));
+
+  // Status pill
+  let status, statusClass, paceColor;
+  if (paceDelta > 10)       { status='STRONG';   statusClass='strong'; paceColor='#00e5a0'; }
+  else if (paceDelta > -3)  { status='ON TRACK'; statusClass='track';  paceColor='#5fdfff'; }
+  else if (paceDelta > -10) { status='SLOW';     statusClass='slow';   paceColor='#ffb830'; }
+  else                      { status='AT RISK';  statusClass='risk';   paceColor='#ff4d6a'; }
+
+  // Action recommendation — heuristic from pace × utilization. Kept ≤ ~14
+  // words so the suggestion block stays at 2 lines max in the popup.
+  let actionIcon, actionIconColor, actionText;
+  if (status === 'STRONG' && currentUtil > 85) {
+    actionIcon='↑'; actionIconColor=paceColor;
+    actionText='Raise rate <b>+5%</b> &mdash; pull any open promos before cutoff.';
+  } else if (status === 'STRONG') {
+    actionIcon='↑'; actionIconColor=paceColor;
+    actionText='Hold rate &mdash; watch for overbook risk near cutoff.';
+  } else if (status === 'ON TRACK') {
+    actionIcon='✓'; actionIconColor=paceColor;
+    actionText='On track &mdash; no rate action this cycle.';
+  } else if (status === 'SLOW' && currentUtil < 70) {
+    actionIcon='↓'; actionIconColor=paceColor;
+    actionText='Release rate to <b>agents / NVOCCs</b>; push lagging PODs.';
+  } else if (status === 'SLOW') {
+    actionIcon='⚠'; actionIconColor=paceColor;
+    actionText='Pace softening &mdash; ready a rate release within 48h.';
+  } else if (currentUtil < 60) {
+    actionIcon='!'; actionIconColor=paceColor;
+    actionText='Run <b>promo</b> + urgent NVOCC outreach &mdash; vessel sailing light.';
+  } else {
+    actionIcon='!'; actionIconColor=paceColor;
+    actionText='Tactical <b>price drop</b> + sales push on backfill PODs.';
+  }
+
+  // Build the 14-day booking curve (cumulative TEU)
+  const target = capacity * 0.95;
+  const baseline = [], actual = [];
+  const elapsedT = (WINDOW - daysToCutoff) / WINDOW; // 0..1 progress in window
+  for (let d=0; d<=WINDOW; d++) {
+    const t = d / WINDOW;
+    // Baseline S-curve (logistic)
+    const sBase = 1 / (1 + Math.exp(-8 * (t - 0.5)));
+    baseline.push(sBase * target);
+    // Actual: shift the S-curve earlier (positive paceDelta) or later
+    const tShift = t - (paceDelta / 100) * 0.4;
+    const sAct = 1 / (1 + Math.exp(-8 * (tShift - 0.5)));
+    actual.push(t <= elapsedT ? sAct * target * (0.95 + rng()*0.1) : null);
+  }
+
+  // SVG path geometry
+  const W = 270, H = 68, PXL = 4, PXR = 4, PT = 6, PB = 4;
+  const cW = W - PXL - PXR, cH = H - PT - PB;
+  const yMax = Math.max(...baseline);
+  const toX = i => PXL + (i / WINDOW) * cW;
+  const toY = val => PT + cH - (val / yMax) * cH;
+
+  const baselinePath = baseline.map((val,i) =>
+    (i===0?'M':'L') + toX(i).toFixed(1) + ',' + toY(val).toFixed(1)).join(' ');
+  const baselineFill = baselinePath +
+    ' L' + toX(WINDOW).toFixed(1) + ',' + (PT+cH).toFixed(1) +
+    ' L' + toX(0).toFixed(1) + ',' + (PT+cH).toFixed(1) + ' Z';
+
+  const actualVals = actual.filter(val => val !== null);
+  const actualPath = actualVals.map((val,i) =>
+    (i===0?'M':'L') + toX(i).toFixed(1) + ',' + toY(val).toFixed(1)).join(' ');
+
+  const curIdx = actualVals.length - 1;
+  const curX = curIdx >= 0 ? toX(curIdx).toFixed(1) : '0';
+  const curY = curIdx >= 0 ? toY(actualVals[curIdx]).toFixed(1) : '0';
+
+  // Today marker (vertical line at current position)
+  const todayX = toX(WINDOW - daysToCutoff).toFixed(1);
+
+  // Top 3 booking lanes from topFlows, with mock pace deltas tied to the
+  // overall pace. If all flows discharge at the same POD we show only the
+  // POL (POD is already in the popup header). If PODs differ we show the
+  // full POL → POD lane.
+  const flows3 = (v.topFlows || []).slice(0, 3);
+  const allSamePod = flows3.length > 0 && flows3.every(f => f.pod === flows3[0].pod);
+  const lanes = flows3.map((f, idx) => {
+    const lanePace = Math.round(paceDelta * (0.4 + rng()*1.0) + (idx===0 ? 3 : idx===2 ? -5 : 0));
+    const laneColor = lanePace > 5 ? '#00e5a0' : lanePace < -5 ? '#ff4d6a' : '#ffb830';
+    const barPct = Math.max(15, Math.min(100, 52 + lanePace * 1.8));
+    const label = allSamePod ? f.pol : f.pol + ' → ' + f.pod;
+    const title = f.pol + ' → ' + f.pod;
+    return { label, title, teu: f.teu, delta: lanePace, color: laneColor, barPct };
+  });
+  const laneHeading = allSamePod && flows3.length
+    ? `<div style="font-size:9px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;font-weight:600;margin-bottom:4px;">Top loading ports &middot; → ${flows3[0].pod}</div>`
+    : `<div style="font-size:9px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;font-weight:600;margin-bottom:4px;">Top lanes by booking pace</div>`;
+  const podHtml = lanes.map(p => `
+    <div class="bv-pod-row">
+      <span class="bv-pod-name" title="${p.title}">${p.label}</span>
+      <span class="bv-pod-teu">${p.teu} TEU</span>
+      <div class="bv-pod-bar"><div class="bv-pod-bar-fill" style="width:${p.barPct}%;background:${p.color}"></div></div>
+      <span class="bv-pod-delta" style="color:${p.color}">${p.delta>0?'+':''}${p.delta}%</span>
+    </div>`).join('');
+
+  const paceSign = paceDelta > 0 ? '+' : '';
+  const cutoffStr = daysToCutoff >= 1 ? `${daysToCutoff}d ${hoursToCutoff}h` : `${hoursToCutoff}h`;
+  const updateAgo = 4 + Math.floor(rng() * 18); // seconds at render time
+  const liveSince = Date.now() - updateAgo * 1000;
+  const openTeu = Math.max(0, capacity - currentBooked).toLocaleString();
+  // Forecast colour bands:
+  //   ≥100% → red (overbook risk)
+  //   90–99% → green (at target)
+  //   75–89% → amber (light)
+  //   <75% → red (very light / lost revenue)
+  const fcColor = forecastUtil >= 100 ? '#ff4d6a'
+                : forecastUtil >= 90  ? '#00e5a0'
+                : forecastUtil >= 75  ? '#ffb830'
+                                      : '#ff4d6a';
+
+  return `<div class="popup-section-title">
+    Booking Velocity
+    <span style="font-size:9px;font-weight:500;color:var(--muted);margin-left:6px;text-transform:none;letter-spacing:0.2px;">· 14-day window</span>
+  </div>
+  <div class="bv-section">
+    <div class="bv-header">
+      <div>
+        <div class="bv-pace-row">
+          <span class="bv-pace-num" style="color:${paceColor}">${paceSign}${paceDelta}%</span>
+          <span class="bv-status-pill bv-status-${statusClass}">${status}</span>
+        </div>
+        <div class="bv-pace-sub">vs. last 4 sailings &middot; baseline pace</div>
+      </div>
+      <div class="bv-meta">
+        <div>Cutoff in <b>${cutoffStr}</b></div>
+        <div class="bv-meta-live">Live &middot; <span class="bv-live-ago" data-since="${liveSince}">${updateAgo}s</span> ago</div>
+      </div>
+    </div>
+
+    <div class="bv-curve-wrap">
+      <svg class="bv-curve-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <path d="${baselineFill}" fill="rgba(106,138,170,0.10)" stroke="none"/>
+        <path d="${baselinePath}" fill="none" stroke="rgba(106,138,170,0.55)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="${todayX}" y1="${PT}" x2="${todayX}" y2="${(PT+cH).toFixed(1)}"
+              stroke="rgba(255,255,255,0.18)" stroke-width="0.75" stroke-dasharray="2,2"/>
+        <path d="${actualPath}" fill="none" stroke="${paceColor}" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="${curX}" cy="${curY}" r="6" fill="${paceColor}" opacity="0.25">
+          <animate attributeName="r" values="3.5;9;3.5" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.5;0;0.5" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="${curX}" cy="${curY}" r="3" fill="${paceColor}" stroke="rgba(5,13,26,0.8)" stroke-width="1.2"/>
+      </svg>
+      <div class="bv-curve-axis">
+        <span>T&minus;14</span><span>T&minus;7</span><span>Cutoff</span>
+      </div>
+    </div>
+
+    <div class="bv-forecast-row">
+      <span class="bv-fc-label">Forecast at cutoff</span>
+      <span><b class="bv-fc-val" style="color:${fcColor};">${forecastUtil}%</b>
+      <span style="color:var(--muted);">&nbsp;&middot;&nbsp;${openTeu} TEU still open</span></span>
+    </div>
+
+    ${laneHeading}
+    <div class="bv-pod-list">${podHtml}</div>
+
+    <div class="bv-action">
+      <span class="bv-action-icon" style="color:${actionIconColor};background:rgba(${actionIconColor==='#00e5a0'?'0,229,160':actionIconColor==='#5fdfff'?'95,223,255':actionIconColor==='#ffb830'?'255,184,48':'255,77,106'},0.18);">${actionIcon}</span>
+      <span class="bv-action-text">
+        <span class="bv-action-hd">Suggested action</span>${actionText}
+      </span>
+    </div>
+  </div>`;
+}
+
 function buildVesselSectionHtml(id, v) {
   switch (id) {
     case 'pnl':          return _vesselSecPnl(v);
@@ -2929,6 +3233,7 @@ function buildVesselSectionHtml(id, v) {
     case 'utilisation':  return _vesselSecUtil(v);
     case 'cargoOnboard': return _vesselSecCargo(v);
     case 'pricing':      return _vesselSecPricing(v);
+    case 'velocity':     return _vesselSecVelocity(v);
   }
   return '';
 }
@@ -4697,6 +5002,32 @@ document.addEventListener('keydown', function(e) {
     }
   }
 });
+
+/* ─────────────────────────────────────────────────────────────────
+   Booking Velocity — live "Xs ago" ticker
+   Updates every second; matches any element with class .bv-live-ago
+   and recomputes from its data-since timestamp. One global interval
+   for the whole page (set up once on first DOMContentLoaded).
+   ───────────────────────────────────────────────────────────────── */
+(function startVelocityTicker() {
+  function fmtAgo(ms) {
+    const s = Math.max(0, Math.floor(ms / 1000));
+    if (s < 60) return s + 's';
+    if (s < 3600) return Math.floor(s/60) + 'm ' + (s%60) + 's';
+    return Math.floor(s/3600) + 'h ' + Math.floor((s%3600)/60) + 'm';
+  }
+  function tick() {
+    const now = Date.now();
+    document.querySelectorAll('.bv-live-ago').forEach(el => {
+      const since = parseInt(el.dataset.since, 10);
+      if (!isNaN(since)) el.textContent = fmtAgo(now - since);
+    });
+  }
+  if (!window.__bvTickerStarted) {
+    window.__bvTickerStarted = true;
+    setInterval(tick, 1000);
+  }
+})();
 
 /* ─────────────────────────────────────────────────────────────────
    AISHA — AI Sea Hawk Agent (mock chatbot)
