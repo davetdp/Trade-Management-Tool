@@ -3132,24 +3132,47 @@ function _vesselSecVelocity(v) {
   const overallBkPct  = totalAlloc    ? Math.round(totalBookings / totalAlloc * 100) : 0;
   const overallPuPct  = totalBookings ? Math.round(totalPickup   / totalBookings * 100) : 0;
 
-  // ── Status pill ───────────────────────────────────────────────
-  let status, statusClass, paceColor;
-  if (overallBkPct >= 130)     { status='STRONG';   statusClass='strong'; paceColor='#00e5a0'; }
-  else if (overallBkPct >= 95) { status='ON TRACK'; statusClass='track';  paceColor='#5fdfff'; }
-  else if (overallBkPct >= 75) { status='SLOW';     statusClass='slow';   paceColor='#ffb830'; }
-  else                          { status='AT RISK';  statusClass='risk';   paceColor='#ff4d6a'; }
+  // ── Pace + forecast ───────────────────────────────────────────
+  // Booking window = 14 days before the FINAL POL's ETA. We compute how
+  // far through the window we are based on the last POL's days-to-ETA.
+  // The S-curve baseline is a typical sailing's cumulative-bookings curve
+  // (sigmoid → ~100% at cutoff). Pace = current overall % vs baseline %.
+  // Forecast at cutoff = where current pace projects us at end of window.
+  const WINDOW = 14;
+  const lastPolDays = polData.length
+    ? Math.max(0.5, polData[polData.length - 1].daysToEtaInt + (rng()*0.5))
+    : 1;
+  const elapsedT  = Math.max(0.05, Math.min(0.95, (WINDOW - lastPolDays) / WINDOW));
+  const baseAtNow = 100 / (1 + Math.exp(-8 * (elapsedT - 0.5)));
+  const baseAtEnd = 100 / (1 + Math.exp(-8 * (1.0 - 0.5)));  // ≈ 98.2%
+  const paceDelta = overallBkPct - baseAtNow;                 // ppt above/below baseline NOW
+  // Forecast: if current pace ratio continues, scale to end-of-window baseline.
+  const forecastAtCutoff = baseAtNow > 0
+    ? Math.round(Math.min(220, Math.max(0, overallBkPct * (baseAtEnd / baseAtNow))))
+    : overallBkPct;
 
-  // ── Suggested action ──────────────────────────────────────────
+  // ── Status pill — driven by PACE (matches the curve) ──────────
+  // pace > +15ppt  → STRONG  (curve well above baseline → likely to oversell)
+  // -5..+15        → ON TRACK
+  // -15..-5        → SLOW
+  // < -15          → AT RISK
+  let status, statusClass, paceColor;
+  if (paceDelta >  15)       { status='STRONG';   statusClass='strong'; paceColor='#00e5a0'; }
+  else if (paceDelta >  -5)  { status='ON TRACK'; statusClass='track';  paceColor='#5fdfff'; }
+  else if (paceDelta > -15)  { status='SLOW';     statusClass='slow';   paceColor='#ffb830'; }
+  else                        { status='AT RISK';  statusClass='risk';   paceColor='#ff4d6a'; }
+
+  // ── Suggested action — driven by forecast × pickup ───────────
   let actionIcon, actionText;
-  if (overallBkPct >= 130 && overallPuPct >= 70) {
-    actionIcon='↑'; actionText='Allocation oversold &mdash; <b>raise rates</b>, review next-cycle alloc up.';
-  } else if (overallBkPct >= 130) {
-    actionIcon='⚠'; actionText='Strong bookings but low pickup &mdash; verify show-up before cutoff.';
-  } else if (overallBkPct >= 95) {
-    actionIcon='✓'; actionText='On track &mdash; protect allocation, no rate change this cycle.';
-  } else if (overallBkPct >= 75) {
-    actionIcon='⚠'; actionText='Pace softening &mdash; push agents on lagging POLs.';
-  } else if (overallBkPct >= 60) {
+  if (forecastAtCutoff >= 130 && overallPuPct >= 70) {
+    actionIcon='↑'; actionText='Forecast oversold &mdash; <b>raise rates</b> ahead of cutoff.';
+  } else if (forecastAtCutoff >= 130) {
+    actionIcon='⚠'; actionText='Forecast oversold but pickup soft &mdash; verify show-up.';
+  } else if (forecastAtCutoff >= 95) {
+    actionIcon='✓'; actionText='Forecast on target &mdash; maintain pace, no rate change.';
+  } else if (forecastAtCutoff >= 75) {
+    actionIcon='⚠'; actionText='Forecast undershoot &mdash; push agents on lagging POLs.';
+  } else if (forecastAtCutoff >= 60) {
     actionIcon='↓'; actionText='Release rate to <b>agents / NVOCCs</b>, push lagging POLs.';
   } else {
     actionIcon='!'; actionText='Weak cycle &mdash; run <b>promo</b> + urgent NVOCC outreach.';
@@ -3157,19 +3180,6 @@ function _vesselSecVelocity(v) {
   const iconRgb = paceColor==='#00e5a0' ? '0,229,160'
                 : paceColor==='#5fdfff' ? '95,223,255'
                 : paceColor==='#ffb830' ? '255,184,48' : '255,77,106';
-
-  // ── S-curve: overall booking % over 14-day window ─────────────
-  // Y-axis: % of total allocation (0..max). Baseline = typical S-curve
-  // toward 100% allocation. Actual = trajectory ending at current overallBkPct.
-  // Sign convention: positive paceDelta → actual above baseline; negative → below.
-  const WINDOW = 14;
-  const lastPolDays = polData.length
-    ? Math.max(0.5, polData[polData.length - 1].daysToEtaInt + (rng()*0.5))
-    : 1;
-  const elapsedT = Math.max(0.05, Math.min(0.95, (WINDOW - lastPolDays) / WINDOW));
-  // Expected baseline at "now" (sigmoid → ~50% mid, ~100% at right edge)
-  const baseAtNow = 100 / (1 + Math.exp(-8 * (elapsedT - 0.5)));
-  const paceDelta = overallBkPct - baseAtNow;          // ppt above/below
 
   const baseline = [], actual = [];
   for (let d=0; d<=WINDOW; d++) {
@@ -3242,7 +3252,7 @@ function _vesselSecVelocity(v) {
           <span class="bv-pace-num" style="color:${paceColor}">${overallBkPct}%</span>
           <span class="bv-status-pill bv-status-${statusClass}">${status}</span>
         </div>
-        <div class="bv-pace-sub">overall bookings &middot; ${totalBookings.toLocaleString()} / ${totalAlloc.toLocaleString()} TEU</div>
+        <div class="bv-pace-sub">booked of allocation &middot; forecast <b style="color:#e8f4ff;">${forecastAtCutoff}%</b> at cutoff</div>
       </div>
       <div class="bv-meta">
         <div>Avg pickup <b>${overallPuPct}%</b></div>
