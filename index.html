@@ -2149,7 +2149,7 @@ const vessels = [
     name: 'Kota Cempaka',
     vvd: 'KCPK0101N',
     service: 'CCS',
-    position: [23.5, 116.0],
+    position: [22.8, 117.5],
     route: 'Xiamen → Shekou → Haiphong → Singapore → Kolkata',
     nextPort: 'Shekou',
     status: 'On route to Shekou',
@@ -2161,7 +2161,7 @@ const vessels = [
     teu: 13400,
     teuLoaded: 11490,
     speed: '14.0 kts',
-    heading: 'SW',
+    heading: 'W',
     eta: '21 May 2026',
     revenue:   { label: 'Voyage Revenue',  value: 'USD 7.92M',  color: 'var(--green)' },
     costs:     { label: 'Voyage Costs',    value: 'USD 5.04M',  color: 'var(--red)' },
@@ -4413,10 +4413,14 @@ const ports = [
     'Kota Ebony': [
       [30.6, 122.4], [30.25, 122.25], [30.0, 122.15]
     ],
-    // South China Sea, southwest along Chinese coast from current position
-    // toward Shekou (Shenzhen) — approach the Pearl River Delta entrance
+    // Taiwan Strait → South China Sea: clear the Shantou peninsula well to
+    // the south, then approach Shekou (Shenzhen) from the south past Hong
+    // Kong, entering the Pearl River Delta from the east.
     'Kota Cempaka': [
-      [23.5, 116.0], [22.9, 114.8], [22.6, 114.1]
+      [22.8, 117.5],    // current position (Taiwan Strait, SE of Xiamen)
+      [22.2, 116.2],    // south of Shantou peninsula, open water
+      [21.8, 114.8],    // open South China Sea south of Pearl River
+      [22.05, 114.15]   // south of Hong Kong, approaching Shekou
     ],
     // Eastern Pacific → Callao — open ocean, slight curve
     'Kota Layang': [
