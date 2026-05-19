@@ -1022,15 +1022,16 @@
       animation: pulse 2s infinite;
     }
 
+    /* Overall booking-pace S-curve (actual vs baseline) */
     .bv-curve-wrap {
       position: relative;
       background: rgba(0,180,255,0.03);
       border: 1px solid rgba(0,180,255,0.10);
       border-radius: 6px;
       padding: 5px 6px 4px;
-      margin-bottom: 7px;
+      margin-bottom: 8px;
     }
-    .bv-curve-svg { display: block; width: 100%; height: 68px; }
+    .bv-curve-svg { display: block; width: 100%; height: 60px; }
     .bv-curve-axis {
       display: flex; justify-content: space-between;
       font-size: 8px; color: var(--muted);
@@ -1039,32 +1040,59 @@
       font-family: 'Space Grotesk', sans-serif; font-weight: 600;
     }
 
-    .bv-forecast-row {
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 10px; margin-bottom: 8px; padding: 0 2px;
+    /* Per-POL allocation/bookings/pickup table */
+    .bv-tbl {
+      border: 1px solid rgba(0,180,255,0.10);
+      border-radius: 6px;
+      background: rgba(0,180,255,0.03);
+      padding: 4px 6px 6px;
+      margin-bottom: 8px;
+      overflow: hidden;
     }
-    .bv-fc-label { color: var(--muted); }
-    .bv-fc-val { font-weight: 700; }
-
-    .bv-pod-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 9px; }
-    .bv-pod-row {
+    .bv-tbl-hdr, .bv-tbl-row {
       display: grid;
-      grid-template-columns: 2fr 44px 1fr 34px;
-      gap: 5px; align-items: center;
-      font-size: 9.5px;
-    }
-    .bv-pod-name {
-      color: #e8f4ff; font-weight: 600;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-      font-size: 9px;
-    }
-    .bv-pod-teu  { color: var(--muted); font-size: 8.5px; text-align: right; }
-    .bv-pod-bar  { height: 5px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
-    .bv-pod-bar-fill { height: 100%; border-radius: 2px; transition: width .5s ease; }
-    .bv-pod-delta {
+      grid-template-columns: minmax(0,1fr) 26px 32px 30px 32px 28px;
+      gap: 3px; align-items: center;
+      padding: 3px 0;
       font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700; font-size: 9px; text-align: right;
     }
+    .bv-tbl-hdr {
+      font-size: 8px; font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.6px;
+      border-bottom: 1px solid rgba(0,180,255,0.15);
+      padding-bottom: 4px; margin-bottom: 1px;
+    }
+    .bv-tbl-row { font-size: 9px; border-bottom: 1px solid rgba(0,180,255,0.05); }
+    .bv-tbl-row:last-child { border-bottom: none; }
+    .bv-tbl-row.bv-tbl-closed { opacity: 0.55; }
+    .bv-tbl-pol {
+      color: #e8f4ff; font-weight: 700;
+      font-size: 9.5px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .bv-tbl-pol-sub {
+      display: block;
+      font-size: 8px; font-weight: 600;
+      color: rgba(0,180,255,0.6);
+      letter-spacing: 0.4px;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bv-tbl-num { color: var(--muted); text-align: right; }
+    .bv-tbl-pct { text-align: right; font-weight: 800; font-size: 9.5px; }
+    .bv-tbl-pct-hdr { text-align: right; }
+    .bv-tbl-num-hdr { text-align: right; }
+    .bv-tbl-total {
+      border-top: 1px solid rgba(0,180,255,0.22);
+      padding-top: 5px; margin-top: 3px;
+      font-weight: 700;
+      border-bottom: none;
+    }
+    .bv-tbl-total .bv-tbl-pol  { color: #5fdfff; }
+    .bv-tbl-total .bv-tbl-num  { color: #e8f4ff; }
 
     .bv-action {
       display: flex; align-items: flex-start; gap: 8px;
@@ -3033,83 +3061,134 @@ function _vesselSecPricing(v) {
 }
 
 function _vesselSecVelocity(v) {
-  // Deterministic per-vessel mock data, seeded by vessel name so each
-  // vessel always shows the same numbers across renders.
+  // Deterministic per-vessel mock data, seeded by vessel name.
   let seed = 0;
   for (let i=0; i<v.name.length; i++) seed = (seed*31 + v.name.charCodeAt(i)) >>> 0;
   const rng = () => { seed = (seed * 1103515245 + 12345) >>> 0; return seed / 4294967296; };
 
-  const WINDOW = 14;
-  const capacity = v.teu;
-  const currentBooked = Math.round(v.teuLoaded * (0.86 + rng()*0.18));
-  const currentUtil = Math.round(currentBooked / capacity * 100);
+  // ── Identify ALL loading ports on this voyage ─────────────────
+  // Loading ports = route ports BEFORE the first port-of-discharge,
+  // i.e. every port preceding the first port the vessel discharges at
+  // (the last loading port is the "last ROB / Remain On Board" port).
+  const routePorts = (v.route || '').split('→').map(s => s.trim()).filter(Boolean);
+  const podSet = new Set((v.topFlows || []).map(f => f.pod));
+  let firstPodIdx = routePorts.length;
+  routePorts.forEach((port, i) => {
+    if (podSet.has(port) && i < firstPodIdx) firstPodIdx = i;
+  });
+  const loadingPorts = routePorts.slice(0, firstPodIdx);
 
-  // Days/hours to cutoff — deterministic but feels live
-  const daysToCutoff = 1 + Math.floor(rng() * WINDOW);
-  const hoursToCutoff = Math.floor(rng() * 24);
+  // POL → UN/LOCODE lookup.
+  const POL_CODE = {
+    'Shanghai':'CNSHA', 'Ningbo':'CNNGB', 'Shekou':'CNSKO', 'Singapore':'SGSIN',
+    'Port Kelang':'MYPKG', 'Port Klang':'MYPKG', 'Hong Kong':'HKHKG',
+    'Nansha':'CNNSA', 'Xiamen':'CNXMN', 'Kaohsiung':'TWKHH', 'Qingdao':'CNTAO',
+    'Tianjin':'CNTSN', 'Yantian':'CNYTN', 'Dalian':'CNDLC', 'Busan':'KRPUS',
+    'Mombasa':'KEMBA', 'Cape Town':'ZACPT', 'Durban':'ZADUR',
+    'Nhava Sheva':'INNSA', 'Mundra':'INMUN', 'Karachi':'PKKHI',
+    'Dar es Salaam':'TZDAR', 'Lagos':'NGAPP', 'Tema':'GHTEM',
+  };
+  const polCode = (name) => POL_CODE[name] || name.replace(/[^A-Za-z]/g,'').slice(0,5).toUpperCase();
 
-  // Pace delta (percentage points ahead/behind baseline pace)
-  const paceDelta = Math.round((rng() - 0.45) * 50);
+  // ── Generate mock per-POL data ────────────────────────────────
+  const totalPols = Math.max(loadingPorts.length, 1);
+  const polData = loadingPorts.map((pol, i) => {
+    const t = totalPols > 1 ? i / (totalPols - 1) : 0.5;
+    // ETA spread: earliest POL ~−3d (already sailed), final POL ~+6d
+    const daysOffset = -3 + t * 9 + (rng() - 0.5) * 0.8;
+    const daysToEtaInt = Math.round(daysOffset);
+    const isClosed = daysToEtaInt < 0;
 
-  // Forecast utilization at cutoff (clamp 40..118)
-  const remaining = capacity * 0.95 - currentBooked;
-  const dailyExpected = remaining / Math.max(daysToCutoff, 1);
-  const dailyActual = dailyExpected * (1 + paceDelta/40);
-  const forecastUtil = Math.min(118, Math.max(40,
-    Math.round((currentBooked + dailyActual * daysToCutoff) / capacity * 100)));
+    // Allocation per POL: 80–500 TEU.
+    const allocation = 80 + Math.floor(rng() * 420);
 
-  // Status pill
+    // Bookings % vs allocation, biased by where we are in the window.
+    let bookingsPct;
+    if (isClosed)               bookingsPct = 95  + Math.floor(rng() * 95);
+    else if (daysToEtaInt <= 1) bookingsPct = 90  + Math.floor(rng() * 80);
+    else if (daysToEtaInt <= 3) bookingsPct = 55  + Math.floor(rng() * 75);
+    else                        bookingsPct = 10  + Math.floor(rng() * 50);
+    bookingsPct = Math.max(0, Math.min(260, bookingsPct));
+    const bookings = Math.round(allocation * bookingsPct / 100);
+
+    // Pickup % vs bookings, biased same way.
+    let pickupPct;
+    if (isClosed)               pickupPct = 80 + Math.floor(rng() * 18);
+    else if (daysToEtaInt <= 1) pickupPct = 50 + Math.floor(rng() * 40);
+    else if (daysToEtaInt <= 3) pickupPct = 18 + Math.floor(rng() * 32);
+    else                        pickupPct = 0  + Math.floor(rng() * 20);
+    if (bookingsPct > 160) pickupPct = Math.max(15, pickupPct - 8);
+    pickupPct = Math.max(0, Math.min(95, pickupPct));
+    const pickup = Math.round(bookings * pickupPct / 100);
+
+    return { pol, code: polCode(pol), daysToEtaInt, isClosed,
+             allocation, bookings, bookingsPct, pickup, pickupPct };
+  });
+
+  // ── Aggregate ─────────────────────────────────────────────────
+  const totalAlloc    = polData.reduce((s,p) => s + p.allocation, 0);
+  const totalBookings = polData.reduce((s,p) => s + p.bookings, 0);
+  const totalPickup   = polData.reduce((s,p) => s + p.pickup, 0);
+  const overallBkPct  = totalAlloc    ? Math.round(totalBookings / totalAlloc * 100) : 0;
+  const overallPuPct  = totalBookings ? Math.round(totalPickup   / totalBookings * 100) : 0;
+
+  // ── Status pill ───────────────────────────────────────────────
   let status, statusClass, paceColor;
-  if (paceDelta > 10)       { status='STRONG';   statusClass='strong'; paceColor='#00e5a0'; }
-  else if (paceDelta > -3)  { status='ON TRACK'; statusClass='track';  paceColor='#5fdfff'; }
-  else if (paceDelta > -10) { status='SLOW';     statusClass='slow';   paceColor='#ffb830'; }
-  else                      { status='AT RISK';  statusClass='risk';   paceColor='#ff4d6a'; }
+  if (overallBkPct >= 130)     { status='STRONG';   statusClass='strong'; paceColor='#00e5a0'; }
+  else if (overallBkPct >= 95) { status='ON TRACK'; statusClass='track';  paceColor='#5fdfff'; }
+  else if (overallBkPct >= 75) { status='SLOW';     statusClass='slow';   paceColor='#ffb830'; }
+  else                          { status='AT RISK';  statusClass='risk';   paceColor='#ff4d6a'; }
 
-  // Action recommendation — heuristic from pace × utilization. Kept ≤ ~14
-  // words so the suggestion block stays at 2 lines max in the popup.
-  let actionIcon, actionIconColor, actionText;
-  if (status === 'STRONG' && currentUtil > 85) {
-    actionIcon='↑'; actionIconColor=paceColor;
-    actionText='Raise rate <b>+5%</b> &mdash; pull any open promos before cutoff.';
-  } else if (status === 'STRONG') {
-    actionIcon='↑'; actionIconColor=paceColor;
-    actionText='Hold rate &mdash; watch for overbook risk near cutoff.';
-  } else if (status === 'ON TRACK') {
-    actionIcon='✓'; actionIconColor=paceColor;
-    actionText='On track &mdash; no rate action this cycle.';
-  } else if (status === 'SLOW' && currentUtil < 70) {
-    actionIcon='↓'; actionIconColor=paceColor;
-    actionText='Release rate to <b>agents / NVOCCs</b>; push lagging PODs.';
-  } else if (status === 'SLOW') {
-    actionIcon='⚠'; actionIconColor=paceColor;
-    actionText='Pace softening &mdash; ready a rate release within 48h.';
-  } else if (currentUtil < 60) {
-    actionIcon='!'; actionIconColor=paceColor;
-    actionText='Run <b>promo</b> + urgent NVOCC outreach &mdash; vessel sailing light.';
+  // ── Suggested action ──────────────────────────────────────────
+  let actionIcon, actionText;
+  if (overallBkPct >= 130 && overallPuPct >= 70) {
+    actionIcon='↑'; actionText='Allocation oversold &mdash; <b>raise rates</b>, review next-cycle alloc up.';
+  } else if (overallBkPct >= 130) {
+    actionIcon='⚠'; actionText='Strong bookings but low pickup &mdash; verify show-up before cutoff.';
+  } else if (overallBkPct >= 95) {
+    actionIcon='✓'; actionText='On track &mdash; protect allocation, no rate change this cycle.';
+  } else if (overallBkPct >= 75) {
+    actionIcon='⚠'; actionText='Pace softening &mdash; push agents on lagging POLs.';
+  } else if (overallBkPct >= 60) {
+    actionIcon='↓'; actionText='Release rate to <b>agents / NVOCCs</b>, push lagging POLs.';
   } else {
-    actionIcon='!'; actionIconColor=paceColor;
-    actionText='Tactical <b>price drop</b> + sales push on backfill PODs.';
+    actionIcon='!'; actionText='Weak cycle &mdash; run <b>promo</b> + urgent NVOCC outreach.';
   }
+  const iconRgb = paceColor==='#00e5a0' ? '0,229,160'
+                : paceColor==='#5fdfff' ? '95,223,255'
+                : paceColor==='#ffb830' ? '255,184,48' : '255,77,106';
 
-  // Build the 14-day booking curve (cumulative TEU)
-  const target = capacity * 0.95;
+  // ── S-curve: overall booking % over 14-day window ─────────────
+  // Y-axis: % of total allocation (0..max). Baseline = typical S-curve
+  // toward 100% allocation. Actual = trajectory ending at current overallBkPct.
+  // Sign convention: positive paceDelta → actual above baseline; negative → below.
+  const WINDOW = 14;
+  const lastPolDays = polData.length
+    ? Math.max(0.5, polData[polData.length - 1].daysToEtaInt + (rng()*0.5))
+    : 1;
+  const elapsedT = Math.max(0.05, Math.min(0.95, (WINDOW - lastPolDays) / WINDOW));
+  // Expected baseline at "now" (sigmoid → ~50% mid, ~100% at right edge)
+  const baseAtNow = 100 / (1 + Math.exp(-8 * (elapsedT - 0.5)));
+  const paceDelta = overallBkPct - baseAtNow;          // ppt above/below
+
   const baseline = [], actual = [];
-  const elapsedT = (WINDOW - daysToCutoff) / WINDOW; // 0..1 progress in window
   for (let d=0; d<=WINDOW; d++) {
     const t = d / WINDOW;
-    // Baseline S-curve (logistic)
-    const sBase = 1 / (1 + Math.exp(-8 * (t - 0.5)));
-    baseline.push(sBase * target);
-    // Actual: shift the S-curve earlier (positive paceDelta) or later
-    const tShift = t - (paceDelta / 100) * 0.4;
-    const sAct = 1 / (1 + Math.exp(-8 * (tShift - 0.5)));
-    actual.push(t <= elapsedT ? sAct * target * (0.95 + rng()*0.1) : null);
+    const sBase = 100 / (1 + Math.exp(-8 * (t - 0.5)));
+    baseline.push(sBase);
+    if (t <= elapsedT) {
+      const tShift = t + (paceDelta / 100) * 0.4;
+      const sAct = 100 / (1 + Math.exp(-8 * (tShift - 0.5)));
+      actual.push(Math.max(0, sAct * (0.95 + rng()*0.1)));
+    } else {
+      actual.push(null);
+    }
   }
 
   // SVG path geometry
-  const W = 270, H = 68, PXL = 4, PXR = 4, PT = 6, PB = 4;
+  const W = 270, H = 60, PXL = 4, PXR = 4, PT = 6, PB = 4;
   const cW = W - PXL - PXR, cH = H - PT - PB;
-  const yMax = Math.max(...baseline);
+  const yMax = Math.max(120, Math.max(...baseline), overallBkPct + 10);
   const toX = i => PXL + (i / WINDOW) * cW;
   const toY = val => PT + cH - (val / yMax) * cH;
 
@@ -3127,74 +3206,56 @@ function _vesselSecVelocity(v) {
   const curX = curIdx >= 0 ? toX(curIdx).toFixed(1) : '0';
   const curY = curIdx >= 0 ? toY(actualVals[curIdx]).toFixed(1) : '0';
 
-  // Today marker (vertical line at current position)
-  const todayX = toX(WINDOW - daysToCutoff).toFixed(1);
+  // 100% allocation reference line (horizontal)
+  const refY = toY(100).toFixed(1);
 
-  // Top 3 booking lanes from topFlows, with mock pace deltas tied to the
-  // overall pace. If all flows discharge at the same POD we show only the
-  // POL (POD is already in the popup header). If PODs differ we show the
-  // full POL → POD lane.
-  const flows3 = (v.topFlows || []).slice(0, 3);
-  const allSamePod = flows3.length > 0 && flows3.every(f => f.pod === flows3[0].pod);
-  const lanes = flows3.map((f, idx) => {
-    const lanePace = Math.round(paceDelta * (0.4 + rng()*1.0) + (idx===0 ? 3 : idx===2 ? -5 : 0));
-    const laneColor = lanePace > 5 ? '#00e5a0' : lanePace < -5 ? '#ff4d6a' : '#ffb830';
-    const barPct = Math.max(15, Math.min(100, 52 + lanePace * 1.8));
-    const label = allSamePod ? f.pol : f.pol + ' → ' + f.pod;
-    const title = f.pol + ' → ' + f.pod;
-    return { label, title, teu: f.teu, delta: lanePace, color: laneColor, barPct };
-  });
-  const laneHeading = allSamePod && flows3.length
-    ? `<div style="font-size:9px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;font-weight:600;margin-bottom:4px;">Top loading ports &middot; → ${flows3[0].pod}</div>`
-    : `<div style="font-size:9px;color:var(--muted);letter-spacing:0.4px;text-transform:uppercase;font-weight:600;margin-bottom:4px;">Top lanes by booking pace</div>`;
-  const podHtml = lanes.map(p => `
-    <div class="bv-pod-row">
-      <span class="bv-pod-name" title="${p.title}">${p.label}</span>
-      <span class="bv-pod-teu">${p.teu} TEU</span>
-      <div class="bv-pod-bar"><div class="bv-pod-bar-fill" style="width:${p.barPct}%;background:${p.color}"></div></div>
-      <span class="bv-pod-delta" style="color:${p.color}">${p.delta>0?'+':''}${p.delta}%</span>
-    </div>`).join('');
-
-  const paceSign = paceDelta > 0 ? '+' : '';
-  const cutoffStr = daysToCutoff >= 1 ? `${daysToCutoff}d ${hoursToCutoff}h` : `${hoursToCutoff}h`;
-  const updateAgo = 4 + Math.floor(rng() * 18); // seconds at render time
-  const liveSince = Date.now() - updateAgo * 1000;
-  const openTeu = Math.max(0, capacity - currentBooked).toLocaleString();
-  // Forecast colour bands:
-  //   ≥100% → red (overbook risk)
-  //   90–99% → green (at target)
-  //   75–89% → amber (light)
-  //   <75% → red (very light / lost revenue)
-  const fcColor = forecastUtil >= 100 ? '#ff4d6a'
-                : forecastUtil >= 90  ? '#00e5a0'
-                : forecastUtil >= 75  ? '#ffb830'
-                                      : '#ff4d6a';
+  // ── Per-POL table HTML ────────────────────────────────────────
+  const polRowsHtml = polData.map(p => {
+    const bkColor = p.bookingsPct >= 130 ? '#00e5a0'
+                  : p.bookingsPct >= 95  ? '#5fdfff'
+                  : p.bookingsPct >= 75  ? '#ffb830' : '#ff4d6a';
+    const puColor = p.pickupPct >= 75 ? '#00e5a0'
+                  : p.pickupPct >= 50 ? '#5fdfff'
+                  : p.pickupPct >= 30 ? '#ffb830' : '#ff4d6a';
+    const cls = p.isClosed ? 'bv-tbl-row bv-tbl-closed' : 'bv-tbl-row';
+    return `<div class="${cls}" title="${p.code}">
+      <div>
+        <span class="bv-tbl-pol">${p.pol}</span>
+        <span class="bv-tbl-pol-sub">${p.isClosed ? 'closed' : p.daysToEtaInt + 'd to ETA'}</span>
+      </div>
+      <span class="bv-tbl-num">${p.allocation}</span>
+      <span class="bv-tbl-num">${p.bookings}</span>
+      <span class="bv-tbl-pct" style="color:${bkColor}">${p.bookingsPct}%</span>
+      <span class="bv-tbl-num">${p.pickup}</span>
+      <span class="bv-tbl-pct" style="color:${puColor}">${p.pickupPct}%</span>
+    </div>`;
+  }).join('');
 
   return `<div class="popup-section-title">
     Booking Velocity
-    <span style="font-size:9px;font-weight:500;color:var(--muted);margin-left:6px;text-transform:none;letter-spacing:0.2px;">· 14-day window</span>
+    <span style="font-size:9px;font-weight:500;color:var(--muted);margin-left:6px;text-transform:none;letter-spacing:0.2px;">&middot; vs. allocation</span>
   </div>
   <div class="bv-section">
     <div class="bv-header">
       <div>
         <div class="bv-pace-row">
-          <span class="bv-pace-num" style="color:${paceColor}">${paceSign}${paceDelta}%</span>
+          <span class="bv-pace-num" style="color:${paceColor}">${overallBkPct}%</span>
           <span class="bv-status-pill bv-status-${statusClass}">${status}</span>
         </div>
-        <div class="bv-pace-sub">vs. last 4 sailings &middot; baseline pace</div>
+        <div class="bv-pace-sub">overall bookings &middot; ${totalBookings.toLocaleString()} / ${totalAlloc.toLocaleString()} TEU</div>
       </div>
       <div class="bv-meta">
-        <div>Cutoff in <b>${cutoffStr}</b></div>
-        <div class="bv-meta-live">Live &middot; <span class="bv-live-ago" data-since="${liveSince}">${updateAgo}s</span> ago</div>
+        <div>Avg pickup <b>${overallPuPct}%</b></div>
+        <div style="font-size:9px;color:var(--muted);">${polData.length} POL${polData.length===1?'':'s'} this voyage</div>
       </div>
     </div>
 
     <div class="bv-curve-wrap">
       <svg class="bv-curve-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <line x1="${PXL}" y1="${refY}" x2="${W-PXR}" y2="${refY}"
+              stroke="rgba(255,255,255,0.18)" stroke-width="0.6" stroke-dasharray="2,3"/>
         <path d="${baselineFill}" fill="rgba(106,138,170,0.10)" stroke="none"/>
         <path d="${baselinePath}" fill="none" stroke="rgba(106,138,170,0.55)" stroke-width="1" stroke-dasharray="3,3"/>
-        <line x1="${todayX}" y1="${PT}" x2="${todayX}" y2="${(PT+cH).toFixed(1)}"
-              stroke="rgba(255,255,255,0.18)" stroke-width="0.75" stroke-dasharray="2,2"/>
         <path d="${actualPath}" fill="none" stroke="${paceColor}" stroke-width="1.8" stroke-linecap="round"/>
         <circle cx="${curX}" cy="${curY}" r="6" fill="${paceColor}" opacity="0.25">
           <animate attributeName="r" values="3.5;9;3.5" dur="2.4s" repeatCount="indefinite"/>
@@ -3203,21 +3264,32 @@ function _vesselSecVelocity(v) {
         <circle cx="${curX}" cy="${curY}" r="3" fill="${paceColor}" stroke="rgba(5,13,26,0.8)" stroke-width="1.2"/>
       </svg>
       <div class="bv-curve-axis">
-        <span>T&minus;14</span><span>T&minus;7</span><span>Cutoff</span>
+        <span>T&minus;14</span><span>T&minus;7</span><span>Final cutoff</span>
       </div>
     </div>
 
-    <div class="bv-forecast-row">
-      <span class="bv-fc-label">Forecast at cutoff</span>
-      <span><b class="bv-fc-val" style="color:${fcColor};">${forecastUtil}%</b>
-      <span style="color:var(--muted);">&nbsp;&middot;&nbsp;${openTeu} TEU still open</span></span>
+    <div class="bv-tbl">
+      <div class="bv-tbl-hdr">
+        <span>POL</span>
+        <span class="bv-tbl-num-hdr">Alloc</span>
+        <span class="bv-tbl-num-hdr">Bk</span>
+        <span class="bv-tbl-pct-hdr">Bk%</span>
+        <span class="bv-tbl-num-hdr">Pu</span>
+        <span class="bv-tbl-pct-hdr">Pu%</span>
+      </div>
+      ${polRowsHtml}
+      <div class="bv-tbl-row bv-tbl-total">
+        <span class="bv-tbl-pol">Total</span>
+        <span class="bv-tbl-num">${totalAlloc.toLocaleString()}</span>
+        <span class="bv-tbl-num">${totalBookings.toLocaleString()}</span>
+        <span class="bv-tbl-pct" style="color:${paceColor}">${overallBkPct}%</span>
+        <span class="bv-tbl-num">${totalPickup.toLocaleString()}</span>
+        <span class="bv-tbl-pct" style="color:${overallPuPct >= 75 ? '#00e5a0' : overallPuPct >= 50 ? '#5fdfff' : overallPuPct >= 30 ? '#ffb830' : '#ff4d6a'}">${overallPuPct}%</span>
+      </div>
     </div>
 
-    ${laneHeading}
-    <div class="bv-pod-list">${podHtml}</div>
-
     <div class="bv-action">
-      <span class="bv-action-icon" style="color:${actionIconColor};background:rgba(${actionIconColor==='#00e5a0'?'0,229,160':actionIconColor==='#5fdfff'?'95,223,255':actionIconColor==='#ffb830'?'255,184,48':'255,77,106'},0.18);">${actionIcon}</span>
+      <span class="bv-action-icon" style="color:${paceColor};background:rgba(${iconRgb},0.18);">${actionIcon}</span>
       <span class="bv-action-text">
         <span class="bv-action-hd">Suggested action</span>${actionText}
       </span>
