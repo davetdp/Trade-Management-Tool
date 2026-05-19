@@ -1066,6 +1066,14 @@
       text-transform: uppercase;
     }
 
+    /* Small disclaimer note above the Per-POL table */
+    .bv-tbl-legend {
+      font-size: 8.5px;
+      color: var(--muted);
+      letter-spacing: 0.2px;
+      margin-bottom: 4px;
+      padding-left: 2px;
+    }
     /* Per-POL allocation/bookings/pickup table */
     .bv-tbl {
       border: 1px solid rgba(0,180,255,0.10);
@@ -3139,14 +3147,16 @@ function _vesselSecVelocity(v) {
     bookingsPct = Math.max(0, Math.min(260, bookingsPct));
     const bookings = Math.round(allocation * bookingsPct / 100);
 
-    // Pickup % vs bookings, biased same way.
+    // Pickup % vs bookings, biased by how far through the booking window
+    // we are. For a CLOSED POL (cutoff already passed) every booking
+    // should have been picked up by definition — set to 100%.
     let pickupPct;
-    if (isClosed)               pickupPct = 80 + Math.floor(rng() * 18);
+    if (isClosed)               pickupPct = 100;
     else if (daysToEtaInt <= 1) pickupPct = 50 + Math.floor(rng() * 40);
     else if (daysToEtaInt <= 3) pickupPct = 18 + Math.floor(rng() * 32);
     else                        pickupPct = 0  + Math.floor(rng() * 20);
-    if (bookingsPct > 160) pickupPct = Math.max(15, pickupPct - 8);
-    pickupPct = Math.max(0, Math.min(95, pickupPct));
+    if (!isClosed && bookingsPct > 160) pickupPct = Math.max(15, pickupPct - 8);
+    pickupPct = Math.max(0, Math.min(100, pickupPct));
     const pickup = Math.round(bookings * pickupPct / 100);
 
     return { pol, code: polCode(pol), daysToEtaInt, isClosed,
@@ -3319,14 +3329,15 @@ function _vesselSecVelocity(v) {
       </div>
     </div>
 
+    <div class="bv-tbl-legend">* Pu = Pick Up &middot; TEU delivered to the port gate</div>
     <div class="bv-tbl">
       <div class="bv-tbl-hdr">
         <span>POL</span>
         <span class="bv-tbl-num-hdr">Alloc</span>
         <span class="bv-tbl-num-hdr">Bk</span>
         <span class="bv-tbl-pct-hdr">Bk%</span>
-        <span class="bv-tbl-num-hdr">Pu</span>
-        <span class="bv-tbl-pct-hdr">Pu%</span>
+        <span class="bv-tbl-num-hdr">Pu<sup style="font-size:7px;color:rgba(0,180,255,0.7);">*</sup></span>
+        <span class="bv-tbl-pct-hdr">Pu%<sup style="font-size:7px;color:rgba(0,180,255,0.7);">*</sup></span>
       </div>
       ${polRowsHtml}
       <div class="bv-tbl-row bv-tbl-total">
