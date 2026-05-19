@@ -1032,18 +1032,19 @@
       margin-bottom: 8px;
     }
     .bv-curve-svg { display: block; width: 100%; height: 60px; }
-    /* Two-row axis: top = T-X tick labels (positioned at their exact
-       fractional x), bottom = the cutoff date label (right-aligned). */
+    /* Single-row x-axis: T-X tick labels positioned at their exact
+       fractional x, with the cutoff-date label inline at the right edge
+       in a smaller, cyan-tinted font. */
     .bv-curve-axis {
       position: relative;
-      height: 11px;
+      height: 18px;
       margin-top: 1px;
       padding: 0 2px;
       font-family: 'Space Grotesk', sans-serif;
       font-size: 8px;
       font-weight: 600;
       color: var(--muted);
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
     }
     .bv-curve-axis span {
       position: absolute;
@@ -1051,15 +1052,18 @@
       transform: translateX(-50%);
     }
     .bv-curve-axis span.bv-axis-left { left: 0; transform: none; }
-    .bv-curve-axis-cutoff {
-      text-align: right;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 8.5px;
+    /* Cutoff date label — positioned below T-1 within the same axis row
+       (vertical offset prevents text collision while keeping the label on
+       the right edge of the chart, where the cutoff is). */
+    .bv-curve-axis span.bv-axis-cutoff {
+      right: 0;
+      top: 6px;
+      transform: none;
+      font-size: 7px;
       font-weight: 700;
-      color: rgba(0,180,255,0.75);
-      letter-spacing: 0.5px;
-      margin-top: 1px;
-      padding-right: 2px;
+      color: rgba(0,180,255,0.95);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
     }
 
     /* Per-POL allocation/bookings/pickup table */
@@ -3111,6 +3115,8 @@ function _vesselSecVelocity(v) {
     'Dar es Salaam':'TZDAR', 'Lagos':'NGAPP', 'Tema':'GHTEM',
   };
   const polCode = (name) => POL_CODE[name] || name.replace(/[^A-Za-z]/g,'').slice(0,5).toUpperCase();
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtDate = (date) => `${date.getDate()} ${MONTHS[date.getMonth()]}`;
 
   // ── Generate mock per-POL data ────────────────────────────────
   const totalPols = Math.max(loadingPorts.length, 1);
@@ -3164,6 +3170,8 @@ function _vesselSecVelocity(v) {
   const lastPolDays = polData.length
     ? Math.max(0.5, polData[polData.length - 1].daysToEtaInt + (rng()*0.5))
     : 1;
+  const cutoffDate    = new Date(Date.now() + lastPolDays * 86400000);
+  const cutoffDateStr = fmtDate(cutoffDate);
   const elapsedT  = Math.max(0.05, Math.min(0.95, (WINDOW - lastPolDays) / WINDOW));
   const baseAtNow = 100 / (1 + Math.exp(-8 * (elapsedT - 0.5)));
   const baseAtEnd = 100 / (1 + Math.exp(-8 * (1.0 - 0.5)));  // ≈ 98.2%
@@ -3286,6 +3294,12 @@ function _vesselSecVelocity(v) {
       <svg class="bv-curve-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
         <line x1="${PXL}" y1="${refY}" x2="${W-PXR}" y2="${refY}"
               stroke="rgba(255,255,255,0.18)" stroke-width="0.6" stroke-dasharray="2,3"/>
+        <line x1="${toX(7).toFixed(1)}"  y1="${PT}" x2="${toX(7).toFixed(1)}"  y2="${(PT+cH).toFixed(1)}"
+              stroke="rgba(255,255,255,0.10)" stroke-width="0.5" stroke-dasharray="2,3"/>
+        <line x1="${toX(9).toFixed(1)}"  y1="${PT}" x2="${toX(9).toFixed(1)}"  y2="${(PT+cH).toFixed(1)}"
+              stroke="rgba(255,255,255,0.10)" stroke-width="0.5" stroke-dasharray="2,3"/>
+        <line x1="${toX(13).toFixed(1)}" y1="${PT}" x2="${toX(13).toFixed(1)}" y2="${(PT+cH).toFixed(1)}"
+              stroke="rgba(255,255,255,0.10)" stroke-width="0.5" stroke-dasharray="2,3"/>
         <path d="${baselineFill}" fill="rgba(106,138,170,0.10)" stroke="none"/>
         <path d="${baselinePath}" fill="none" stroke="rgba(106,138,170,0.55)" stroke-width="1" stroke-dasharray="3,3"/>
         <path d="${actualPath}" fill="none" stroke="${paceColor}" stroke-width="1.8" stroke-linecap="round"/>
@@ -3301,8 +3315,8 @@ function _vesselSecVelocity(v) {
         <span style="left:64.3%">T&minus;5</span>
         <span style="left:78.6%">T&minus;3</span>
         <span style="left:92.9%">T&minus;1</span>
+        <span class="bv-axis-cutoff">${cutoffDateStr}</span>
       </div>
-      <div class="bv-curve-axis-cutoff">Cutoff date</div>
     </div>
 
     <div class="bv-tbl">
