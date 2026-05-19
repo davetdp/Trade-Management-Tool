@@ -1032,12 +1032,34 @@
       margin-bottom: 8px;
     }
     .bv-curve-svg { display: block; width: 100%; height: 60px; }
+    /* Two-row axis: top = T-X tick labels (positioned at their exact
+       fractional x), bottom = the cutoff date label (right-aligned). */
     .bv-curve-axis {
-      display: flex; justify-content: space-between;
-      font-size: 8px; color: var(--muted);
-      letter-spacing: 0.4px; margin-top: 1px;
+      position: relative;
+      height: 11px;
+      margin-top: 1px;
       padding: 0 2px;
-      font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.4px;
+    }
+    .bv-curve-axis span {
+      position: absolute;
+      white-space: nowrap;
+      transform: translateX(-50%);
+    }
+    .bv-curve-axis span.bv-axis-left { left: 0; transform: none; }
+    .bv-curve-axis-cutoff {
+      text-align: right;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: rgba(0,180,255,0.75);
+      letter-spacing: 0.5px;
+      margin-top: 1px;
+      padding-right: 2px;
     }
 
     /* Per-POL allocation/bookings/pickup table */
@@ -3274,8 +3296,13 @@ function _vesselSecVelocity(v) {
         <circle cx="${curX}" cy="${curY}" r="3" fill="${paceColor}" stroke="rgba(5,13,26,0.8)" stroke-width="1.2"/>
       </svg>
       <div class="bv-curve-axis">
-        <span>T&minus;14</span><span>T&minus;7</span><span>Final cutoff</span>
+        <span class="bv-axis-left">T&minus;14</span>
+        <span style="left:50%">T&minus;7</span>
+        <span style="left:64.3%">T&minus;5</span>
+        <span style="left:78.6%">T&minus;3</span>
+        <span style="left:92.9%">T&minus;1</span>
       </div>
+      <div class="bv-curve-axis-cutoff">Cutoff date</div>
     </div>
 
     <div class="bv-tbl">
