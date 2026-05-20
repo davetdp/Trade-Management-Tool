@@ -1037,7 +1037,7 @@
        in a smaller, cyan-tinted font. */
     .bv-curve-axis {
       position: relative;
-      height: 18px;
+      height: 12px;
       margin-top: 1px;
       padding: 0 2px;
       font-family: 'Space Grotesk', sans-serif;
@@ -3292,7 +3292,7 @@ function _vesselSecVelocity(v) {
           <span class="bv-pace-num" style="color:${paceColor}">${overallBkPct}%</span>
           <span class="bv-status-pill bv-status-${statusClass}">${status}</span>
         </div>
-        <div class="bv-pace-sub">booked of allocation &middot; forecast <b style="color:#e8f4ff;">${forecastAtCutoff}%</b> at cutoff</div>
+        <div class="bv-pace-sub">booked of allocation</div>
       </div>
       <div class="bv-meta">
         <div>Avg pickup <b>${overallPuPct}%</b></div>
@@ -3325,7 +3325,6 @@ function _vesselSecVelocity(v) {
         <span style="left:64.3%">T&minus;5</span>
         <span style="left:78.6%">T&minus;3</span>
         <span style="left:92.9%">T&minus;1</span>
-        <span class="bv-axis-cutoff">${cutoffDateStr}</span>
       </div>
     </div>
 
