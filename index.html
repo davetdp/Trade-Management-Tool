@@ -3150,22 +3150,21 @@ function _vesselSecVelocity(v) {
     // Pickup % vs bookings. Models real container-shipping gate flow:
     // gate close is ~1d before ETA, but shippers pick up empties 3-5d
     // before gate close so they have time to stuff cargo and return.
-    // So by T-1 to ETA, most/all pickups should already be done — and
-    // can even exceed 100% (split bookings, late bookings still being
-    // processed, walk-ins). Curve:
-    //   closed     → 100%
-    //   1d to ETA  → ~95-135% (peak pickup nearly complete)
-    //   3d to ETA  → ~60-100% (active pickup phase)
-    //   5d to ETA  → ~25-60%  (pickup ramping)
-    //   7d+ to ETA → ~5-30%   (early, few empties pulled yet)
+    // PU is a subset of BK by definition — you can't pick up more than
+    // what was booked — so pickupPct is hard-capped at 100%.
+    //   closed     → 100% (all gate-ins complete)
+    //   1d to ETA  → 90-100% (peak pickup nearly complete)
+    //   3d to ETA  → 55-90%  (active pickup phase)
+    //   5d to ETA  → 25-55%  (pickup ramping)
+    //   7d+ to ETA → 5-25%   (early, few empties pulled)
     let pickupPct;
     if (isClosed)               pickupPct = 100;
-    else if (daysToEtaInt <= 1) pickupPct = 95 + Math.floor(rng() * 40);
-    else if (daysToEtaInt <= 3) pickupPct = 60 + Math.floor(rng() * 40);
-    else if (daysToEtaInt <= 5) pickupPct = 25 + Math.floor(rng() * 35);
-    else                        pickupPct = 5  + Math.floor(rng() * 25);
+    else if (daysToEtaInt <= 1) pickupPct = 90 + Math.floor(rng() * 10);
+    else if (daysToEtaInt <= 3) pickupPct = 55 + Math.floor(rng() * 35);
+    else if (daysToEtaInt <= 5) pickupPct = 25 + Math.floor(rng() * 30);
+    else                        pickupPct = 5  + Math.floor(rng() * 20);
     if (!isClosed && bookingsPct > 160) pickupPct = Math.max(15, pickupPct - 8);
-    pickupPct = Math.max(0, Math.min(140, pickupPct));   // allow over-pickup
+    pickupPct = Math.max(0, Math.min(100, pickupPct));
     const pickup = Math.round(bookings * pickupPct / 100);
 
     return { pol, code: polCode(pol), daysToEtaInt, isClosed,
@@ -3273,9 +3272,9 @@ function _vesselSecVelocity(v) {
     const bkColor = p.bookingsPct >= 130 ? '#00e5a0'
                   : p.bookingsPct >= 95  ? '#5fdfff'
                   : p.bookingsPct >= 75  ? '#ffb830' : '#ff4d6a';
-    const puColor = p.pickupPct >= 100 ? '#00e5a0'
-                  : p.pickupPct >= 70  ? '#5fdfff'
-                  : p.pickupPct >= 40  ? '#ffb830' : '#ff4d6a';
+    const puColor = p.pickupPct >= 90 ? '#00e5a0'
+                  : p.pickupPct >= 60 ? '#5fdfff'
+                  : p.pickupPct >= 30 ? '#ffb830' : '#ff4d6a';
     const cls = p.isClosed ? 'bv-tbl-row bv-tbl-closed' : 'bv-tbl-row';
     return `<div class="${cls}" title="${p.code}">
       <div>
@@ -3325,7 +3324,7 @@ function _vesselSecVelocity(v) {
         <span class="bv-tbl-num">${totalBookings.toLocaleString()}</span>
         <span class="bv-tbl-pct" style="color:${paceColor}">${overallBkPct}%</span>
         <span class="bv-tbl-num">${totalPickup.toLocaleString()}</span>
-        <span class="bv-tbl-pct" style="color:${overallPuPct >= 100 ? '#00e5a0' : overallPuPct >= 70 ? '#5fdfff' : overallPuPct >= 40 ? '#ffb830' : '#ff4d6a'}">${overallPuPct}%</span>
+        <span class="bv-tbl-pct" style="color:${overallPuPct >= 90 ? '#00e5a0' : overallPuPct >= 60 ? '#5fdfff' : overallPuPct >= 30 ? '#ffb830' : '#ff4d6a'}">${overallPuPct}%</span>
       </div>
     </div>
 
