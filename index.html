@@ -1287,6 +1287,10 @@
       background: #ffb830; color: #050d1a;
       box-shadow: 0 0 8px rgba(255,184,48,0.45);
     }
+    .schedule-marker-severe {
+      background: #ff4d6a; color: #fff;
+      box-shadow: 0 0 8px rgba(255,77,106,0.5);
+    }
     .schedule-marker-current {
       background: rgba(0,180,255,0.95);
       animation: schedule-marker-pulse 2s infinite;
@@ -1340,6 +1344,10 @@
       background: rgba(255,184,48,0.18);
       color: #ffb830;
       letter-spacing: 0.4px;
+    }
+    .schedule-delay-tag-severe {
+      background: rgba(255,77,106,0.20);
+      color: #ff4d6a;
     }
     .schedule-current-tag {
       display: inline-block; margin-left: 6px;
@@ -5896,11 +5904,15 @@ function initScheduleDrawer() {
         tag = '<span class="schedule-current-tag">In Port</span>';
         timesHtml = `
           <div class="schedule-time-row"><span class="schedule-time-label">PTA:</span><span>${fmtDateTime(it.pta)}</span></div>
-          <div class="schedule-time-row"><span class="schedule-time-label">ATA:</span><span>${fmtDateTime(it.ata)}</span>${it.delayHours>2?`<span class="schedule-delay-tag">${fmtDelay(it.delayHours)}</span>`:''}</div>
+          <div class="schedule-time-row"><span class="schedule-time-label">ATA:</span><span>${fmtDateTime(it.ata)}</span>${it.delayHours>2?`<span class="schedule-delay-tag${it.delayHours>=24?' schedule-delay-tag-severe':''}">${fmtDelay(it.delayHours)}</span>`:''}</div>
           <div class="schedule-time-row"><span class="schedule-time-label">PTD:</span><span>${fmtDateTime(it.ptd)}</span></div>
         `;
       } else if (it.isPast) {
-        if (it.delayHours > 2) {
+        if (it.delayHours >= 24) {
+          // Severe delay (≥1 day) — flag red
+          mClass = 'schedule-marker-severe'; mIcon = '!';
+          tag = `<span class="schedule-delay-tag schedule-delay-tag-severe">${fmtDelay(it.delayHours)} delayed</span>`;
+        } else if (it.delayHours > 2) {
           mClass = 'schedule-marker-delayed'; mIcon = '!';
           tag = `<span class="schedule-delay-tag">${fmtDelay(it.delayHours)} delayed</span>`;
         } else {
