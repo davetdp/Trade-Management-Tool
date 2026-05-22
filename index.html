@@ -5823,6 +5823,11 @@ function initScheduleDrawer() {
       if (isPast || isCurrent) {
         // Bias toward delay: rng - 0.35 gives more positive than negative values
         delayHours = Math.round((rng() - 0.35) * 18);                 // mostly -6h to +12h
+        // Sample multi-day delay scenario for Kota Ebony at Shanghai —
+        // demonstrates how the drawer flags >24h slippage.
+        if (v.name === 'Kota Ebony' && port === 'Shanghai' && isPast) {
+          delayHours = 32 + Math.floor(rng() * 14);                   // 32-46h delay
+        }
         ata = new Date(pta.getTime() + delayHours * 3600000);
         if (isPast) atd = new Date(ptd.getTime() + delayHours * 3600000);
       }
@@ -5873,6 +5878,14 @@ function initScheduleDrawer() {
       return;
     }
 
+    // Format a delay (in hours) as "+Xh" or "+Yd Xh" for ≥24h slippage
+    function fmtDelay(h) {
+      if (h < 24) return '+' + h + 'h';
+      const d = Math.floor(h / 24);
+      const rem = h % 24;
+      return rem ? '+' + d + 'd ' + rem + 'h' : '+' + d + 'd';
+    }
+
     listEl.innerHTML = items.map(it => {
       let mClass, mIcon, itemCls, timesHtml;
       let tag = '';
@@ -5883,13 +5896,13 @@ function initScheduleDrawer() {
         tag = '<span class="schedule-current-tag">In Port</span>';
         timesHtml = `
           <div class="schedule-time-row"><span class="schedule-time-label">PTA:</span><span>${fmtDateTime(it.pta)}</span></div>
-          <div class="schedule-time-row"><span class="schedule-time-label">ATA:</span><span>${fmtDateTime(it.ata)}</span>${it.delayHours>2?`<span class="schedule-delay-tag">+${it.delayHours}h</span>`:''}</div>
+          <div class="schedule-time-row"><span class="schedule-time-label">ATA:</span><span>${fmtDateTime(it.ata)}</span>${it.delayHours>2?`<span class="schedule-delay-tag">${fmtDelay(it.delayHours)}</span>`:''}</div>
           <div class="schedule-time-row"><span class="schedule-time-label">PTD:</span><span>${fmtDateTime(it.ptd)}</span></div>
         `;
       } else if (it.isPast) {
         if (it.delayHours > 2) {
           mClass = 'schedule-marker-delayed'; mIcon = '!';
-          tag = `<span class="schedule-delay-tag">+${it.delayHours}h delayed</span>`;
+          tag = `<span class="schedule-delay-tag">${fmtDelay(it.delayHours)} delayed</span>`;
         } else {
           mClass = 'schedule-marker-completed'; mIcon = '✓';
         }
@@ -5963,11 +5976,11 @@ function initScheduleDrawer() {
   }
 
   function setDefaultDateRange() {
-    // Default window: start of current month → +90 days. Anchoring FROM
-    // to the 1st of the current month keeps all displayed port calls in
-    // the current month and forward, rather than spilling into last month.
+    // Default window: start of LAST month → +90 days. This pulls in the
+    // most recent completed past port calls (which show as ATA/ATD with
+    // delay tags) plus the upcoming PTA/PTD entries.
     const now  = new Date();
-    const from = new Date(now.getFullYear(), now.getMonth(), 1);
+    const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const to   = new Date(now.getTime() + 90 * 86400000);
     fromInp.value = fmtDateInput(from);
     toInp.value   = fmtDateInput(to);
