@@ -5321,6 +5321,22 @@ initCardSectionPanels();
   setTimeout(function() { map.invalidateSize(); activeTileLayer.redraw(); }, ms);
 });
 
+// Also redraw once the page has fully loaded (fonts/images settled) and
+// on any browser resize — Leaflet otherwise miscomputes the container size
+// and tiles fail to fetch.
+window.addEventListener('load', () => {
+  map.invalidateSize();
+  if (activeTileLayer) activeTileLayer.redraw();
+});
+let _resizeT;
+window.addEventListener('resize', () => {
+  clearTimeout(_resizeT);
+  _resizeT = setTimeout(() => {
+    map.invalidateSize();
+    if (activeTileLayer) activeTileLayer.redraw();
+  }, 200);
+});
+
 // ── SIDEBAR TOGGLE ───────────────────────────────────────────
 function toggleSidebar() {
   const sidebar = document.querySelector('.sidebar');
