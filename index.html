@@ -3347,13 +3347,41 @@ function _vesselSecVelocity(v) {
   const fmtDate = (date) => `${date.getDate()} ${MONTHS[date.getMonth()]}`;
 
   // ── Generate mock per-POL data ────────────────────────────────
+  // Determine which loading ports the vessel has ALREADY passed vs. is
+  // still upcoming, based on v.nextPort's position in v.route.
+  // Cases:
+  //   • nextPort is a discharge port (e.g., Kota Eagle → Nhava Sheva):
+  //     all loading ports are in the past → CLOSED.
+  //   • nextPort is one of the loading ports (e.g., Kota Ebony → Ningbo):
+  //     POLs before nextPort = closed; nextPort and after = upcoming.
+  //   • nextPort missing/unknown: fall back to a generic ETA spread.
   const totalPols = Math.max(loadingPorts.length, 1);
+  const nextPortIdx = (v.nextPort && routePorts.indexOf(v.nextPort)) >= 0
+    ? routePorts.indexOf(v.nextPort)
+    : -1;
   const polData = loadingPorts.map((pol, i) => {
-    const t = totalPols > 1 ? i / (totalPols - 1) : 0.5;
-    // ETA spread: earliest POL ~−3d (already sailed), final POL ~+6d
-    const daysOffset = -3 + t * 9 + (rng() - 0.5) * 0.8;
-    const daysToEtaInt = Math.round(daysOffset);
-    const isClosed = daysToEtaInt < 0;
+    const polIdx = routePorts.indexOf(pol);
+
+    let isClosed, daysToEtaInt;
+    if (nextPortIdx >= 0) {
+      if (polIdx < nextPortIdx) {
+        // Already past — closed. Older POLs further in the past.
+        const daysAgo = (nextPortIdx - polIdx) * 2 + 1 + Math.floor(rng() * 2);
+        daysToEtaInt = -daysAgo;
+        isClosed = true;
+      } else {
+        // nextPort itself or later — still upcoming.
+        const distFromNext = polIdx - nextPortIdx;
+        daysToEtaInt = 1 + distFromNext * 2 + Math.floor(rng() * 2);
+        isClosed = false;
+      }
+    } else {
+      // Fallback (vessel without a known nextPort): even spread −3d → +6d.
+      const t = totalPols > 1 ? i / (totalPols - 1) : 0.5;
+      const daysOffset = -3 + t * 9 + (rng() - 0.5) * 0.8;
+      daysToEtaInt = Math.round(daysOffset);
+      isClosed = daysToEtaInt < 0;
+    }
 
     // Allocation per POL: 80–500 TEU.
     const allocation = 80 + Math.floor(rng() * 420);
