@@ -1151,6 +1151,226 @@
     }
 
     /* ─────────────────────────────────────────────────────────
+       VESSEL SCHEDULE DRAWER (per-vessel voyage schedule)
+       ───────────────────────────────────────────────────────── */
+    .schedule-panel {
+      position: fixed; top: 58px; right: 0; bottom: 62px;
+      width: 380px;
+      background: linear-gradient(180deg, rgba(7,16,36,0.97) 0%, rgba(5,13,26,0.95) 100%);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(0,180,255,0.18);
+      box-shadow: -8px 0 28px rgba(0,0,0,0.55);
+      transform: translateX(105%);
+      transition: transform .28s cubic-bezier(.4,0,.2,1);
+      z-index: 1450;
+      display: flex; flex-direction: column;
+    }
+    .schedule-panel.open { transform: translateX(0); }
+    .schedule-panel-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(0,180,255,0.15);
+      background: rgba(0,180,255,0.04);
+    }
+    .schedule-panel-title-block { flex: 1; min-width: 0; }
+    .schedule-panel-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: #e8f4ff; letter-spacing: 0.3px;
+    }
+    .schedule-panel-subtitle {
+      font-size: 10px; color: var(--muted);
+      letter-spacing: 0.4px; margin-top: 2px;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .schedule-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 22px; line-height: 1;
+      padding: 4px 6px; border-radius: 6px;
+      transition: color .15s, background .15s;
+    }
+    .schedule-close:hover { color: #e8f4ff; background: rgba(255,255,255,0.05); }
+
+    .schedule-filter-block {
+      padding: 12px 16px 14px;
+      border-bottom: 1px solid rgba(0,180,255,0.10);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .schedule-filter-label {
+      font-size: 9.5px; color: var(--muted);
+      letter-spacing: 0.4px; font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .schedule-vessel-select,
+    .schedule-date-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,180,255,0.22);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #e8f4ff; font-size: 12px;
+      font-family: inherit;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .schedule-vessel-select:focus,
+    .schedule-date-input:focus { border-color: rgba(0,180,255,0.55); }
+    .schedule-date-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .schedule-button-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px;
+    }
+    .schedule-btn {
+      padding: 9px 14px; border-radius: 8px;
+      font-family: inherit; font-size: 11.5px;
+      font-weight: 700; letter-spacing: 0.4px;
+      cursor: pointer; border: 1px solid; outline: none;
+      transition: background .15s, border-color .15s, box-shadow .15s;
+    }
+    .schedule-btn-primary {
+      background: linear-gradient(135deg, #00b4ff 0%, #0066cc 100%);
+      border-color: rgba(0,180,255,0.6); color: #fff;
+    }
+    .schedule-btn-primary:hover { box-shadow: 0 0 14px rgba(0,180,255,0.45); }
+    .schedule-btn-secondary {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.18); color: #e8f4ff;
+    }
+    .schedule-btn-secondary:hover { background: rgba(255,255,255,0.08); }
+
+    .schedule-list {
+      flex: 1; overflow-y: auto;
+      padding: 14px 16px 20px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,180,255,0.25) transparent;
+    }
+    .schedule-list::-webkit-scrollbar { width: 6px; }
+    .schedule-list::-webkit-scrollbar-thumb {
+      background: rgba(0,180,255,0.25); border-radius: 3px;
+    }
+
+    .schedule-item {
+      position: relative;
+      padding-left: 30px;
+      padding-bottom: 15px;
+    }
+    .schedule-item:last-child { padding-bottom: 0; }
+    /* Vertical connector line between items */
+    .schedule-item::before {
+      content: ''; position: absolute;
+      left: 11px; top: 24px; bottom: -3px;
+      width: 1px; background: rgba(106,138,170,0.25);
+    }
+    .schedule-item:last-child::before { display: none; }
+    .schedule-item-past::before {
+      background: linear-gradient(to bottom, rgba(0,229,160,0.55), rgba(0,229,160,0.25));
+    }
+    .schedule-item-current::before {
+      background: linear-gradient(to bottom, rgba(0,229,160,0.45), rgba(106,138,170,0.25));
+    }
+
+    .schedule-marker {
+      position: absolute; left: 0; top: 4px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .schedule-marker-completed {
+      background: #00e5a0; color: #050d1a;
+      box-shadow: 0 0 8px rgba(0,229,160,0.45);
+    }
+    .schedule-marker-delayed {
+      background: #ffb830; color: #050d1a;
+      box-shadow: 0 0 8px rgba(255,184,48,0.45);
+    }
+    .schedule-marker-current {
+      background: rgba(0,180,255,0.95);
+      animation: schedule-marker-pulse 2s infinite;
+    }
+    .schedule-marker-upcoming {
+      background: rgba(106,138,170,0.25);
+      border: 1.5px solid rgba(106,138,170,0.45);
+    }
+    @keyframes schedule-marker-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,180,255,0.6); }
+      50%      { box-shadow: 0 0 0 7px rgba(0,180,255,0); }
+    }
+
+    .schedule-item-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 4px;
+    }
+    .schedule-port-link {
+      flex: 1;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: #5fdfff; cursor: pointer;
+      transition: color .15s;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .schedule-port-link:hover { color: #00b4ff; text-decoration: underline; }
+    .schedule-eye {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); padding: 2px;
+      transition: color .15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .schedule-eye:hover { color: #5fdfff; }
+
+    .schedule-item-times {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px; color: #b8d8ff;
+      line-height: 1.5;
+    }
+    .schedule-time-row {
+      display: flex; align-items: baseline; gap: 6px;
+    }
+    .schedule-time-label {
+      color: var(--muted); font-weight: 700;
+      letter-spacing: 0.3px; min-width: 30px;
+    }
+    .schedule-delay-tag {
+      display: inline-block; margin-left: 6px;
+      font-size: 9px; font-weight: 700;
+      padding: 1px 5px; border-radius: 4px;
+      background: rgba(255,184,48,0.18);
+      color: #ffb830;
+      letter-spacing: 0.4px;
+    }
+    .schedule-current-tag {
+      display: inline-block; margin-left: 6px;
+      font-size: 9px; font-weight: 700;
+      padding: 1px 5px; border-radius: 4px;
+      background: rgba(0,180,255,0.18);
+      color: #5fdfff;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .schedule-empty {
+      text-align: center; padding: 36px 20px;
+      color: var(--muted); font-size: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .schedule-panel { top: 58px; bottom: 0; width: 100%; }
+    }
+
+    /* Brief pulse for a port marker when focused from the schedule */
+    .port-highlight-flash {
+      animation: port-flash 2.2s ease-out 1;
+    }
+    @keyframes port-flash {
+      0%   { filter: drop-shadow(0 0 0 rgba(0,180,255,0)); transform: scale(1); }
+      30%  { filter: drop-shadow(0 0 14px rgba(0,180,255,0.95)); transform: scale(1.25); }
+      100% { filter: drop-shadow(0 0 0 rgba(0,180,255,0)); transform: scale(1); }
+    }
+
+    /* ─────────────────────────────────────────────────────────
        AISHA — AI Sea Hawk Agent (floating chatbot)
        ───────────────────────────────────────────────────────── */
     .aisha-fab {
@@ -5462,7 +5682,335 @@ if (document.readyState === 'loading') {
 } else {
   initAisha();
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   VESSEL SCHEDULE DRAWER — opens on vessel marker click, replaces
+   the popup with a right-side timeline of past + upcoming port calls
+   (past 1 month + future 3 months by default).
+   ───────────────────────────────────────────────────────────────── */
+function initScheduleDrawer() {
+  const panel     = document.getElementById('schedule-panel');
+  const closeBtn  = document.getElementById('schedule-close');
+  const titleEl   = document.getElementById('schedule-panel-title');
+  const vSelect   = document.getElementById('schedule-vessel-select');
+  const fromInp   = document.getElementById('schedule-from');
+  const toInp     = document.getElementById('schedule-to');
+  const searchBtn = document.getElementById('schedule-search');
+  const clearBtn  = document.getElementById('schedule-clear');
+  const listEl    = document.getElementById('schedule-list');
+  if (!panel) return;
+
+  // UN/LOCODE lookup for port codes shown after each name.
+  const PORT_CODE = {
+    'Shanghai':'CNSHA','Ningbo':'CNNGB','Shekou':'CNSKO','Singapore':'SGSIN',
+    'Port Kelang':'MYPKG','Port Klang':'MYPKG','Hong Kong':'HKHKG','Nansha':'CNNSA',
+    'Xiamen':'CNXMN','Kaohsiung':'TWKHH','Qingdao':'CNTAO','Tianjin':'CNTSN',
+    'Yantian':'CNYTN','Dalian':'CNDLC','Busan':'KRPUS','Mombasa':'KEMBA',
+    'Cape Town':'ZACPT','Durban':'ZADUR','Nhava Sheva':'INNSA','Mundra':'INMUN',
+    'Karachi':'PKKHI','Dar es Salaam':'TZDAR','Lagos':'NGAPP','Tema':'GHTEM',
+    'Kolkata':'INCCU','Haiphong':'VNHPH','Ho Chi Minh City':'VNSGN','Jakarta':'IDJKT',
+    'Manila':'PHMNL','Bangkok':'THBKK','Laem Chabang':'THLCH','Colombo':'LKCMB',
+    'Sohar':'OMSOH','Salalah':'OMSLL','Callao':'PECLL','San Antonio':'CLSAI',
+    'Melbourne':'AUMEL','Sydney':'AUSYD','Brisbane':'AUBNE','Auckland':'NZAKL',
+    'Suva':'FJSUV','Apia':'WSAPW',
+  };
+  const codeFor = (port) =>
+    PORT_CODE[port] || port.replace(/[^A-Za-z]/g,'').slice(0,5).toUpperCase();
+
+  // Lookup [lat,lng] for a port name. Uses ports[] from the page
+  // (already keyed by short name) plus a couple of fallbacks.
+  function coordsFor(port) {
+    if (typeof ports !== 'undefined') {
+      const p = ports.find(p => {
+        const short = p.name.replace(/^Port of\s+/i, '').replace(/^Port\s+/i, '');
+        return short === port || p.name === port;
+      });
+      if (p && p.position) return p.position;
+    }
+    const fallback = {
+      'Shekou':[22.49,113.92], 'Mombasa':[-4.05,39.66], 'Mundra':[22.74,69.71],
+      'Karachi':[24.85,67.05], 'Kolkata':[22.55,88.36], 'Haiphong':[20.86,106.69],
+      'Lagos':[6.45,3.40], 'Cape Town':[-33.92,18.42], 'Durban':[-29.87,31.03],
+      'Dar es Salaam':[-6.80,39.28], 'Tema':[5.66,0.01], 'Sohar':[24.50,56.65],
+      'Callao':[-12.05,-77.13],
+    };
+    return fallback[port] || null;
+  }
+
+  // Deterministic per-vessel mock schedule: generates port calls covering
+  // (now − 35 days) → (now + 95 days), then filtered to the From/To window.
+  // The cycle is route forward + reverse so we get a full round trip.
+  function generateSchedule(v, fromDate, toDate) {
+    if (!v || !v.route) return [];
+    const routePorts = v.route.split('→').map(s => s.trim()).filter(Boolean);
+    if (!routePorts.length) return [];
+    // Round trip: forward + reverse minus the duplicated turn-port at the end
+    // e.g. A→B→C→D becomes A→B→C→D→C→B→A→B (cycle continues).
+    const cycle = routePorts.concat(routePorts.slice(0, -1).reverse());
+
+    // Seed rng deterministically per vessel name
+    let seed = 0;
+    for (let i=0; i<v.name.length; i++) seed = (seed*31 + v.name.charCodeAt(i)) >>> 0;
+    const rng = () => { seed = (seed * 1103515245 + 12345) >>> 0; return seed / 4294967296; };
+
+    const now = Date.now();
+    const startMs = fromDate ? fromDate.getTime() : now - 30 * 86400000;
+    const endMs   = toDate   ? toDate.getTime()   : now + 90 * 86400000;
+
+    // Step generation forward from a fixed anchor (now − 35d) so the same
+    // vessel always produces the same timeline regardless of filter.
+    let cursor = now - 35 * 86400000;
+    let cycleIdx = 0;
+    const items = [];
+    let safety = 0;
+
+    while (cursor < endMs + 7 * 86400000 && safety++ < 200) {
+      const port      = cycle[cycleIdx % cycle.length];
+      const stayHours = 18 + Math.floor(rng() * 30);                // 18–48h in port
+      const pta = new Date(cursor);
+      const ptd = new Date(cursor + stayHours * 3600000);
+
+      const isPast    = ptd.getTime() < now;
+      const isCurrent = pta.getTime() <= now && ptd.getTime() >= now;
+
+      // For past/current calls, generate actuals with realistic delay variance
+      // (mostly slight delays, occasionally significant)
+      let ata = null, atd = null, delayHours = 0;
+      if (isPast || isCurrent) {
+        // Bias toward delay: rng - 0.35 gives more positive than negative values
+        delayHours = Math.round((rng() - 0.35) * 18);                 // mostly -6h to +12h
+        ata = new Date(pta.getTime() + delayHours * 3600000);
+        if (isPast) atd = new Date(ptd.getTime() + delayHours * 3600000);
+      }
+
+      if (ptd.getTime() >= startMs - 86400000) {
+        items.push({
+          port, code: codeFor(port),
+          pta: pta.toISOString(), ptd: ptd.toISOString(),
+          ata: ata ? ata.toISOString() : null,
+          atd: atd ? atd.toISOString() : null,
+          isPast, isCurrent, delayHours,
+        });
+      }
+
+      const transitDays = 2 + Math.floor(rng() * 6);                  // 2–7d transit
+      cursor = ptd.getTime() + transitDays * 86400000;
+      cycleIdx++;
+    }
+
+    return items;
+  }
+
+  function pad2(n) { return String(n).padStart(2, '0'); }
+  function fmtDateTime(iso) {
+    const d = new Date(iso);
+    return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ` +
+           `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+  }
+  function fmtDateInput(d) {
+    return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  }
+
+  let currentVessel = null;
+
+  function renderSchedule() {
+    if (!currentVessel) {
+      listEl.innerHTML = '<div class="schedule-empty">Select a vessel to see schedule</div>';
+      return;
+    }
+    titleEl.textContent = currentVessel.name.toUpperCase();
+
+    const from = fromInp.value ? new Date(fromInp.value + 'T00:00:00') : null;
+    const to   = toInp.value   ? new Date(toInp.value   + 'T23:59:59') : null;
+    const items = generateSchedule(currentVessel, from, to);
+
+    if (!items.length) {
+      listEl.innerHTML = '<div class="schedule-empty">No port calls in the selected date range.</div>';
+      return;
+    }
+
+    listEl.innerHTML = items.map(it => {
+      let mClass, mIcon, itemCls, timesHtml;
+      let tag = '';
+
+      if (it.isCurrent) {
+        mClass = 'schedule-marker-current'; mIcon = '';
+        itemCls = 'schedule-item schedule-item-current';
+        tag = '<span class="schedule-current-tag">In Port</span>';
+        timesHtml = `
+          <div class="schedule-time-row"><span class="schedule-time-label">PTA:</span><span>${fmtDateTime(it.pta)}</span></div>
+          <div class="schedule-time-row"><span class="schedule-time-label">ATA:</span><span>${fmtDateTime(it.ata)}</span>${it.delayHours>2?`<span class="schedule-delay-tag">+${it.delayHours}h</span>`:''}</div>
+          <div class="schedule-time-row"><span class="schedule-time-label">PTD:</span><span>${fmtDateTime(it.ptd)}</span></div>
+        `;
+      } else if (it.isPast) {
+        if (it.delayHours > 2) {
+          mClass = 'schedule-marker-delayed'; mIcon = '!';
+          tag = `<span class="schedule-delay-tag">+${it.delayHours}h delayed</span>`;
+        } else {
+          mClass = 'schedule-marker-completed'; mIcon = '✓';
+        }
+        itemCls = 'schedule-item schedule-item-past';
+        timesHtml = `
+          <div class="schedule-time-row"><span class="schedule-time-label">ATA:</span><span>${fmtDateTime(it.ata)}</span></div>
+          <div class="schedule-time-row"><span class="schedule-time-label">ATD:</span><span>${fmtDateTime(it.atd)}</span></div>
+        `;
+      } else {
+        mClass = 'schedule-marker-upcoming'; mIcon = '';
+        itemCls = 'schedule-item schedule-item-upcoming';
+        timesHtml = `
+          <div class="schedule-time-row"><span class="schedule-time-label">PTA:</span><span>${fmtDateTime(it.pta)}</span></div>
+          <div class="schedule-time-row"><span class="schedule-time-label">PTD:</span><span>${fmtDateTime(it.ptd)}</span></div>
+        `;
+      }
+
+      return `<div class="${itemCls}">
+        <div class="schedule-marker ${mClass}">${mIcon}</div>
+        <div class="schedule-item-header">
+          <span class="schedule-port-link" data-port="${it.port}" title="Click to zoom to ${it.port}">${it.port} (${it.code})</span>${tag}
+          <button class="schedule-eye" data-port="${it.port}" title="Highlight on map">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="schedule-item-times">${timesHtml}</div>
+      </div>`;
+    }).join('');
+
+    // Wire per-port click handlers
+    listEl.querySelectorAll('.schedule-port-link').forEach(el => {
+      el.addEventListener('click', () => focusPortOnMap(el.dataset.port, true));
+    });
+    listEl.querySelectorAll('.schedule-eye').forEach(el => {
+      el.addEventListener('click', () => focusPortOnMap(el.dataset.port, true));
+    });
+  }
+
+  // Zoom map to a port and briefly pulse its marker
+  function focusPortOnMap(portName, highlight) {
+    const c = coordsFor(portName);
+    if (!c || typeof map === 'undefined') return;
+    map.flyTo(c, 7, { duration: 0.8 });
+    if (highlight && typeof portMarkers !== 'undefined') {
+      // Try to find the port marker and trigger a brief CSS pulse via class
+      const pm = portMarkers.find(o => {
+        const p = o.p;
+        if (!p) return false;
+        const short = p.name.replace(/^Port of\s+/i, '').replace(/^Port\s+/i, '');
+        return short === portName || p.name === portName;
+      });
+      if (pm && pm.marker && pm.marker._icon) {
+        pm.marker._icon.classList.add('port-highlight-flash');
+        setTimeout(() => pm.marker._icon && pm.marker._icon.classList.remove('port-highlight-flash'), 2200);
+      }
+    }
+  }
+
+  // Populate vessel dropdown from the global vessels[] array
+  function populateVesselSelect() {
+    if (typeof vessels === 'undefined') return;
+    vSelect.innerHTML = '';
+    vessels.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.name;
+      opt.textContent = `${v.name.toUpperCase()}${v.imo ? ' — ' + v.imo : ''}`;
+      vSelect.appendChild(opt);
+    });
+  }
+
+  function setDefaultDateRange() {
+    const now = new Date();
+    const from = new Date(now.getTime() - 30 * 86400000);
+    const to   = new Date(now.getTime() + 90 * 86400000);
+    fromInp.value = fmtDateInput(from);
+    toInp.value   = fmtDateInput(to);
+  }
+
+  function openDrawer(v) {
+    if (!v) return;
+    currentVessel = v;
+    if (typeof map !== 'undefined') map.closePopup();
+    vSelect.value = v.name;
+    setDefaultDateRange();
+    renderSchedule();
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+  }
+  function closeDrawer() {
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+  }
+
+  // Wire up controls
+  closeBtn.addEventListener('click', closeDrawer);
+  searchBtn.addEventListener('click', renderSchedule);
+  clearBtn.addEventListener('click', () => {
+    setDefaultDateRange();
+    renderSchedule();
+  });
+  vSelect.addEventListener('change', () => {
+    const v = (typeof vessels !== 'undefined') ? vessels.find(x => x.name === vSelect.value) : null;
+    if (v) { currentVessel = v; renderSchedule(); }
+  });
+
+  // ESC closes the drawer (in addition to the existing AISHA/popup handlers)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closeDrawer();
+  });
+
+  // Replace vessel-marker click → opens drawer (instead of popup)
+  if (typeof vesselMarkers !== 'undefined') {
+    vesselMarkers.forEach(({ marker, v }) => {
+      if (!marker || !v) return;
+      marker.off('click');
+      marker.on('click', () => openDrawer(v));
+    });
+  }
+
+  populateVesselSelect();
+  // Expose the opener for any caller (e.g. AISHA suggestion chips)
+  window.openVesselSchedule = openDrawer;
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initScheduleDrawer);
+} else {
+  initScheduleDrawer();
+}
 </script>
+
+<!-- ═══════════════════════════════════════════════════════
+     VESSEL SCHEDULE DRAWER
+     ═══════════════════════════════════════════════════════ -->
+<aside class="schedule-panel" id="schedule-panel" aria-label="Vessel schedule" aria-hidden="true">
+  <header class="schedule-panel-header">
+    <div class="schedule-panel-title-block">
+      <div class="schedule-panel-title" id="schedule-panel-title">Vessel Schedule</div>
+      <div class="schedule-panel-subtitle">Past 1 month · Next 3 months</div>
+    </div>
+    <button class="schedule-close" id="schedule-close" aria-label="Close schedule">&times;</button>
+  </header>
+  <div class="schedule-filter-block">
+    <div>
+      <div class="schedule-filter-label">Select Vessel</div>
+      <select class="schedule-vessel-select" id="schedule-vessel-select"></select>
+    </div>
+    <div class="schedule-date-row">
+      <div>
+        <div class="schedule-filter-label">From</div>
+        <input type="date" class="schedule-date-input" id="schedule-from"/>
+      </div>
+      <div>
+        <div class="schedule-filter-label">To</div>
+        <input type="date" class="schedule-date-input" id="schedule-to"/>
+      </div>
+    </div>
+    <div class="schedule-button-row">
+      <button class="schedule-btn schedule-btn-primary"   id="schedule-search">Search</button>
+      <button class="schedule-btn schedule-btn-secondary" id="schedule-clear">Clear</button>
+    </div>
+  </div>
+  <div class="schedule-list" id="schedule-list"></div>
+</aside>
 
 <!-- ═══════════════════════════════════════════════════════
      AISHA — AI Sea Hawk Agent
