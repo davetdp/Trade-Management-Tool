@@ -5783,7 +5783,7 @@ function initScheduleDrawer() {
         if (isPast) atd = new Date(ptd.getTime() + delayHours * 3600000);
       }
 
-      if (ptd.getTime() >= startMs - 86400000) {
+      if (pta.getTime() >= startMs) {
         items.push({
           port, code: codeFor(port),
           pta: pta.toISOString(), ptd: ptd.toISOString(),
@@ -5919,8 +5919,11 @@ function initScheduleDrawer() {
   }
 
   function setDefaultDateRange() {
-    const now = new Date();
-    const from = new Date(now.getTime() - 30 * 86400000);
+    // Default window: start of current month → +90 days. Anchoring FROM
+    // to the 1st of the current month keeps all displayed port calls in
+    // the current month and forward, rather than spilling into last month.
+    const now  = new Date();
+    const from = new Date(now.getFullYear(), now.getMonth(), 1);
     const to   = new Date(now.getTime() + 90 * 86400000);
     fromInp.value = fmtDateInput(from);
     toInp.value   = fmtDateInput(to);
