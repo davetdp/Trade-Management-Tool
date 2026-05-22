@@ -5994,17 +5994,20 @@ function initScheduleDrawer() {
 
     // Scroll the list to the vessel's CURRENT position so the user doesn't
     // have to scroll past past-month entries to find "where the vessel is
-    // now". Prefer .schedule-item-current; fall back to the first
-    // upcoming (non-past) item; otherwise leave the scroll at top.
-    const target =
-      listEl.querySelector('.schedule-item-current') ||
-      listEl.querySelector('.schedule-item:not(.schedule-item-past):not(.schedule-item-current)');
-    if (target) {
-      // Position the target near the top of the visible list with a small
-      // header offset so the user can still see the prior (last past) call.
+    // now". Prefer pinning the LAST PAST item to the top of the visible
+    // list — that way the most recent completed call sits flush at the top
+    // and the next upcoming call appears immediately below (no clipping).
+    const pastItems   = listEl.querySelectorAll('.schedule-item-past');
+    const lastPast    = pastItems[pastItems.length - 1];
+    const currentItem = listEl.querySelector('.schedule-item-current');
+    const firstUpcomingItem = listEl.querySelector(
+      '.schedule-item:not(.schedule-item-past):not(.schedule-item-current)'
+    );
+    const scrollTarget = lastPast || currentItem || firstUpcomingItem;
+    if (scrollTarget) {
       const listRect = listEl.getBoundingClientRect();
-      const tRect    = target.getBoundingClientRect();
-      const offset   = tRect.top - listRect.top - 60;  // ~60px headroom
+      const tRect    = scrollTarget.getBoundingClientRect();
+      const offset   = tRect.top - listRect.top - 8;   // 8px headroom
       listEl.scrollTop = Math.max(0, listEl.scrollTop + offset);
     }
   }
