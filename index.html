@@ -500,6 +500,18 @@
       content: ''; display: inline-block; width: 3px; height: 10px;
       border-radius: 2px; background: rgba(0,180,255,0.5); flex-shrink: 0;
     }
+    /* Consistent gap between popup sections — applied to any section-title
+       that follows another element (i.e. not the very first section). When
+       a popup-divider precedes the title, the divider's own margin already
+       provides the spacing, so we cancel the extra gap there. */
+    .popup-body > * + .popup-section-title,
+    .port-popup-body > * + .popup-section-title {
+      margin-top: 12px;
+    }
+    .popup-body > .popup-divider + .popup-section-title,
+    .port-popup-body > .popup-divider + .popup-section-title {
+      margin-top: 0;
+    }
 
     .pnl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 8px; }
     .pnl-item {
