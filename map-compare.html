@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SHIP — Map Tile Provider Comparison</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; height: 100vh;
+      background: #050d1a; color: #e8f4ff;
+      font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    }
+    .top-bar {
+      height: 52px;
+      padding: 0 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(180deg, #0a1929 0%, #050d1a 100%);
+      border-bottom: 1px solid rgba(0,180,255,0.18);
+      box-shadow: 0 1px 24px rgba(0,0,0,0.5);
+    }
+    .top-bar h1 {
+      font-size: 14px; font-weight: 700; margin: 0;
+      letter-spacing: 0.4px;
+    }
+    .top-bar .controls {
+      display: flex; gap: 14px; align-items: center;
+      font-size: 12px; color: #6a8aaa;
+    }
+    .top-bar button {
+      background: rgba(0,180,255,0.12);
+      border: 1px solid rgba(0,180,255,0.35);
+      color: #5fdfff;
+      padding: 5px 12px; border-radius: 6px;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      transition: background .15s;
+      font-family: inherit;
+    }
+    .top-bar button:hover { background: rgba(0,180,255,0.22); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 10px;
+      height: calc(100vh - 52px);
+    }
+    .panel {
+      display: flex; flex-direction: column;
+      background: #050d1a;
+      border: 1px solid rgba(0,180,255,0.18);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 8px 12px;
+      background: rgba(0,180,255,0.04);
+      border-bottom: 1px solid rgba(0,180,255,0.15);
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .panel-title {
+      font-size: 12px; font-weight: 700; color: #e8f4ff;
+      letter-spacing: 0.3px;
+    }
+    .panel-sub {
+      font-size: 9.5px; color: #6a8aaa;
+      letter-spacing: 0.4px; text-transform: uppercase;
+    }
+    .map { flex: 1; min-height: 0; }
+    .map .leaflet-container { background: #020d1e; }
+    /* Current SHIP filter for fair comparison */
+    .map.tinted .leaflet-tile-pane {
+      filter: brightness(1.45) contrast(1.18) saturate(1.10);
+    }
+    .map .leaflet-tile { transform: translateZ(0); }
+    /* Marker styling — minimal, just to anchor visual context */
+    .vessel-marker {
+      background: rgba(0,180,255,0.85);
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(0,180,255,0.85);
+      border: 2px solid #050d1a;
+    }
+    .legend {
+      padding: 8px 12px; border-top: 1px solid rgba(0,180,255,0.10);
+      font-size: 9.5px; color: #6a8aaa; line-height: 1.45;
+    }
+    .legend a { color: #5fdfff; text-decoration: none; }
+    .legend code {
+      background: rgba(255,255,255,0.05);
+      padding: 1px 5px; border-radius: 3px;
+      font-size: 9px; color: #b8d8ff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>SHIP — Tile Provider Comparison</h1>
+  <div class="controls">
+    <span id="zoom-label">Zoom: 3</span>
+    <button onclick="zoomAll(1)">Zoom +</button>
+    <button onclick="zoomAll(-1)">Zoom −</button>
+    <button onclick="resetAll()">Reset View</button>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+      <input type="checkbox" id="tintToggle" checked onchange="toggleTint()"/> Apply SHIP tint filter
+    </label>
+  </div>
+</div>
+
+<div class="grid">
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">CartoDB Dark (current)</span>
+      <span class="panel-sub">Carto / OpenStreetMap</span>
+    </div>
+    <div id="map1" class="map tinted"></div>
+    <div class="legend">
+      <code>basemaps.cartocdn.com/dark_all</code><br/>
+      What SHIP uses today. Free, no API key, slightly soft labels.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Stadia Alidade Smooth Dark</span>
+      <span class="panel-sub">Stadia Maps</span>
+    </div>
+    <div id="map2" class="map tinted"></div>
+    <div class="legend">
+      <code>tiles.stadiamaps.com/.../alidade_smooth_dark</code><br/>
+      Known for crisp labels at low zoom. Free tier (200k/day) — needs domain registered for prod. <a href="https://stadiamaps.com" target="_blank">stadiamaps.com</a>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Esri Dark Gray Canvas</span>
+      <span class="panel-sub">Esri / ArcGIS Online</span>
+    </div>
+    <div id="map3" class="map tinted"></div>
+    <div class="legend">
+      <code>services.arcgisonline.com/.../World_Dark_Gray_Base</code><br/>
+      Enterprise-grade. Free for non-commercial / attribution use. Sharper geometry, less colour variation.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Sample vessel + port positions matching SHIP layout ──
+  const VESSELS = [
+    { name: 'Kota Cantik',   pos: [-32.5, 16.8]  },
+    { name: 'Kota Cempaka',  pos: [22.8, 117.5]  },
+    { name: 'Kota Ebony',    pos: [30.6, 122.4]  },
+    { name: 'Kota Eagle',    pos: [14.5, 57.5]   },
+    { name: 'Kota Layang',   pos: [-12.0, -84.0] },
+    { name: 'Kota Oasis',    pos: [-17.0, 175.5] },
+    { name: 'Kota Damai',    pos: [-18.4, -26.2] },
+  ];
+  const PORTS = [
+    { name: 'Singapore',    pos: [1.29, 103.85]  },
+    { name: 'Shanghai',     pos: [31.20, 121.50] },
+    { name: 'Port Kelang',  pos: [3.00, 101.40]  },
+    { name: 'Mombasa',      pos: [-4.05, 39.66]  },
+    { name: 'Mundra',       pos: [22.74, 69.71]  },
+    { name: 'Cape Town',    pos: [-33.92, 18.42] },
+    { name: 'Callao',       pos: [-12.05, -77.13]},
+  ];
+
+  const TILE_OPTS = {
+    subdomains: 'abcd', maxZoom: 19, crossOrigin: '',
+    detectRetina: true, keepBuffer: 4
+  };
+
+  // ── Provider URLs ──
+  const PROVIDERS = [
+    {
+      id: 'map1',
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      opts: { ...TILE_OPTS, subdomains: 'abcd' }
+    },
+    {
+      id: 'map2',
+      url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
+      opts: { ...TILE_OPTS, subdomains: '' }
+    },
+    {
+      id: 'map3',
+      url: 'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      opts: { ...TILE_OPTS, subdomains: '', detectRetina: false }
+    },
+  ];
+
+  const maps = [];
+  const startCenter = [8, 75];
+  const startZoom   = 3;
+
+  PROVIDERS.forEach(p => {
+    const m = L.map(p.id, {
+      center: startCenter, zoom: startZoom,
+      minZoom: 2, maxZoom: 10,
+      zoomSnap: 1, zoomDelta: 1,
+      zoomControl: false, attributionControl: false
+    });
+    L.tileLayer(p.url, p.opts).addTo(m);
+
+    // Add vessel + port markers (visual context match SHIP)
+    VESSELS.forEach(v => {
+      L.marker(v.pos, {
+        icon: L.divIcon({
+          html: '<div class="vessel-marker"></div>',
+          className: '', iconSize: [12, 12], iconAnchor: [6, 6]
+        })
+      }).addTo(m);
+    });
+    PORTS.forEach(po => {
+      L.circleMarker(po.pos, {
+        radius: 6, color: '#ffb830', weight: 2,
+        fillColor: '#ffb830', fillOpacity: 0.3
+      }).addTo(m);
+    });
+
+    maps.push(m);
+  });
+
+  // Sync pan/zoom across all maps
+  let syncing = false;
+  maps.forEach((m, i) => {
+    m.on('move zoom', () => {
+      if (syncing) return;
+      syncing = true;
+      const c = m.getCenter(); const z = m.getZoom();
+      maps.forEach((other, j) => {
+        if (j !== i) other.setView(c, z, { animate: false });
+      });
+      document.getElementById('zoom-label').textContent = 'Zoom: ' + z;
+      syncing = false;
+    });
+  });
+
+  function zoomAll(d) {
+    const newZ = maps[0].getZoom() + d;
+    maps.forEach(m => m.setZoom(newZ));
+  }
+  function resetAll() {
+    maps.forEach(m => m.setView(startCenter, startZoom));
+  }
+  function toggleTint() {
+    const on = document.getElementById('tintToggle').checked;
+    document.querySelectorAll('.map').forEach(el =>
+      el.classList.toggle('tinted', on));
+  }
+</script>
+
+</body>
+</html>
