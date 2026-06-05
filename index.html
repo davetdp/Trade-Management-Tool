@@ -222,16 +222,17 @@
     }
     body.sidebar-hidden #map-glow { left: 0 !important; }
     .leaflet-container { background: #020d1e !important; }
-    .leaflet-tile-pane { filter: brightness(1.7); }
-    /* Sharpen raster tile rendering on non-Retina / Windows DPI-scaled
-       displays. -webkit-optimize-contrast tells Chrome/Edge to use a
-       crisper downsampling filter; translateZ(0) forces GPU compositing
-       so the tile pane renders consistently across Windows GPUs. */
-    .leaflet-tile {
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
-      transform: translateZ(0);
+    /* Brighten the dark basemap, add a touch of contrast + saturation so
+       continents and country labels read more sharply on Windows displays
+       (the previous brightness-only filter was washing out detail). */
+    .leaflet-tile-pane {
+      filter: brightness(1.45) contrast(1.18) saturate(1.10);
     }
+    /* Force consistent GPU compositing across Windows GPUs. Removed the
+       earlier image-rendering: crisp-edges rule — that value is meant for
+       pixel art and was making raster basemap tiles look chunkier, not
+       sharper. Browser-default bilinear is the right choice here. */
+    .leaflet-tile { transform: translateZ(0); }
 
     /* ── MAP MODE TOGGLE ── */
     .map-mode-toggle {
