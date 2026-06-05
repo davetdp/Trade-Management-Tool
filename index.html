@@ -222,12 +222,12 @@
     }
     body.sidebar-hidden #map-glow { left: 0 !important; }
     .leaflet-container { background: #020d1e !important; }
-    /* Brighten the dark basemap, add a touch of contrast + saturation so
-       continents and country labels read more sharply on Windows displays
-       (the previous brightness-only filter was washing out detail). */
-    .leaflet-tile-pane {
-      filter: brightness(1.45) contrast(1.18) saturate(1.10);
-    }
+    /* Brighten the dark basemap. Plain brightness-only filter (was
+       brightness × contrast × saturate, but on Windows 125 % DPI the
+       contrast push crushed the small country labels into the dark
+       background — invisible. The simpler filter is more cross-platform
+       stable). */
+    .leaflet-tile-pane { filter: brightness(1.55); }
     /* Force consistent GPU compositing across Windows GPUs. Removed the
        earlier image-rendering: crisp-edges rule — that value is meant for
        pixel art and was making raster basemap tiles look chunkier, not
@@ -2210,12 +2210,16 @@ const TILE_DARK  = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.pn
 const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
 // Shared tile options — crossOrigin prevents CORS issues; keepBuffer keeps
-// already-loaded tiles in memory when the map pans/resizes; detectRetina
-// asks the tile provider for @2x tiles on HiDPI displays (Windows 125 %+
-// scaling, Mac Retina, mobile), removing the bilinear-upscale blur.
+// already-loaded tiles in memory when the map pans/resizes.
+//
+// detectRetina note: Leaflet's built-in flag triggers @2x tiles for any
+// devicePixelRatio > 1 — but on Windows at 125 % DPI scaling (dpr 1.25)
+// the @2x tile gets DOWNSAMPLED by 0.625× when displayed, which blurs out
+// the small country labels in the tile. We only want @2x tiles when the
+// display is a true Retina/HiDPI display (dpr ≥ 2) where they render 1:1.
 const TILE_OPTS = {
   subdomains: 'abcd', maxZoom: 19, crossOrigin: '', keepBuffer: 4,
-  detectRetina: true
+  detectRetina: (window.devicePixelRatio || 1) >= 2
 };
 
 function _makeTileLayer(url) {
