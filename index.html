@@ -223,6 +223,15 @@
     body.sidebar-hidden #map-glow { left: 0 !important; }
     .leaflet-container { background: #020d1e !important; }
     .leaflet-tile-pane { filter: brightness(1.7); }
+    /* Sharpen raster tile rendering on non-Retina / Windows DPI-scaled
+       displays. -webkit-optimize-contrast tells Chrome/Edge to use a
+       crisper downsampling filter; translateZ(0) forces GPU compositing
+       so the tile pane renders consistently across Windows GPUs. */
+    .leaflet-tile {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      transform: translateZ(0);
+    }
 
     /* ── MAP MODE TOGGLE ── */
     .map-mode-toggle {
@@ -2187,6 +2196,9 @@ const map = L.map('map', {
   zoom: 2,
   minZoom: 2,
   maxZoom: 10,
+  zoomSnap: 1,            // tiles always at native integer zoom
+  zoomDelta: 1,           // zoom buttons step by 1
+  wheelPxPerZoomLevel: 80,
   zoomControl: false,
   attributionControl: false
 });
@@ -2197,8 +2209,13 @@ const TILE_DARK  = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.pn
 const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
 // Shared tile options — crossOrigin prevents CORS issues; keepBuffer keeps
-// already-loaded tiles in memory when the map pans/resizes
-const TILE_OPTS = { subdomains: 'abcd', maxZoom: 19, crossOrigin: '', keepBuffer: 4 };
+// already-loaded tiles in memory when the map pans/resizes; detectRetina
+// asks the tile provider for @2x tiles on HiDPI displays (Windows 125 %+
+// scaling, Mac Retina, mobile), removing the bilinear-upscale blur.
+const TILE_OPTS = {
+  subdomains: 'abcd', maxZoom: 19, crossOrigin: '', keepBuffer: 4,
+  detectRetina: true
+};
 
 function _makeTileLayer(url) {
   const layer = L.tileLayer(url, TILE_OPTS);
