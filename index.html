@@ -6373,14 +6373,13 @@ function initInsights() {
     });
     countsEl.textContent =
       `${active} active · ${ack} acknowledged · ${snz} snoozed${dis ? ' · '+dis+' dismissed' : ''}${muted ? ' · '+muted+' muted' : ''}`;
-    // Nav-bar badge reflects active urgent count only
-    const urgent = ALERTS.filter(a =>
-      a.severity !== 'watch' &&
+    // Nav-bar badge reflects total active alerts (all severities)
+    const activeCount = ALERTS.filter(a =>
       !state.muted.includes(a.category) &&
       statusOf(a.id) === 'active'
     ).length;
-    badge.textContent = urgent;
-    badge.style.display = urgent === 0 ? 'none' : '';
+    badge.textContent = activeCount;
+    badge.style.display = activeCount === 0 ? 'none' : '';
   }
 
   function render() {
