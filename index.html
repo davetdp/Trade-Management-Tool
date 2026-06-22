@@ -3418,12 +3418,12 @@ const PORT_SECTION_LABELS = {
   dwelling:    'Laden Containers Dwelling',
 };
 const PORT_SECTION_ORDER_PNL       = ['services','delinquency','inventory','portDetails'];
-const PORT_SECTION_ORDER_CARGOFLOW = ['services','dwelling'];
+const PORT_SECTION_ORDER_CARGOFLOW = ['services','inventory','dwelling'];
 const PORT_SECTION_FALLBACK        = ['services','delinquency','inventory','portDetails','dwelling'];
 
 const PORT_SECTION_DEFAULTS = {
   pnl:       { services:true, delinquency:true,  inventory:true,  portDetails:true,  dwelling:false },
-  cargoflow: { services:true, delinquency:false, inventory:false, portDetails:false, dwelling:true  },
+  cargoflow: { services:true, delinquency:false, inventory:true,  portDetails:false, dwelling:true  },
 };
 
 // Mutable per-session visibility state (per mode → per section).
