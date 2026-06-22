@@ -2323,6 +2323,19 @@
     </div>
   </div>
 
+  <!-- Insight Subscriptions — tick categories to receive in the Insights
+       drawer. Two-way bound with the per-alert Mute control. -->
+  <div class="ml-section" style="border-top:1px solid rgba(0,180,255,0.12);">
+    <div class="ml-hdr" onclick="mlToggle('mlInsightSecBody',this)">
+      <svg class="ml-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21h4"/></svg>
+      <span>Insight Subscriptions</span>
+      <span class="ml-chev" style="transform:rotate(-90deg)">▲</span>
+    </div>
+    <div id="mlInsightSecBody" class="ml-body" style="display:none;">
+      <!-- populated by initInsightCategoryPanel() -->
+    </div>
+  </div>
+
   <div style="position:fixed; bottom:0; left:0; width:220px; height:62px; border-top:1px solid rgba(0,180,255,0.1); display:flex; align-items:center; padding:0 16px; background:linear-gradient(180deg,rgba(7,16,36,0.97),rgba(5,13,26,0.98));">
     <div style="font-size:10px; color:#ffffff; line-height:1.5; opacity:0.7;">Developed by<br><span style="font-weight:700;">Trade Development and Planning</span></div>
   </div>
@@ -2838,6 +2851,44 @@ window.onCardSectionToggle = function(domain, id, checked) {
   if (!target) return;
   target[id] = checked;
   rerenderOpenPopups();
+};
+
+// ── Insight Subscriptions panel (sidebar) ───────────────────────
+// Lists every alert category as a tick-box. Ticked = receive,
+// unticked = muted. State is owned by the Insights drawer; this
+// panel is a UI surface bound to it via window.insights* functions.
+function initInsightCategoryPanel() {
+  const body = document.getElementById('mlInsightSecBody');
+  if (!body || typeof window.insightsCategories !== 'function') return;
+  const cats = window.insightsCategories();
+  body.innerHTML = cats.map(cat => {
+    const safe = cat.replace(/"/g, '&quot;');
+    return `<label class="fleet-chk-row insight-sub-row" data-cat="${safe}">
+      <input type="checkbox" />
+      <span class="fleet-chk-label">${cat}</span>
+    </label>`;
+  }).join('');
+  // Wire onchange — using a listener (not inline) avoids quote-escaping
+  // pain for categories that contain special characters.
+  body.querySelectorAll('.insight-sub-row').forEach(row => {
+    const cb  = row.querySelector('input');
+    const cat = row.dataset.cat;
+    if (cb) cb.addEventListener('change', () => {
+      if (typeof window.insightsSetCategoryMuted === 'function') {
+        window.insightsSetCategoryMuted(cat, !cb.checked);
+      }
+    });
+  });
+  window.syncInsightCategoryPanel();
+}
+
+window.syncInsightCategoryPanel = function() {
+  if (typeof window.insightsIsCategoryMuted !== 'function') return;
+  document.querySelectorAll('.insight-sub-row').forEach(row => {
+    const cat = row.dataset.cat;
+    const cb  = row.querySelector('input');
+    if (cb) cb.checked = !window.insightsIsCategoryMuted(cat);
+  });
 };
 
 // Refresh the *content* of every popup (open or closed) so that when the
@@ -6812,6 +6863,10 @@ function initInsights() {
           showToast(`Muted "${a.category}" alerts.`);
           // Remove all cards with this category from the visible list
           render();
+          // Sync sidebar checkbox so the muted topic shows as un-ticked
+          if (typeof window.syncInsightCategoryPanel === 'function') {
+            window.syncInsightCategoryPanel();
+          }
         }
       });
     });
@@ -6831,7 +6886,36 @@ function initInsights() {
     saveStates();
     showToast('All insights restored.');
     render();
+    // Re-tick every sidebar category checkbox
+    if (typeof window.syncInsightCategoryPanel === 'function') {
+      window.syncInsightCategoryPanel();
+    }
   });
+
+  // ── Public API for the sidebar Insight Subscriptions panel ──
+  // The sidebar lists every unique alert category as a checkbox; ticking
+  // it subscribes (un-mutes), unticking mutes. State is fully shared
+  // with the per-alert overflow Mute action.
+  window.insightsCategories = function() {
+    const seen = new Set(); const out = [];
+    ALERTS.forEach(a => { if (!seen.has(a.category)) { seen.add(a.category); out.push(a.category); } });
+    return out;
+  };
+  window.insightsIsCategoryMuted = function(cat) {
+    return state.muted.includes(cat);
+  };
+  window.insightsSetCategoryMuted = function(cat, muted) {
+    const was = state.muted.includes(cat);
+    if (muted && !was) {
+      state.muted.push(cat);
+      showToast(`Muted "${cat}" alerts.`);
+    } else if (!muted && was) {
+      state.muted = state.muted.filter(c => c !== cat);
+      showToast(`Subscribed to "${cat}" alerts.`);
+    }
+    saveStates();
+    render();
+  };
 
   // ── LMS modal — preview LMS write-back before posting ──
   const lmsBackdrop  = document.getElementById('lms-modal-backdrop');
@@ -6978,10 +7062,16 @@ function initInsights() {
   render();
   window.openInsights = openDrawer;
 }
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initInsights);
-} else {
+function _bootInsightsAndPanel() {
   initInsights();
+  // Sidebar Insight Subscriptions panel — depends on the Insights API
+  // being exposed by initInsights() above.
+  if (typeof initInsightCategoryPanel === 'function') initInsightCategoryPanel();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _bootInsightsAndPanel);
+} else {
+  _bootInsightsAndPanel();
 }
 
 /* ─────────────────────────────────────────────────────────────────
