@@ -1508,6 +1508,7 @@
     }
 
     .insight-card {
+      position: relative;
       background: rgba(8,18,40,0.85);
       border: 1px solid rgba(0,180,255,0.18);
       border-radius: 10px;
@@ -1600,6 +1601,121 @@
     .insight-btn-secondary:hover {
       background: rgba(0,180,255,0.14);
       border-color: rgba(0,180,255,0.55);
+    }
+
+    /* Overflow menu (⋮) — per-card actions: ack/snooze/dismiss/mute */
+    .insight-menu-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted);
+      font-size: 18px; line-height: 0.6;
+      padding: 0 4px;
+      border-radius: 4px;
+      transition: color .15s, background .15s;
+    }
+    .insight-menu-btn:hover { color: #e8f4ff; background: rgba(255,255,255,0.05); }
+    .insight-menu {
+      position: absolute;
+      top: 30px; right: 10px;
+      background: rgba(8,18,40,0.98);
+      border: 1px solid rgba(0,180,255,0.32);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+      padding: 4px;
+      z-index: 10;
+      min-width: 160px;
+      display: none;
+      backdrop-filter: blur(12px);
+    }
+    .insight-menu.open { display: block; }
+    .insight-menu-item {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%;
+      background: none; border: none;
+      color: #e8f4ff;
+      padding: 7px 10px;
+      font-size: 11px; font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      border-radius: 5px;
+      font-family: inherit;
+      transition: background .12s;
+    }
+    .insight-menu-item:hover { background: rgba(0,180,255,0.12); }
+    .insight-menu-item .ic {
+      width: 14px; height: 14px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--muted);
+    }
+    .insight-menu-divider {
+      height: 1px;
+      background: rgba(0,180,255,0.14);
+      margin: 3px 4px;
+    }
+
+    /* States */
+    .insight-card.is-acknowledged {
+      opacity: 0.55;
+    }
+    .insight-card.is-acknowledged .insight-title { color: var(--muted); }
+    .insight-ack-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-left: 6px;
+      font-size: 9px; font-weight: 700;
+      padding: 1px 6px; border-radius: 4px;
+      background: rgba(0,229,160,0.18);
+      color: #00e5a0;
+      letter-spacing: 0.4px;
+    }
+
+    /* Fade-out animation on dismiss/snooze/mute */
+    @keyframes insight-fade-out {
+      from { opacity: 1; transform: translateX(0); max-height: 280px; margin-bottom: 10px; padding-top: 11px; padding-bottom: 12px; }
+      to   { opacity: 0; transform: translateX(20px); max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; }
+    }
+    .insight-card.is-removing {
+      overflow: hidden;
+      animation: insight-fade-out .35s ease forwards;
+    }
+
+    /* Footer with counts + reset link */
+    .insights-footer {
+      padding: 10px 14px;
+      border-top: 1px solid rgba(0,180,255,0.12);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 10px; color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .insights-reset {
+      background: none; border: none;
+      color: #5fdfff; cursor: pointer;
+      font-size: 10px; font-weight: 600;
+      font-family: inherit;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background .15s;
+    }
+    .insights-reset:hover { background: rgba(0,180,255,0.10); }
+
+    /* Toast — brief status notification after an action */
+    .insights-toast {
+      position: absolute;
+      bottom: 64px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(8,18,40,0.98);
+      border: 1px solid rgba(0,180,255,0.32);
+      color: #e8f4ff;
+      font-size: 11px; font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      opacity: 0;
+      transition: opacity .2s, transform .2s;
+      pointer-events: none;
+      z-index: 20;
+      white-space: nowrap;
+    }
+    .insights-toast.show {
+      opacity: 1; transform: translateX(-50%) translateY(0);
     }
 
     @media (max-width: 700px) {
@@ -6159,29 +6275,138 @@ function initInsights() {
   const closeBtn = document.getElementById('insights-close');
   const listEl   = document.getElementById('insights-list');
   const badge    = document.getElementById('insights-badge');
+  const countsEl = document.getElementById('insights-counts');
+  const resetBtn = document.getElementById('insights-reset');
+  const toastEl  = document.getElementById('insights-toast');
   if (!trigger || !panel) return;
 
-  // Badge shows just the critical+high count (watch alerts don't pulse).
-  const urgentCount = ALERTS.filter(a => a.severity !== 'watch').length;
-  badge.textContent = urgentCount;
+  // ── Per-alert state (persisted in sessionStorage for the demo) ──
+  // state shape per id: 'active' | 'acknowledged' | 'snoozed' | 'dismissed'
+  // muted: set of category names
+  function loadStates() {
+    try { return JSON.parse(sessionStorage.getItem('insightsState') || '{}'); }
+    catch (e) { return {}; }
+  }
+  function saveStates() {
+    sessionStorage.setItem('insightsState', JSON.stringify(state));
+  }
+  const state = loadStates();
+  if (!state.alerts)  state.alerts  = {};      // id → { status, ts }
+  if (!state.muted)   state.muted   = [];      // [categoryName,…]
+
+  function statusOf(id) {
+    const s = state.alerts[id];
+    if (!s) return 'active';
+    // Auto-expire snoozes
+    if (s.status === 'snoozed' && s.expires && Date.now() > s.expires) {
+      delete state.alerts[id]; saveStates();
+      return 'active';
+    }
+    return s.status;
+  }
+  function setStatus(id, status, extra) {
+    state.alerts[id] = Object.assign({ status, ts: Date.now() }, extra || {});
+    saveStates();
+  }
+  function clearStatus(id) {
+    delete state.alerts[id]; saveStates();
+  }
+
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toastEl.classList.remove('show'), 2400);
+  }
+
+  function removeCardWithAnim(card, then) {
+    card.classList.add('is-removing');
+    setTimeout(() => { if (then) then(); render(); }, 360);
+  }
+
+  // Returns the alerts that should currently be visible
+  function visibleAlerts() {
+    return ALERTS.filter(a => {
+      if (state.muted.includes(a.category)) return false;
+      const s = statusOf(a.id);
+      return s !== 'dismissed' && s !== 'snoozed';
+    });
+  }
+
+  function updateCounts() {
+    const total = ALERTS.length;
+    let ack = 0, snz = 0, dis = 0, muted = 0, active = 0;
+    ALERTS.forEach(a => {
+      if (state.muted.includes(a.category))  { muted++; return; }
+      const s = statusOf(a.id);
+      if (s === 'acknowledged') ack++;
+      else if (s === 'snoozed') snz++;
+      else if (s === 'dismissed') dis++;
+      else active++;
+    });
+    countsEl.textContent =
+      `${active} active · ${ack} acknowledged · ${snz} snoozed${dis ? ' · '+dis+' dismissed' : ''}${muted ? ' · '+muted+' muted' : ''}`;
+    // Nav-bar badge reflects active urgent count only
+    const urgent = ALERTS.filter(a =>
+      a.severity !== 'watch' &&
+      !state.muted.includes(a.category) &&
+      statusOf(a.id) === 'active'
+    ).length;
+    badge.textContent = urgent;
+    badge.style.display = urgent === 0 ? 'none' : '';
+  }
 
   function render() {
-    listEl.innerHTML = ALERTS.map(a => `
-      <div class="insight-card severity-${a.severity}" data-id="${a.id}">
+    const visible = visibleAlerts();
+    if (!visible.length) {
+      listEl.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:12px;">
+        No active insights. Tap <b style="color:#5fdfff;">Reset all</b> below to restore the feed.
+      </div>`;
+      updateCounts();
+      return;
+    }
+    listEl.innerHTML = visible.map(a => {
+      const s = statusOf(a.id);
+      const cls = s === 'acknowledged' ? 'is-acknowledged' : '';
+      const ackTag = s === 'acknowledged'
+        ? '<span class="insight-ack-tag">&#10003; Acknowledged</span>' : '';
+      return `
+      <div class="insight-card severity-${a.severity} ${cls}" data-id="${a.id}">
         <div class="insight-header">
           <span class="insight-severity-dot"></span>
           <span class="insight-category">${a.category}</span>
           <span class="insight-time">${a.time}</span>
+          <button class="insight-menu-btn" data-menu="${a.id}" aria-label="More actions">&#8942;</button>
         </div>
-        <div class="insight-title">${a.title}</div>
+        <div class="insight-title">${a.title}${ackTag}</div>
         <div class="insight-body">${a.body}</div>
         <div class="insight-actions">
           <button class="insight-btn insight-btn-primary" data-action="${a.id}">${a.action.label}</button>
           <button class="insight-btn insight-btn-secondary" data-aisha="${a.id}">Ask AISHA</button>
         </div>
+        <div class="insight-menu" id="menu-${a.id}">
+          <button class="insight-menu-item" data-do="ack" data-id="${a.id}">
+            <span class="ic">&#10003;</span> Acknowledge
+          </button>
+          <button class="insight-menu-item" data-do="snooze-1" data-id="${a.id}">
+            <span class="ic">&#8987;</span> Snooze 1 hour
+          </button>
+          <button class="insight-menu-item" data-do="snooze-4" data-id="${a.id}">
+            <span class="ic">&#8987;</span> Snooze 4 hours
+          </button>
+          <div class="insight-menu-divider"></div>
+          <button class="insight-menu-item" data-do="dismiss" data-id="${a.id}">
+            <span class="ic">&times;</span> Dismiss
+          </button>
+          <button class="insight-menu-item" data-do="mute" data-id="${a.id}">
+            <span class="ic">&#128263;</span> Mute "${a.category}"
+          </button>
+        </div>
       </div>
-    `).join('');
+      `;
+    }).join('');
 
+    // Wire main actions
     listEl.querySelectorAll('[data-action]').forEach(btn => {
       btn.addEventListener('click', () => {
         const a = ALERTS.find(x => x.id === btn.dataset.action);
@@ -6194,7 +6419,70 @@ function initInsights() {
         if (a) askAisha(a);
       });
     });
+
+    // Wire overflow menus
+    listEl.querySelectorAll('[data-menu]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.menu;
+        // Close any other open menus first
+        listEl.querySelectorAll('.insight-menu.open').forEach(m => {
+          if (m.id !== 'menu-' + id) m.classList.remove('open');
+        });
+        const menu = document.getElementById('menu-' + id);
+        if (menu) menu.classList.toggle('open');
+      });
+    });
+    listEl.querySelectorAll('[data-do]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id  = item.dataset.id;
+        const op  = item.dataset.do;
+        const a   = ALERTS.find(x => x.id === id);
+        if (!a) return;
+        const card = listEl.querySelector(`.insight-card[data-id="${id}"]`);
+        const menu = document.getElementById('menu-' + id);
+        if (menu) menu.classList.remove('open');
+
+        if (op === 'ack') {
+          setStatus(id, 'acknowledged');
+          showToast('Alert acknowledged.');
+          render();
+        } else if (op === 'snooze-1' || op === 'snooze-4') {
+          const hours = (op === 'snooze-1') ? 1 : 4;
+          setStatus(id, 'snoozed', { expires: Date.now() + hours * 3600000 });
+          showToast(`Snoozed for ${hours} hour${hours>1?'s':''}.`);
+          removeCardWithAnim(card);
+        } else if (op === 'dismiss') {
+          setStatus(id, 'dismissed');
+          showToast('Alert dismissed.');
+          removeCardWithAnim(card);
+        } else if (op === 'mute') {
+          if (!state.muted.includes(a.category)) state.muted.push(a.category);
+          saveStates();
+          showToast(`Muted "${a.category}" alerts.`);
+          // Remove all cards with this category from the visible list
+          render();
+        }
+      });
+    });
+
+    updateCounts();
   }
+
+  // Click outside any menu → close all open menus
+  document.addEventListener('click', () => {
+    listEl.querySelectorAll('.insight-menu.open').forEach(m => m.classList.remove('open'));
+  });
+
+  // Reset link → restore everything (handy for demos)
+  resetBtn.addEventListener('click', () => {
+    state.alerts = {};
+    state.muted  = [];
+    saveStates();
+    showToast('All insights restored.');
+    render();
+  });
 
   function takeAction(alert) {
     closeDrawer();
@@ -6650,6 +6938,11 @@ if (document.readyState === 'loading') {
     <button class="insights-close" id="insights-close" aria-label="Close insights">&times;</button>
   </header>
   <div class="insights-list" id="insights-list"></div>
+  <div class="insights-footer" id="insights-footer">
+    <span id="insights-counts">0 active · 0 acknowledged · 0 snoozed</span>
+    <button class="insights-reset" id="insights-reset" title="Restore all dismissed/snoozed/muted alerts">Reset all</button>
+  </div>
+  <div class="insights-toast" id="insights-toast"></div>
 </aside>
 
 <!-- ═══════════════════════════════════════════════════════
