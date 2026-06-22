@@ -4931,13 +4931,17 @@ function buildPortPopup(p) {
     if (id === 'inventory') {
       // Derive specialty container counts from the existing D2 baseline
       // using a name-seeded hash so each port has stable, slightly varied
-      // ratios. Reefer typically 15-25 % of dry, flat-rack 3-7 %, open
-      // top 2-6 % — matches industry norms for hub vs spoke ports.
+      // ratios. Industry norms for hub vs spoke ports:
+      //   R3 (20' reefer)     ≈  8-16 % of D2 — less common than R5
+      //   R5 (40' reefer)     ≈ 15-25 % of D2
+      //   F4 (40' flat rack)  ≈  3-7 %
+      //   O3 (20' open top)   ≈  2-5 %
       let _h = 0;
       for (let i=0; i<p.name.length; i++) _h = (_h*31 + p.name.charCodeAt(i)) >>> 0;
-      const r5Count = Math.round(p.d2.count * (0.15 + ((_h % 11)/100)));
-      const f4Count = Math.round(p.d2.count * (0.03 + (((_h >> 4) % 5)/100)));
-      const o3Count = Math.round(p.d2.count * (0.02 + (((_h >> 8) % 4)/100)));
+      const r3Count = Math.round(p.d2.count * (0.08 + ((_h % 9)/100)));
+      const r5Count = Math.round(p.d2.count * (0.15 + (((_h >> 4) % 11)/100)));
+      const f4Count = Math.round(p.d2.count * (0.03 + (((_h >> 8) % 5)/100)));
+      const o3Count = Math.round(p.d2.count * (0.02 + (((_h >> 12) % 4)/100)));
       return `<div class="inv-title">Containers Available on Land</div>
       <div class="inv-grid">
         <div class="inv-card">
@@ -4953,15 +4957,21 @@ function buildPortPopup(p) {
           <div class="inv-card-label">Units on Ground</div>
         </div>
         <div class="inv-card">
-          <div class="inv-card-type">R5</div>
-          <div class="inv-card-desc">40' Reefer</div>
-          <div class="inv-card-count">${r5Count}</div>
-          <div class="inv-card-label">Units on Ground</div>
-        </div>
-        <div class="inv-card">
           <div class="inv-card-type">F4</div>
           <div class="inv-card-desc">40' Flat Rack</div>
           <div class="inv-card-count">${f4Count}</div>
+          <div class="inv-card-label">Units on Ground</div>
+        </div>
+        <div class="inv-card">
+          <div class="inv-card-type">R3</div>
+          <div class="inv-card-desc">20' Reefer</div>
+          <div class="inv-card-count">${r3Count}</div>
+          <div class="inv-card-label">Units on Ground</div>
+        </div>
+        <div class="inv-card">
+          <div class="inv-card-type">R5</div>
+          <div class="inv-card-desc">40' Reefer</div>
+          <div class="inv-card-count">${r5Count}</div>
           <div class="inv-card-label">Units on Ground</div>
         </div>
         <div class="inv-card">
