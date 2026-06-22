@@ -6676,7 +6676,7 @@ function initInsights() {
       else active++;
     });
     countsEl.textContent =
-      `${active} active · ${ack} acknowledged · ${snz} snoozed${dis ? ' · '+dis+' dismissed' : ''}${muted ? ' · '+muted+' muted' : ''}`;
+      `${active} active · ${ack} actioned · ${snz} snoozed${dis ? ' · '+dis+' dismissed' : ''}${muted ? ' · '+muted+' muted' : ''}`;
     // Nav-bar badge reflects total active alerts (all severities)
     const activeCount = ALERTS.filter(a =>
       !state.muted.includes(a.category) &&
@@ -6701,7 +6701,7 @@ function initInsights() {
       const cls = isAcked ? 'is-acknowledged' : '';
       const lmsRec = isAcked ? (state.alerts[a.id] && state.alerts[a.id].lms) : null;
       const ackTag = isAcked
-        ? '<span class="insight-ack-tag">&#10003; Acknowledged</span>' : '';
+        ? '<span class="insight-ack-tag">&#9889; Actioned</span>' : '';
       const lmsChip = lmsRec ? `
         <div class="insight-lms-chip">
           <span class="lms-chip-ic">&#10003;</span>
@@ -6712,8 +6712,8 @@ function initInsights() {
       // Hide Ack/Dismiss once acknowledged — the alert is now committed
       // to an LMS object, so the operational lifecycle has moved on.
       const ackDismissButtons = isAcked ? '' : `
-          <button class="insight-btn insight-btn-ack"      data-do="ack"     data-id="${a.id}" title="Acknowledge — create LMS action and mark as in progress">
-            <span class="ic">&#10003;</span> Ack
+          <button class="insight-btn insight-btn-ack"      data-do="ack"     data-id="${a.id}" title="Take action — create the recommended LMS object">
+            <span class="ic">&#9889;</span> Take Action
           </button>
           <button class="insight-btn insight-btn-dismiss"  data-do="dismiss" data-id="${a.id}" title="Dismiss — remove from feed">
             <span class="ic">&times;</span> Dismiss
@@ -7369,7 +7369,7 @@ if (document.readyState === 'loading') {
   </header>
   <div class="insights-list" id="insights-list"></div>
   <div class="insights-footer" id="insights-footer">
-    <span id="insights-counts">0 active · 0 acknowledged · 0 snoozed</span>
+    <span id="insights-counts">0 active · 0 actioned · 0 snoozed</span>
     <button class="insights-reset" id="insights-reset" title="Restore all dismissed/snoozed/muted alerts">Reset all</button>
   </div>
   <div class="insights-toast" id="insights-toast"></div>
