@@ -5421,7 +5421,7 @@ ports.forEach(p => {
   }).setContent(buildPortPopup(p));
   bindSmartPopup(marker, popup, 270, 460);
   portLayers[p.tier].addLayer(marker);
-  portMarkerList.push({ marker, tier: p.tier, alert });
+  portMarkerList.push({ marker, tier: p.tier, alert, p });
 });
 
 function updatePortMarkerColors(mode) {
@@ -6216,7 +6216,7 @@ function initInsights() {
       time: '35m ago',
       title: 'Lagos delinquency spike +14% WoW',
       body: '<b>2,140 TEU</b> stuck >18 days. Root causes: customs clearance backlog (60%), inland transport disruption (40%). Recommend escalation to ops + customer notification on top 12 affected bookings.',
-      action: { label: 'View Lagos',   type: 'port',  name: 'Lagos' },
+      action: { label: 'View Lagos',   type: 'port',  name: 'Apapa' },
       aishaPrompt: 'Break down the Lagos delinquency spike. Which customers and forwarders are most exposed, and what mitigation actions has PIL taken in similar past spikes?'
     },
     {
@@ -6523,17 +6523,20 @@ function initInsights() {
         ? ports.find(p => p.name.toLowerCase().includes(a.name.toLowerCase()))
         : null;
       if (portObj && portObj.position) {
+        const pm = (typeof portMarkerList !== 'undefined')
+          ? portMarkerList.find(o => o.p && o.p.name === portObj.name) : null;
         map.flyTo(portObj.position, 5, { duration: 0.8 });
-        const pm = (typeof portMarkers !== 'undefined')
-          ? portMarkers.find(o => o.p.name === portObj.name) : null;
-        if (pm && pm.marker) setTimeout(() => pm.marker.openPopup(), 850);
+        // Use 'moveend' so the popup opens *after* the flight completes
+        map.once('moveend', () => {
+          if (pm && pm.marker) pm.marker.openPopup();
+        });
       }
     } else if (a.type === 'vessel') {
       const vm = (typeof vesselMarkers !== 'undefined')
         ? vesselMarkers.find(o => o.v.name === a.name) : null;
       if (vm) {
         map.flyTo(vm.v.position, 4, { duration: 0.8 });
-        setTimeout(() => vm.marker.openPopup(), 850);
+        map.once('moveend', () => vm.marker.openPopup());
       }
     } else if (a.type === 'schedule') {
       const vm = (typeof vesselMarkers !== 'undefined')
@@ -6866,9 +6869,9 @@ function initScheduleDrawer() {
     const c = coordsFor(portName);
     if (!c || typeof map === 'undefined') return;
     map.flyTo(c, 7, { duration: 0.8 });
-    if (highlight && typeof portMarkers !== 'undefined') {
+    if (highlight && typeof portMarkerList !== 'undefined') {
       // Try to find the port marker and trigger a brief CSS pulse via class
-      const pm = portMarkers.find(o => {
+      const pm = portMarkerList.find(o => {
         const p = o.p;
         if (!p) return false;
         const short = p.name.replace(/^Port of\s+/i, '').replace(/^Port\s+/i, '');
