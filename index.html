@@ -1405,6 +1405,208 @@
     }
 
     /* ─────────────────────────────────────────────────────────
+       INSIGHTS — proactive operational alerts panel
+       ───────────────────────────────────────────────────────── */
+    .insights-trigger {
+      position: relative;
+      background: rgba(0,180,255,0.06);
+      border: 1px solid rgba(0,180,255,0.28);
+      color: #5fdfff;
+      padding: 6px 12px 6px 30px;
+      border-radius: 18px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .15s, border-color .15s;
+      margin-right: 12px;
+    }
+    .insights-trigger:hover {
+      background: rgba(0,180,255,0.14);
+      border-color: rgba(0,180,255,0.55);
+    }
+    .insights-trigger::before {
+      content: '';
+      position: absolute;
+      left: 11px; top: 50%;
+      width: 12px; height: 12px;
+      transform: translateY(-50%);
+      background:
+        radial-gradient(circle, transparent 35%, #5fdfff 36%, #5fdfff 55%, transparent 56%) center/contain no-repeat,
+        radial-gradient(circle at 50% 95%, #5fdfff 0 25%, transparent 26%) center/contain no-repeat;
+      mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/><path d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/></svg>");
+      -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/><path d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/></svg>");
+      background: #5fdfff;
+    }
+    .insights-badge {
+      display: inline-block;
+      background: #ff4d6a;
+      color: #fff;
+      border-radius: 10px;
+      padding: 1px 6px;
+      font-size: 9px;
+      font-weight: 800;
+      margin-left: 6px;
+      vertical-align: middle;
+      box-shadow: 0 0 0 0 rgba(255,77,106,0.6);
+      animation: insights-badge-pulse 2.5s infinite;
+    }
+    @keyframes insights-badge-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,77,106,0.6); }
+      50%      { box-shadow: 0 0 0 5px rgba(255,77,106,0); }
+    }
+
+    .insights-panel {
+      position: fixed; top: 58px; right: 0; bottom: 62px;
+      width: 400px;
+      background: linear-gradient(180deg, rgba(7,16,36,0.97) 0%, rgba(5,13,26,0.95) 100%);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(0,180,255,0.18);
+      box-shadow: -8px 0 28px rgba(0,0,0,0.55);
+      transform: translateX(105%);
+      transition: transform .28s cubic-bezier(.4,0,.2,1);
+      z-index: 1455;
+      display: flex; flex-direction: column;
+    }
+    .insights-panel.open { transform: translateX(0); }
+    .insights-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(0,180,255,0.15);
+      background: rgba(0,180,255,0.04);
+    }
+    .insights-title-block { flex: 1; min-width: 0; }
+    .insights-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: #e8f4ff; letter-spacing: 0.3px;
+    }
+    .insights-subtitle {
+      font-size: 10px; color: var(--muted);
+      letter-spacing: 0.4px; margin-top: 2px;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .insights-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 22px; line-height: 1;
+      padding: 4px 6px; border-radius: 6px;
+      transition: color .15s, background .15s;
+    }
+    .insights-close:hover { color: #e8f4ff; background: rgba(255,255,255,0.05); }
+
+    .insights-list {
+      flex: 1; overflow-y: auto;
+      padding: 12px 14px 18px;
+      display: flex; flex-direction: column; gap: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,180,255,0.25) transparent;
+    }
+    .insights-list::-webkit-scrollbar { width: 6px; }
+    .insights-list::-webkit-scrollbar-thumb {
+      background: rgba(0,180,255,0.25); border-radius: 3px;
+    }
+
+    .insight-card {
+      background: rgba(8,18,40,0.85);
+      border: 1px solid rgba(0,180,255,0.18);
+      border-radius: 10px;
+      padding: 11px 13px 12px;
+      border-left-width: 3px;
+      animation: insight-fade-in .35s ease;
+    }
+    @keyframes insight-fade-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .insight-card.severity-critical {
+      border-left-color: #ff4d6a;
+      background: linear-gradient(90deg, rgba(255,77,106,0.10), rgba(8,18,40,0.85) 35%);
+    }
+    .insight-card.severity-high {
+      border-left-color: #ffb830;
+      background: linear-gradient(90deg, rgba(255,184,48,0.10), rgba(8,18,40,0.85) 35%);
+    }
+    .insight-card.severity-watch {
+      border-left-color: #5fdfff;
+      background: linear-gradient(90deg, rgba(0,180,255,0.08), rgba(8,18,40,0.85) 35%);
+    }
+
+    .insight-header {
+      display: flex; align-items: center; gap: 7px;
+      margin-bottom: 6px;
+    }
+    .insight-severity-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .severity-critical .insight-severity-dot {
+      background: #ff4d6a; box-shadow: 0 0 6px #ff4d6a;
+      animation: insights-badge-pulse 2s infinite;
+    }
+    .severity-high .insight-severity-dot {
+      background: #ffb830; box-shadow: 0 0 6px #ffb830;
+    }
+    .severity-watch .insight-severity-dot {
+      background: #5fdfff;
+    }
+    .insight-category {
+      font-size: 9px; font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.6px;
+      flex: 1;
+    }
+    .insight-time {
+      font-size: 9px; color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .insight-title {
+      font-size: 12.5px; font-weight: 700;
+      color: #e8f4ff;
+      font-family: 'Space Grotesk', sans-serif;
+      line-height: 1.35; margin-bottom: 6px;
+    }
+    .insight-body {
+      font-size: 11px; color: #b8d8ff;
+      line-height: 1.5; margin-bottom: 10px;
+    }
+    .insight-body b { color: #5fdfff; font-weight: 700; }
+    .insight-actions {
+      display: flex; gap: 8px;
+    }
+    .insight-btn {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      border: 1px solid;
+      font-family: inherit;
+      transition: background .15s, border-color .15s, box-shadow .15s;
+      outline: none;
+    }
+    .insight-btn-primary {
+      background: linear-gradient(135deg, #00b4ff 0%, #0066cc 100%);
+      border-color: rgba(0,180,255,0.6);
+      color: #fff;
+    }
+    .insight-btn-primary:hover { box-shadow: 0 0 12px rgba(0,180,255,0.45); }
+    .insight-btn-secondary {
+      background: rgba(0,180,255,0.06);
+      border-color: rgba(0,180,255,0.32);
+      color: #5fdfff;
+    }
+    .insight-btn-secondary:hover {
+      background: rgba(0,180,255,0.14);
+      border-color: rgba(0,180,255,0.55);
+    }
+
+    @media (max-width: 700px) {
+      .insights-panel { top: 58px; bottom: 0; width: 100%; }
+    }
+
+    /* ─────────────────────────────────────────────────────────
        AISHA — AI Sea Hawk Agent (floating chatbot)
        ───────────────────────────────────────────────────────── */
     .aisha-fab {
@@ -1739,6 +1941,9 @@
       <div class="nav-stat-value" id="kpi-var-ytd" style="color:var(--green)">+7.6%</div>
     </div>
     <div class="nav-divider"></div>
+    <button class="insights-trigger" id="insights-trigger" type="button" title="Open operational insights">
+      Insights<span class="insights-badge" id="insights-badge">0</span>
+    </button>
     <div class="nav-dot"></div>
   </div>
 </nav>
@@ -5802,12 +6007,263 @@ function initAisha() {
       sendUserMessage(inputEl.value);
     }
   });
+
+  // Expose a programmatic "ask AISHA" hook so other features (Insights
+  // drawer, etc.) can open the chat with a pre-seeded question.
+  window.aishaAsk = (text) => {
+    openPanel();
+    setTimeout(() => sendUserMessage(text), 340);
+  };
+  window.aishaOpenPanel = openPanel;
 }
 // Defer until the AISHA markup (which appears below this script) is parsed.
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initAisha);
 } else {
   initAisha();
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   INSIGHTS DRAWER — proactive operational alerts. Each alert wraps a
+   problem + supporting numbers + recommended action + an Ask-AISHA
+   prompt that opens the chat with a pre-seeded question for follow-up
+   analysis. Hand-crafted mock alerts for the prototype; in production
+   these would be generated from rule triggers + LLM narrative.
+   ───────────────────────────────────────────────────────────────── */
+function initInsights() {
+  const ALERTS = [
+    {
+      id: 'qingdao-d40-shortage',
+      severity: 'critical',
+      category: 'Equipment Imbalance',
+      time: '8m ago',
+      title: 'D40 high-cube shortage at Qingdao',
+      body: 'Shortage of <b>420 units</b> vs forecast, <b>280 units</b> vs bookings in <b>week W23</b>. Recommend repositioning <b>350 units from Singapore</b> (surplus 612).',
+      action: { label: 'View Qingdao',  type: 'port',  name: 'Qingdao' },
+      aishaPrompt: 'Walk me through the Qingdao D40 high-cube shortage alert. Why Singapore as the source port, and what are the cost and operational implications of repositioning 350 units?'
+    },
+    {
+      id: 'kota-eagle-velocity',
+      severity: 'critical',
+      category: 'Booking Velocity',
+      time: '14m ago',
+      title: 'Kota Eagle V.0023W booking velocity AT RISK',
+      body: '<b>Shekou → Karachi</b> only <b>12%</b> booked at T-3 (vs ~78% historical). Forecast at cutoff: <b>54%</b> — light by ~1,840 TEU. Recommend rate drop <b>-5%</b> or release to NVOCCs.',
+      action: { label: 'View Vessel',  type: 'vessel', name: 'Kota Eagle' },
+      aishaPrompt: 'Explain the Kota Eagle V.0023W booking velocity risk. What is the P&L impact if she sails at 54% utilization, and what rate elasticity have we historically seen on the Shekou-Karachi corridor?'
+    },
+    {
+      id: 'kota-ebony-cascade',
+      severity: 'critical',
+      category: 'Schedule Slippage',
+      time: '22m ago',
+      title: 'Kota Ebony delay cascading to Mombasa',
+      body: 'Shanghai +<b>1d 17h</b> delayed. Mombasa ETA shifts <b>24 May → 27 May</b>. <b>3 downstream bookings</b> at risk of missing cutoff at Mombasa; Port Kelang call also +1d.',
+      action: { label: 'View Schedule', type: 'schedule', vessel: 'Kota Ebony' },
+      aishaPrompt: 'Show me the cascade impact of the Kota Ebony Shanghai delay. Which specific bookings are at risk of rolling, and can we re-route any of them to other PIL services that arrive at Mombasa within the same window?'
+    },
+    {
+      id: 'lagos-delinquency-spike',
+      severity: 'high',
+      category: 'Container Delinquency',
+      time: '35m ago',
+      title: 'Lagos delinquency spike +14% WoW',
+      body: '<b>2,140 TEU</b> stuck >18 days. Root causes: customs clearance backlog (60%), inland transport disruption (40%). Recommend escalation to ops + customer notification on top 12 affected bookings.',
+      action: { label: 'View Lagos',   type: 'port',  name: 'Lagos' },
+      aishaPrompt: 'Break down the Lagos delinquency spike. Which customers and forwarders are most exposed, and what mitigation actions has PIL taken in similar past spikes?'
+    },
+    {
+      id: 'sgsin-nsa-cm-leak',
+      severity: 'high',
+      category: 'Pricing Leakage',
+      time: '47m ago',
+      title: 'Singapore → Nhava Sheva CM/TEU below target',
+      body: 'CM/TEU dropped to <b>$2,189</b> (target $2,545). <b>23 BLs</b> in LOW band this week. Top 5 forwarders driving <b>78%</b> of the leakage. Recommend rate review with sales.',
+      action: { label: 'View Pricing', type: 'vessel', name: 'Kota Eagle' },
+      aishaPrompt: 'Walk me through the Singapore → Nhava Sheva CM erosion. Which forwarders are in the LOW band, and what historical rate adjustments have worked on this corridor?'
+    },
+    {
+      id: 'capetown-r5-critical',
+      severity: 'high',
+      category: 'Equipment Imbalance',
+      time: '1h ago',
+      title: 'R5 reefer critical shortage at Cape Town',
+      body: '<b>14 units</b> on ground vs <b>78 required</b> for next 2 sailings. Recommend cross-rail from Durban (surplus 95 units) within <b>3 days</b> to avoid roll on KCTK0041W reefer bookings.',
+      action: { label: 'View Cape Town', type: 'port', name: 'Cape Town' },
+      aishaPrompt: 'Detail the Cape Town R5 reefer shortage. What is the cost-benefit of cross-railing from Durban vs sourcing from a closer port, and what is the customer-level exposure?'
+    },
+    {
+      id: 'kota-cantik-softening',
+      severity: 'high',
+      category: 'Booking Velocity',
+      time: '1h 12m ago',
+      title: 'Kota Cantik V.0041W pace softening',
+      body: 'Total booked <b>88%</b> at T-2 (vs ~124% historical). Port Kelang → Mundra lane lagging at <b>47%</b>. <b>380 TEU at risk</b> on the India corridor — push agents.',
+      action: { label: 'View Vessel', type: 'vessel', name: 'Kota Cantik' },
+      aishaPrompt: 'Explain why Kota Cantik V.0041W is pacing slower than usual. Are there seasonal patterns or competitive moves on the Port Kelang → Mundra corridor we should account for?'
+    },
+    {
+      id: 'mombasa-dwelling',
+      severity: 'high',
+      category: 'Container Dwelling',
+      time: '1h 28m ago',
+      title: 'Mombasa: 540 TEU dwelling >7 days',
+      body: '<b>320 TEU</b> belongs to PIL bookings. Storage charges accruing at <b>$28/TEU/day</b>. Recommend customer notifications and review of top 8 delinquent BLs.',
+      action: { label: 'View Mombasa', type: 'port', name: 'Mombasa' },
+      aishaPrompt: 'Break down the Mombasa dwelling situation. Which customers are responsible, and what is the financial exposure if PIL applies storage charges?'
+    },
+    {
+      id: 'maersk-sentosa-delay',
+      severity: 'watch',
+      category: 'Partner Vessel Alert',
+      time: '2h ago',
+      title: 'MAERSK SENTOSA delayed 48h at Singapore',
+      body: 'Weather hold. <b>18 PIL transhipment containers</b> affected. No service disruption to PIL voyages. Recommend alternate routing via Port Kelang for next 2 sailings as a precaution.',
+      action: { label: 'View Singapore', type: 'port', name: 'Singapore' },
+      aishaPrompt: 'How does the MAERSK SENTOSA delay affect PIL operations? What is our standard alternate routing for transhipment cargo in such cases, and what is the typical cost premium?'
+    },
+    {
+      id: 'sgsin-nsa-pricing-up',
+      severity: 'watch',
+      category: 'Pricing Opportunity',
+      time: '2h 45m ago',
+      title: 'Singapore → Nhava Sheva top-quartile rate climbing',
+      body: 'Top-quartile rate now <b>$2,890</b> (+13% MoM). <b>6 forwarders</b> below current target. Consider rate increase to capture upside before the market reverses.',
+      action: { label: 'View Pricing', type: 'vessel', name: 'Kota Eagle' },
+      aishaPrompt: 'Walk me through the Singapore → Nhava Sheva pricing opportunity. Which forwarders should we target for rate increases, and what is the upside vs churn risk?'
+    },
+    {
+      id: 'cross-vessel-opp',
+      severity: 'watch',
+      category: 'Cross-Vessel Optimization',
+      time: '3h ago',
+      title: 'Cross-vessel cargo reallocation opportunity',
+      body: '<b>Kota Cantik</b> 88% util at T-2 with <b>1,344 TEU open</b>. <b>Kota Cempaka</b> oversold by <b>320 TEU</b> on the same Africa corridor. Consider rerouting cargo to Kota Cantik to avoid roll.',
+      action: { label: 'View Kota Cempaka', type: 'vessel', name: 'Kota Cempaka' },
+      aishaPrompt: 'Walk me through the Kota Cantik / Kota Cempaka cross-vessel reallocation. What are the costs and operational risks of moving 320 TEU between voyages?'
+    },
+    {
+      id: 'pk-mundra-undersold',
+      severity: 'watch',
+      category: 'Allocation Under-sold',
+      time: '4h ago',
+      title: 'Port Kelang → Mundra 47% booked at T-5',
+      body: 'Historical pace at this point: <b>78%</b>. Gap of <b>380 TEU</b> against allocation. <b>4 NVOCCs</b> flagged with recent slowdown — push sales team on India trade.',
+      action: { label: 'View Mundra', type: 'port', name: 'Mundra' },
+      aishaPrompt: 'Explain the Port Kelang → Mundra undersold situation. Which NVOCCs have slowed down, and what rate or capacity incentives could re-engage them?'
+    },
+  ];
+
+  const trigger  = document.getElementById('insights-trigger');
+  const panel    = document.getElementById('insights-panel');
+  const closeBtn = document.getElementById('insights-close');
+  const listEl   = document.getElementById('insights-list');
+  const badge    = document.getElementById('insights-badge');
+  if (!trigger || !panel) return;
+
+  // Badge shows just the critical+high count (watch alerts don't pulse).
+  const urgentCount = ALERTS.filter(a => a.severity !== 'watch').length;
+  badge.textContent = urgentCount;
+
+  function render() {
+    listEl.innerHTML = ALERTS.map(a => `
+      <div class="insight-card severity-${a.severity}" data-id="${a.id}">
+        <div class="insight-header">
+          <span class="insight-severity-dot"></span>
+          <span class="insight-category">${a.category}</span>
+          <span class="insight-time">${a.time}</span>
+        </div>
+        <div class="insight-title">${a.title}</div>
+        <div class="insight-body">${a.body}</div>
+        <div class="insight-actions">
+          <button class="insight-btn insight-btn-primary" data-action="${a.id}">${a.action.label}</button>
+          <button class="insight-btn insight-btn-secondary" data-aisha="${a.id}">Ask AISHA</button>
+        </div>
+      </div>
+    `).join('');
+
+    listEl.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const a = ALERTS.find(x => x.id === btn.dataset.action);
+        if (a) takeAction(a);
+      });
+    });
+    listEl.querySelectorAll('[data-aisha]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const a = ALERTS.find(x => x.id === btn.dataset.aisha);
+        if (a) askAisha(a);
+      });
+    });
+  }
+
+  function takeAction(alert) {
+    closeDrawer();
+    const a = alert.action;
+    if (a.type === 'port') {
+      // Substring match on the ports[] list
+      const portObj = (typeof ports !== 'undefined')
+        ? ports.find(p => p.name.toLowerCase().includes(a.name.toLowerCase()))
+        : null;
+      if (portObj && portObj.position) {
+        map.flyTo(portObj.position, 5, { duration: 0.8 });
+        const pm = (typeof portMarkers !== 'undefined')
+          ? portMarkers.find(o => o.p.name === portObj.name) : null;
+        if (pm && pm.marker) setTimeout(() => pm.marker.openPopup(), 850);
+      }
+    } else if (a.type === 'vessel') {
+      const vm = (typeof vesselMarkers !== 'undefined')
+        ? vesselMarkers.find(o => o.v.name === a.name) : null;
+      if (vm) {
+        map.flyTo(vm.v.position, 4, { duration: 0.8 });
+        setTimeout(() => vm.marker.openPopup(), 850);
+      }
+    } else if (a.type === 'schedule') {
+      const vm = (typeof vesselMarkers !== 'undefined')
+        ? vesselMarkers.find(o => o.v.name === a.vessel) : null;
+      if (vm && typeof window.openVesselSchedule === 'function') {
+        window.openVesselSchedule(vm.v);
+      }
+    }
+  }
+
+  function askAisha(alert) {
+    closeDrawer();
+    setTimeout(() => {
+      if (typeof window.aishaAsk === 'function') {
+        window.aishaAsk(alert.aishaPrompt);
+      }
+    }, 200);
+  }
+
+  function openDrawer() {
+    // Close other right-side drawers to avoid stacking
+    const sched = document.getElementById('schedule-panel');
+    if (sched) sched.classList.remove('open');
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+  }
+  function closeDrawer() {
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+  }
+
+  trigger.addEventListener('click', () => {
+    if (panel.classList.contains('open')) closeDrawer();
+    else openDrawer();
+  });
+  closeBtn.addEventListener('click', closeDrawer);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closeDrawer();
+  });
+
+  render();
+  window.openInsights = openDrawer;
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initInsights);
+} else {
+  initInsights();
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -6181,6 +6637,20 @@ if (document.readyState === 'loading') {
   initScheduleDrawer();
 }
 </script>
+
+<!-- ═══════════════════════════════════════════════════════
+     INSIGHTS — proactive operational alerts
+     ═══════════════════════════════════════════════════════ -->
+<aside class="insights-panel" id="insights-panel" aria-label="Operational insights" aria-hidden="true">
+  <header class="insights-header">
+    <div class="insights-title-block">
+      <div class="insights-title">Operational Insights</div>
+      <div class="insights-subtitle">Proactive alerts · powered by AISHA</div>
+    </div>
+    <button class="insights-close" id="insights-close" aria-label="Close insights">&times;</button>
+  </header>
+  <div class="insights-list" id="insights-list"></div>
+</aside>
 
 <!-- ═══════════════════════════════════════════════════════
      VESSEL SCHEDULE DRAWER
