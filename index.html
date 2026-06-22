@@ -1572,20 +1572,51 @@
     }
     .insight-body b { color: #5fdfff; font-weight: 700; }
     .insight-actions {
-      display: flex; gap: 8px;
+      display: flex; gap: 5px;
     }
     .insight-btn {
       flex: 1;
-      padding: 7px 10px;
+      padding: 6px 6px;
       border-radius: 6px;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.2px;
       cursor: pointer;
       border: 1px solid;
       font-family: inherit;
       transition: background .15s, border-color .15s, box-shadow .15s;
       outline: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    .insight-btn .ic {
+      font-size: 11px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .insight-btn-ack {
+      background: rgba(0,229,160,0.08);
+      border-color: rgba(0,229,160,0.32);
+      color: #00e5a0;
+    }
+    .insight-btn-ack:hover {
+      background: rgba(0,229,160,0.18);
+      border-color: rgba(0,229,160,0.55);
+    }
+    .insight-btn-dismiss {
+      background: rgba(255,77,106,0.06);
+      border-color: rgba(255,77,106,0.32);
+      color: #ff4d6a;
+    }
+    .insight-btn-dismiss:hover {
+      background: rgba(255,77,106,0.16);
+      border-color: rgba(255,77,106,0.55);
     }
     .insight-btn-primary {
       background: linear-gradient(135deg, #00b4ff 0%, #0066cc 100%);
@@ -6381,13 +6412,20 @@ function initInsights() {
         <div class="insight-title">${a.title}${ackTag}</div>
         <div class="insight-body">${a.body}</div>
         <div class="insight-actions">
-          <button class="insight-btn insight-btn-primary" data-action="${a.id}">${a.action.label}</button>
-          <button class="insight-btn insight-btn-secondary" data-aisha="${a.id}">Ask AISHA</button>
+          <button class="insight-btn insight-btn-ack"      data-do="ack"     data-id="${a.id}" title="Acknowledge — mark as seen / in progress">
+            <span class="ic">&#10003;</span> Ack
+          </button>
+          <button class="insight-btn insight-btn-dismiss"  data-do="dismiss" data-id="${a.id}" title="Dismiss — remove from feed">
+            <span class="ic">&times;</span> Dismiss
+          </button>
+          <button class="insight-btn insight-btn-primary"  data-action="${a.id}" title="${a.action.label}">
+            <span class="ic">&#10148;</span> ${a.action.label}
+          </button>
+          <button class="insight-btn insight-btn-secondary" data-aisha="${a.id}" title="Ask AISHA about this">
+            <span class="ic">&#10022;</span> Ask AISHA
+          </button>
         </div>
         <div class="insight-menu" id="menu-${a.id}">
-          <button class="insight-menu-item" data-do="ack" data-id="${a.id}">
-            <span class="ic">&#10003;</span> Acknowledge
-          </button>
           <button class="insight-menu-item" data-do="snooze-1" data-id="${a.id}">
             <span class="ic">&#8987;</span> Snooze 1 hour
           </button>
@@ -6395,9 +6433,6 @@ function initInsights() {
             <span class="ic">&#8987;</span> Snooze 4 hours
           </button>
           <div class="insight-menu-divider"></div>
-          <button class="insight-menu-item" data-do="dismiss" data-id="${a.id}">
-            <span class="ic">&times;</span> Dismiss
-          </button>
           <button class="insight-menu-item" data-do="mute" data-id="${a.id}">
             <span class="ic">&#128263;</span> Mute "${a.category}"
           </button>
