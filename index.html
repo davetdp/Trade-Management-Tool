@@ -6311,19 +6311,15 @@ function initInsights() {
   const toastEl  = document.getElementById('insights-toast');
   if (!trigger || !panel) return;
 
-  // ── Per-alert state (persisted in sessionStorage for the demo) ──
+  // ── Per-alert state — IN-MEMORY ONLY ──
+  // Persisting in sessionStorage made the demo feel "broken" when the
+  // user wanted to refresh and see all alerts again. Now every page load
+  // restores the full feed and ack/dismiss/snooze/mute apply only until
+  // the next refresh.
   // state shape per id: 'active' | 'acknowledged' | 'snoozed' | 'dismissed'
   // muted: set of category names
-  function loadStates() {
-    try { return JSON.parse(sessionStorage.getItem('insightsState') || '{}'); }
-    catch (e) { return {}; }
-  }
-  function saveStates() {
-    sessionStorage.setItem('insightsState', JSON.stringify(state));
-  }
-  const state = loadStates();
-  if (!state.alerts)  state.alerts  = {};      // id → { status, ts }
-  if (!state.muted)   state.muted   = [];      // [categoryName,…]
+  function saveStates() { /* no-op — state is in-memory only */ }
+  const state = { alerts: {}, muted: [] };
 
   function statusOf(id) {
     const s = state.alerts[id];
