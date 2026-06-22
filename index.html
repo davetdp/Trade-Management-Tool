@@ -1633,6 +1633,15 @@
       background: rgba(0,180,255,0.14);
       border-color: rgba(0,180,255,0.55);
     }
+    .insight-btn-aisha {
+      background: rgba(167,139,250,0.08);
+      border-color: rgba(167,139,250,0.38);
+      color: #c4b5fd;
+    }
+    .insight-btn-aisha:hover {
+      background: rgba(167,139,250,0.18);
+      border-color: rgba(167,139,250,0.65);
+    }
 
     /* Overflow menu (⋮) — per-card actions: ack/snooze/dismiss/mute */
     .insight-menu-btn {
@@ -6416,7 +6425,7 @@ function initInsights() {
           <button class="insight-btn insight-btn-secondary" data-action="${a.id}" title="${a.action.label}">
             <span class="ic">&#10148;</span> View Details
           </button>
-          <button class="insight-btn insight-btn-secondary" data-aisha="${a.id}" title="Ask AISHA about this">
+          <button class="insight-btn insight-btn-aisha" data-aisha="${a.id}" title="Ask AISHA about this">
             <span class="ic">&#10022;</span> Ask AISHA
           </button>
         </div>
