@@ -1758,6 +1758,147 @@
       opacity: 1; transform: translateX(-50%) translateY(0);
     }
 
+    /* LMS Action Modal — shown when user clicks Ack on an alert that
+       maps to a write-back to the LMS ERP. Confirms what will be
+       created before posting. */
+    .lms-modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0, 8, 24, 0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity .18s;
+    }
+    .lms-modal-backdrop.open { display: flex; opacity: 1; }
+    .lms-modal {
+      background: #0a1226;
+      border: 1px solid rgba(0,180,255,0.32);
+      border-radius: 10px;
+      width: min(520px, 92vw);
+      max-height: 86vh;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(0,180,255,0.08);
+      transform: translateY(12px);
+      opacity: 0;
+      transition: transform .22s ease, opacity .22s ease;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .lms-modal-backdrop.open .lms-modal {
+      transform: translateY(0); opacity: 1;
+    }
+    .lms-modal-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid rgba(0,180,255,0.10);
+    }
+    .lms-modal-eyebrow {
+      font-size: 9px; font-weight: 700;
+      color: var(--muted); letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .lms-modal-title { font-size: 15px; font-weight: 700; color: #e8f4ff; }
+    .lms-modal-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 22px; line-height: 1;
+      padding: 0 4px; border-radius: 4px;
+      transition: color .15s, background .15s;
+    }
+    .lms-modal-close:hover { color: #e8f4ff; background: rgba(255,255,255,0.05); }
+    .lms-modal-body { padding: 14px 18px; overflow-y: auto; }
+    .lms-modal-summary {
+      font-size: 12px; color: #5fdfff;
+      line-height: 1.45;
+      padding: 8px 10px;
+      background: rgba(0,180,255,0.06);
+      border-left: 2px solid #00b4ff;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 12px;
+    }
+    .lms-modal-fields {
+      display: grid; grid-template-columns: max-content 1fr;
+      gap: 6px 14px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    .lms-field-label { color: var(--muted); font-weight: 600; letter-spacing: 0.3px; }
+    .lms-field-value { color: #e8f4ff; font-weight: 500; }
+    .lms-modal-note {
+      font-size: 10px; color: var(--muted);
+      background: rgba(255,184,48,0.06);
+      border: 1px solid rgba(255,184,48,0.18);
+      border-radius: 4px;
+      padding: 8px 10px;
+      line-height: 1.5;
+    }
+    .lms-modal-note b { color: #ffb830; }
+    .lms-modal-actions {
+      display: flex; justify-content: flex-end; gap: 8px;
+      padding: 12px 18px 16px;
+      border-top: 1px solid rgba(0,180,255,0.10);
+    }
+    .lms-btn {
+      font-family: inherit;
+      font-size: 11px; font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, box-shadow .15s;
+      letter-spacing: 0.3px;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .lms-btn-cancel {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--muted);
+    }
+    .lms-btn-cancel:hover { border-color: rgba(255,255,255,0.32); color: #e8f4ff; }
+    .lms-btn-create {
+      background: linear-gradient(135deg, #00b4ff 0%, #0066cc 100%);
+      border: 1px solid rgba(0,180,255,0.6);
+      color: #fff;
+    }
+    .lms-btn-create:hover { box-shadow: 0 0 14px rgba(0,180,255,0.5); }
+    .lms-btn-create:disabled { opacity: 0.6; cursor: wait; }
+    .lms-spinner {
+      width: 11px; height: 11px;
+      border: 1.5px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: lms-spin 0.7s linear infinite;
+      display: none;
+    }
+    .lms-btn-create.is-loading .lms-spinner { display: inline-block; }
+    @keyframes lms-spin { to { transform: rotate(360deg); } }
+
+    /* LMS reference chip — shown on the card after Ack confirms write-back */
+    .insight-lms-chip {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 10px;
+      padding: 6px 10px;
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.28);
+      border-radius: 6px;
+      font-size: 10px; font-weight: 600;
+      color: #00e5a0;
+      letter-spacing: 0.3px;
+    }
+    .insight-lms-chip .lms-chip-ic { font-size: 11px; }
+    .insight-lms-chip .lms-chip-ref { font-family: 'Space Mono', monospace; font-weight: 700; color: #e8f4ff; }
+    .insight-lms-chip .lms-chip-type { color: var(--muted); font-weight: 500; }
+    .insight-lms-chip .lms-chip-link {
+      margin-left: auto;
+      color: #5fdfff; text-decoration: none;
+      font-weight: 700;
+      padding: 2px 6px; border-radius: 4px;
+      transition: background .15s;
+    }
+    .insight-lms-chip .lms-chip-link:hover { background: rgba(0,180,255,0.14); }
+
     @media (max-width: 700px) {
       .insights-panel { top: 58px; bottom: 0; width: 100%; }
     }
@@ -6310,6 +6451,160 @@ function initInsights() {
     },
   ];
 
+  // ── LMS action mapping ─────────────────────────────────
+  // When the user acknowledges an alert, SHIP can write back to the PIL
+  // LMS ERP — creating an actionable object that ops/sales/pricing teams
+  // pick up downstream. Each alert maps to one LMS object type. Modal
+  // previews the object before posting; mock implementation generates a
+  // synthetic reference id and links back to lms.pilship.com.
+  const LMS_BASE_URL = 'https://lms.pilship.com';
+  const LMS_ACTIONS = {
+    'qingdao-d5-shortage': {
+      type: 'Empty Repositioning Plan', prefix: 'REPO',
+      summary: 'Reposition 350 × D5 from Singapore → Qingdao for Week W23.',
+      fields: [
+        ['Container Type', "D5 (40' High Cube)"],
+        ['Quantity',       '350 units'],
+        ['POL',            'Singapore (SGSIN)'],
+        ['POD',            'Qingdao (CNTAO)'],
+        ['Target ETA',     'Week W23 (06 – 12 Jun 2026)'],
+        ['Service',        'SWS — next available sailing'],
+        ['Justification',  'Covers 100% of bookings + 50% soft-forecast buffer'],
+      ],
+    },
+    'kota-eagle-velocity': {
+      type: 'Rate Action Memo', prefix: 'RATE',
+      summary: 'Apply -5% rate cut OR release to NVOCCs on Shekou → Karachi.',
+      fields: [
+        ['Voyage',           'Kota Eagle V.0023W'],
+        ['Corridor',         'Shekou (CNSKU) → Karachi (PKKHI)'],
+        ['Action',           'Rate -5% OR NVOCC release'],
+        ['Current pace',     '12% at T-3 (vs 78% historical)'],
+        ['Forecast cutoff',  '54% (~1,840 TEU light)'],
+      ],
+    },
+    'kota-ebony-cascade': {
+      type: 'Schedule Recovery Plan', prefix: 'SCHED',
+      summary: 'Mitigate Kota Ebony Shanghai +1d 17h delay across downstream calls.',
+      fields: [
+        ['Voyage',            'Kota Ebony'],
+        ['Origin delay',      'Shanghai +1d 17h'],
+        ['Mombasa ETA shift', '24 May → 27 May 2026'],
+        ['Downstream impact', 'Port Kelang call +1d'],
+        ['At-risk bookings',  '3 (Mombasa cutoff)'],
+        ['Mitigation',        'Re-route candidates + customer notify'],
+      ],
+    },
+    'lagos-delinquency-spike': {
+      type: 'Customer Escalation Case', prefix: 'CASE',
+      summary: 'Top-12 BL escalation — Lagos delinquency spike +14% WoW.',
+      fields: [
+        ['Port',            'Apapa (NGAPL)'],
+        ['Affected volume', '2,140 TEU stuck >18 days'],
+        ['Root cause',      'Customs backlog 60% · Inland transport 40%'],
+        ['Scope',           'Top 12 affected bookings'],
+        ['Required action', 'Ops escalation + customer notification'],
+      ],
+    },
+    'sgsin-nsa-cm-leak': {
+      type: 'Rate Review Request', prefix: 'RATE',
+      summary: 'Singapore → Nhava Sheva CM/TEU below target — reset rate.',
+      fields: [
+        ['Corridor',        'Singapore → Nhava Sheva'],
+        ['Current CM/TEU',  '$2,189'],
+        ['Target CM/TEU',   '$2,545'],
+        ['Gap',             '−$356 / TEU'],
+        ['Affected BLs',    '23 BLs (LOW band)'],
+        ['Top driver',      '5 forwarders = 78% of leakage'],
+      ],
+    },
+    'capetown-r5-critical': {
+      type: 'Empty Repositioning Plan', prefix: 'REPO',
+      summary: 'Cross-rail 64 × R5 from Durban → Cape Town within 3 days.',
+      fields: [
+        ['Container Type',  "R5 (40' Reefer)"],
+        ['Quantity',        '64 units'],
+        ['Mode',            'Cross-rail (inland)'],
+        ['POL',             'Durban (ZADUR)'],
+        ['POD',             'Cape Town (ZACPT)'],
+        ['Target',          'Within 3 days'],
+        ['Trigger',         'KCTK0041W reefer bookings at risk'],
+      ],
+    },
+    'kota-cantik-softening': {
+      type: 'Sales Push Order', prefix: 'SALES',
+      summary: 'Port Kelang → Mundra agent push — 380 TEU at risk.',
+      fields: [
+        ['Voyage',          'Kota Cantik V.0041W'],
+        ['Lane',            'Port Kelang → Mundra'],
+        ['Current pace',    '47% at T-2'],
+        ['Historical pace', '~124%'],
+        ['TEU at risk',     '380'],
+        ['Channel',         'India agent network'],
+      ],
+    },
+    'mombasa-dwelling': {
+      type: 'Customer Escalation Case', prefix: 'CASE',
+      summary: 'Top-8 BL review — Mombasa dwelling >7 days.',
+      fields: [
+        ['Port',           'Mombasa (KEMBA)'],
+        ['Dwelling TEU',   '540 total (320 PIL)'],
+        ['Storage rate',   '$28 / TEU / day'],
+        ['Scope',          'Top 8 delinquent BLs'],
+        ['Action',         'Customer notification + storage charge review'],
+      ],
+    },
+    'maersk-sentosa-delay': {
+      type: 'Alternate Routing Plan', prefix: 'ROUTE',
+      summary: 'Route PIL transhipment via Port Kelang — next 2 sailings.',
+      fields: [
+        ['Trigger',           'MAERSK SENTOSA 48h weather hold @ Singapore'],
+        ['Affected cargo',    '18 PIL transhipment containers'],
+        ['Alternate route',   'Singapore → Port Kelang transhipment'],
+        ['Duration',          'Next 2 sailings (precautionary)'],
+      ],
+    },
+    'sgsin-nsa-pricing-up': {
+      type: 'Rate Review Request', prefix: 'RATE',
+      summary: 'Lift target — Singapore → Nhava Sheva top-quartile climbing.',
+      fields: [
+        ['Corridor',                'Singapore → Nhava Sheva'],
+        ['Top-quartile rate',       '$2,890 (+13% MoM)'],
+        ['Forwarders below target', '6'],
+        ['Recommendation',          'Lift target rate ahead of market reversal'],
+      ],
+    },
+    'cross-vessel-opp': {
+      type: 'Cargo Reallocation Plan', prefix: 'REALLOC',
+      summary: 'Move 320 TEU from Kota Cempaka → Kota Cantik (Africa corridor).',
+      fields: [
+        ['Source voyage', 'Kota Cempaka — oversold 320 TEU'],
+        ['Target voyage', 'Kota Cantik — 88% util, 1,344 TEU open'],
+        ['Volume',        '320 TEU'],
+        ['Corridor',      'Africa'],
+        ['Goal',          'Avoid roll on Kota Cempaka'],
+      ],
+    },
+    'pk-mundra-undersold': {
+      type: 'Sales Push Order', prefix: 'SALES',
+      summary: 'NVOCC re-engagement — Port Kelang → Mundra at 47% T-5.',
+      fields: [
+        ['Lane',            'Port Kelang → Mundra'],
+        ['Current pace',    '47% at T-5'],
+        ['Historical pace', '78%'],
+        ['Gap',             '380 TEU'],
+        ['Target',          '4 flagged NVOCCs'],
+      ],
+    },
+  };
+
+  // Generate a synthetic LMS reference id like REPO-2026-09823 — used
+  // only in the mock; in production the API returns the real id.
+  function generateLmsRef(prefix) {
+    const n = Math.floor(Math.random() * 90000) + 10000;
+    return `${prefix}-2026-${n}`;
+  }
+
   const trigger  = document.getElementById('insights-trigger');
   const panel    = document.getElementById('insights-panel');
   const closeBtn = document.getElementById('insights-close');
@@ -6402,9 +6697,27 @@ function initInsights() {
     }
     listEl.innerHTML = visible.map(a => {
       const s = statusOf(a.id);
-      const cls = s === 'acknowledged' ? 'is-acknowledged' : '';
-      const ackTag = s === 'acknowledged'
+      const isAcked = s === 'acknowledged';
+      const cls = isAcked ? 'is-acknowledged' : '';
+      const lmsRec = isAcked ? (state.alerts[a.id] && state.alerts[a.id].lms) : null;
+      const ackTag = isAcked
         ? '<span class="insight-ack-tag">&#10003; Acknowledged</span>' : '';
+      const lmsChip = lmsRec ? `
+        <div class="insight-lms-chip">
+          <span class="lms-chip-ic">&#10003;</span>
+          <span class="lms-chip-type">${lmsRec.type}</span>
+          <span class="lms-chip-ref">${lmsRec.ref}</span>
+          <a class="lms-chip-link" href="${lmsRec.url}" target="_blank" rel="noopener">Open in LMS &#8599;</a>
+        </div>` : '';
+      // Hide Ack/Dismiss once acknowledged — the alert is now committed
+      // to an LMS object, so the operational lifecycle has moved on.
+      const ackDismissButtons = isAcked ? '' : `
+          <button class="insight-btn insight-btn-ack"      data-do="ack"     data-id="${a.id}" title="Acknowledge — create LMS action and mark as in progress">
+            <span class="ic">&#10003;</span> Ack
+          </button>
+          <button class="insight-btn insight-btn-dismiss"  data-do="dismiss" data-id="${a.id}" title="Dismiss — remove from feed">
+            <span class="ic">&times;</span> Dismiss
+          </button>`;
       return `
       <div class="insight-card severity-${a.severity} ${cls}" data-id="${a.id}">
         <div class="insight-header">
@@ -6415,13 +6728,9 @@ function initInsights() {
         </div>
         <div class="insight-title">${a.title}${ackTag}</div>
         <div class="insight-body">${a.body}</div>
+        ${lmsChip}
         <div class="insight-actions">
-          <button class="insight-btn insight-btn-ack"      data-do="ack"     data-id="${a.id}" title="Acknowledge — mark as seen / in progress">
-            <span class="ic">&#10003;</span> Ack
-          </button>
-          <button class="insight-btn insight-btn-dismiss"  data-do="dismiss" data-id="${a.id}" title="Dismiss — remove from feed">
-            <span class="ic">&times;</span> Dismiss
-          </button>
+          ${ackDismissButtons}
           <button class="insight-btn insight-btn-secondary" data-action="${a.id}" title="${a.action.label}">
             <span class="ic">&#10148;</span> View Details
           </button>
@@ -6484,9 +6793,10 @@ function initInsights() {
         if (menu) menu.classList.remove('open');
 
         if (op === 'ack') {
-          setStatus(id, 'acknowledged');
-          showToast('Alert acknowledged.');
-          render();
+          // Acknowledging now creates an LMS object (Empty Repo Plan,
+          // Rate Memo, Customer Case, etc.) — open the preview modal so
+          // the user can review what'll be written back to LMS.
+          openLmsModal(a);
         } else if (op === 'snooze-1' || op === 'snooze-4') {
           const hours = (op === 'snooze-1') ? 1 : 4;
           setStatus(id, 'snoozed', { expires: Date.now() + hours * 3600000 });
@@ -6521,6 +6831,84 @@ function initInsights() {
     saveStates();
     showToast('All insights restored.');
     render();
+  });
+
+  // ── LMS modal — preview LMS write-back before posting ──
+  const lmsBackdrop  = document.getElementById('lms-modal-backdrop');
+  const lmsTitleEl   = document.getElementById('lms-modal-title');
+  const lmsEyebrowEl = document.getElementById('lms-modal-eyebrow');
+  const lmsSummaryEl = document.getElementById('lms-modal-summary');
+  const lmsFieldsEl  = document.getElementById('lms-modal-fields');
+  const lmsCloseBtn  = document.getElementById('lms-modal-close');
+  const lmsCancelBtn = document.getElementById('lms-modal-cancel');
+  const lmsCreateBtn = document.getElementById('lms-modal-create');
+  const lmsCreateLbl = lmsCreateBtn ? lmsCreateBtn.querySelector('.lms-btn-create-label') : null;
+  let lmsCurrentAlert = null;
+
+  function openLmsModal(alert) {
+    const def = LMS_ACTIONS[alert.id];
+    if (!def || !lmsBackdrop) {
+      // Fallback — no LMS mapping; ack with no LMS object
+      setStatus(alert.id, 'acknowledged');
+      showToast('Alert acknowledged.');
+      render();
+      return;
+    }
+    lmsCurrentAlert = alert;
+    lmsEyebrowEl.textContent = `CREATE ${def.type.toUpperCase()}`;
+    lmsTitleEl.textContent   = def.type;
+    lmsSummaryEl.innerHTML   = def.summary;
+    lmsFieldsEl.innerHTML    = def.fields.map(([k,v]) =>
+      `<span class="lms-field-label">${k}</span><span class="lms-field-value">${v}</span>`
+    ).join('');
+    // Reset button state in case a previous modal was mid-flight
+    lmsCreateBtn.classList.remove('is-loading');
+    lmsCreateBtn.disabled = false;
+    if (lmsCreateLbl) lmsCreateLbl.innerHTML = 'Create in LMS &#9656;';
+    lmsBackdrop.classList.add('open');
+    lmsBackdrop.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeLmsModal() {
+    if (!lmsBackdrop) return;
+    lmsBackdrop.classList.remove('open');
+    lmsBackdrop.setAttribute('aria-hidden', 'true');
+    lmsCurrentAlert = null;
+  }
+
+  function confirmLmsAction() {
+    if (!lmsCurrentAlert) return;
+    const alert = lmsCurrentAlert;
+    const def   = LMS_ACTIONS[alert.id];
+    if (!def) { closeLmsModal(); return; }
+    // Simulate a brief API round-trip
+    lmsCreateBtn.classList.add('is-loading');
+    lmsCreateBtn.disabled = true;
+    if (lmsCreateLbl) lmsCreateLbl.textContent = 'Posting to LMS…';
+    setTimeout(() => {
+      const ref = generateLmsRef(def.prefix);
+      const url = `${LMS_BASE_URL}/plan/${ref}`;
+      setStatus(alert.id, 'acknowledged', {
+        lms: { ref, url, type: def.type, prefix: def.prefix, ts: Date.now() }
+      });
+      closeLmsModal();
+      showToast(`LMS ${def.type} created · ${ref}`);
+      render();
+    }, 700);
+  }
+
+  if (lmsCloseBtn)  lmsCloseBtn.addEventListener('click', closeLmsModal);
+  if (lmsCancelBtn) lmsCancelBtn.addEventListener('click', closeLmsModal);
+  if (lmsCreateBtn) lmsCreateBtn.addEventListener('click', confirmLmsAction);
+  if (lmsBackdrop) {
+    lmsBackdrop.addEventListener('click', (e) => {
+      if (e.target === lmsBackdrop) closeLmsModal();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lmsBackdrop && lmsBackdrop.classList.contains('open')) {
+      closeLmsModal();
+    }
   });
 
   function takeAction(alert) {
@@ -6986,6 +7374,36 @@ if (document.readyState === 'loading') {
   </div>
   <div class="insights-toast" id="insights-toast"></div>
 </aside>
+
+<!-- LMS Action Modal — confirms what will be written back to the
+     PIL LMS ERP when the user acknowledges an alert. -->
+<div class="lms-modal-backdrop" id="lms-modal-backdrop" aria-hidden="true" role="dialog">
+  <div class="lms-modal" role="document">
+    <div class="lms-modal-header">
+      <div>
+        <div class="lms-modal-eyebrow" id="lms-modal-eyebrow">CREATE LMS OBJECT</div>
+        <div class="lms-modal-title" id="lms-modal-title">…</div>
+      </div>
+      <button class="lms-modal-close" id="lms-modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="lms-modal-body">
+      <div class="lms-modal-summary" id="lms-modal-summary">…</div>
+      <div class="lms-modal-fields" id="lms-modal-fields"></div>
+      <div class="lms-modal-note">
+        This will create an LMS object in <b>DRAFT</b> status at
+        <b>lms.pilship.com</b>. Ops can edit fields and activate before
+        execution.
+      </div>
+    </div>
+    <div class="lms-modal-actions">
+      <button class="lms-btn lms-btn-cancel" id="lms-modal-cancel">Cancel</button>
+      <button class="lms-btn lms-btn-create" id="lms-modal-create">
+        <span class="lms-spinner"></span>
+        <span class="lms-btn-create-label">Create in LMS &#9656;</span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════
      VESSEL SCHEDULE DRAWER
