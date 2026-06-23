@@ -2838,6 +2838,23 @@ window.onCardSectionToggle = function(domain, id, checked) {
   rerenderOpenPopups();
 };
 
+// Right-side drawer stacking — whichever panel is opened (or clicked
+// while open) jumps above the others. Without this, the higher static
+// z-index always wins regardless of click order.
+window.__rightPanelFront = null;
+window.raiseRightPanel = function(targetId) {
+  if (window.__rightPanelFront === targetId) return;
+  ['insights-panel', 'aisha-panel', 'schedule-panel'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.zIndex = (id === targetId) ? '1460' : '1450';
+  });
+  window.__rightPanelFront = targetId;
+};
+window.clearRightPanelFront = function(closedId) {
+  if (window.__rightPanelFront === closedId) window.__rightPanelFront = null;
+};
+
 // ── Insight Subscriptions panel (sidebar) ───────────────────────
 // Lists every alert category as a tick-box. Ticked = receive,
 // unticked = muted. State is owned by the Insights drawer; this
@@ -6093,17 +6110,36 @@ function initAisha() {
       seedWelcome();
       msgsEl.dataset.seeded = '1';
     }
+    if (typeof window.raiseRightPanel === 'function') {
+      window.raiseRightPanel('aisha-panel');
+    }
   };
   const closePanel = () => {
     panel.classList.remove('open');
     fab.classList.remove('aisha-active', 'aisha-hidden');
+    if (typeof window.clearRightPanelFront === 'function') {
+      window.clearRightPanelFront('aisha-panel');
+    }
   };
 
   fab.addEventListener('click', () => {
-    if (panel.classList.contains('open')) closePanel();
-    else openPanel();
+    if (panel.classList.contains('open')) {
+      // Mac-dock pattern: if open AND at front, close; if open AND
+      // behind another drawer, raise to front instead of closing.
+      if (window.__rightPanelFront === 'aisha-panel') closePanel();
+      else window.raiseRightPanel('aisha-panel');
+    } else {
+      openPanel();
+    }
   });
   closeBtn.addEventListener('click', closePanel);
+
+  // Clicking anywhere on the panel body also brings it to front
+  panel.addEventListener('mousedown', () => {
+    if (typeof window.raiseRightPanel === 'function') {
+      window.raiseRightPanel('aisha-panel');
+    }
+  });
 
   // ESC closes the panel (don't conflict with the P&L panel handler)
   document.addEventListener('keydown', (e) => {
@@ -7023,22 +7059,42 @@ function initInsights() {
   }
 
   function openDrawer() {
-    // Close other right-side drawers to avoid stacking
+    // Close the schedule panel to avoid 3-way stacking, but let AISHA
+    // coexist (Insights jumps to front, AISHA drops behind).
     const sched = document.getElementById('schedule-panel');
     if (sched) sched.classList.remove('open');
     panel.classList.add('open');
     panel.setAttribute('aria-hidden', 'false');
+    if (typeof window.raiseRightPanel === 'function') {
+      window.raiseRightPanel('insights-panel');
+    }
   }
   function closeDrawer() {
     panel.classList.remove('open');
     panel.setAttribute('aria-hidden', 'true');
+    if (typeof window.clearRightPanelFront === 'function') {
+      window.clearRightPanelFront('insights-panel');
+    }
   }
 
   trigger.addEventListener('click', () => {
-    if (panel.classList.contains('open')) closeDrawer();
-    else openDrawer();
+    if (panel.classList.contains('open')) {
+      // Mac-dock pattern: if open AND at front, close; if open AND
+      // behind another drawer, raise to front instead of closing.
+      if (window.__rightPanelFront === 'insights-panel') closeDrawer();
+      else window.raiseRightPanel('insights-panel');
+    } else {
+      openDrawer();
+    }
   });
   closeBtn.addEventListener('click', closeDrawer);
+
+  // Clicking anywhere on the panel body also brings it to front
+  panel.addEventListener('mousedown', () => {
+    if (typeof window.raiseRightPanel === 'function') {
+      window.raiseRightPanel('insights-panel');
+    }
+  });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && panel.classList.contains('open')) closeDrawer();
