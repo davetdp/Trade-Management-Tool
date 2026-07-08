@@ -2263,6 +2263,19 @@
       transition: opacity .15s;
     }
     .access-gate-error.show { opacity: 1; }
+    .access-gate-credit {
+      margin-top: 22px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(0,180,255,0.10);
+      font-size: 9px;
+      color: #6a8aaa;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+    .access-gate-credit b {
+      color: #8ea8c8;
+      font-weight: 700;
+    }
     .access-gate-card.shake { animation: gate-shake .3s ease; }
     @keyframes gate-shake {
       0%, 100% { transform: translateX(0); }
@@ -2285,6 +2298,7 @@
       <button type="submit">Continue &#8594;</button>
     </form>
     <div class="access-gate-error" id="access-gate-error">Incorrect code. Try again.</div>
+    <div class="access-gate-credit">Developed by <b>Trade Development &amp; Planning</b></div>
   </div>
 </div>
 <script>
