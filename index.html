@@ -3466,9 +3466,17 @@ function bindSmartPopup(marker, popup, popupW, popupH) {
       }
       // Mouse is in the gap between marker and popup edge — keep alive
       const M = 28;
-      if (e.clientX >= r.left - M && e.clientX <= r.right  + M &&
-          e.clientY >= r.top  - M && e.clientY <= r.bottom + M) {
+      const inBridge = (
+        e.clientX >= r.left - M && e.clientX <= r.right  + M &&
+        e.clientY >= r.top  - M && e.clientY <= r.bottom + M
+      );
+      if (inBridge) {
         cancelClose();
+      } else if (!_closeTimer) {
+        // Mouse drifted out of the bridge zone without entering the popup.
+        // Without this, cancelClose() above would kill the original timer and
+        // nothing would ever re-schedule it — the popup would stay open forever.
+        scheduleClose();
       }
     };
     document.addEventListener('mousemove', _moveGuard);
