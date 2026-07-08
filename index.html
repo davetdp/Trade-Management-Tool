@@ -2171,9 +2171,159 @@
       }
       .aisha-greeting { right: 90px; max-width: 220px; }
     }
+
+    /* ── Access gate — client-side password overlay ─────────
+       Casual protection to keep the demo out of search results and
+       random visitors. 7-day localStorage grant so users don't have
+       to re-enter. NOT real security — code is in JS source. */
+    .access-gate {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg, #050d1a 0%, #071024 100%);
+      z-index: 100000;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .access-gate.hidden { display: none !important; }
+    .access-gate-card {
+      width: min(360px, 92vw);
+      padding: 40px 32px 28px;
+      background: rgba(7, 16, 36, 0.6);
+      border: 1px solid rgba(0, 180, 255, 0.18);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      text-align: center;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    }
+    .access-gate-logo {
+      width: 60px; height: 60px;
+      margin: 0 auto 16px;
+      display: block;
+      filter: drop-shadow(0 0 12px rgba(0, 180, 255, 0.5));
+    }
+    .access-gate-title {
+      font-size: 15px; font-weight: 700;
+      color: #e8f4ff;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+    }
+    .access-gate-subtitle {
+      font-size: 10px; color: #6a8aaa;
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+    }
+    .access-gate-form {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .access-gate-form input {
+      padding: 11px 14px;
+      background: rgba(0, 180, 255, 0.06);
+      border: 1px solid rgba(0, 180, 255, 0.28);
+      border-radius: 8px;
+      color: #e8f4ff;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s, background .15s;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .access-gate-form input:focus {
+      border-color: rgba(0, 180, 255, 0.55);
+      background: rgba(0, 180, 255, 0.10);
+    }
+    .access-gate-form input::placeholder {
+      color: #6a8aaa;
+      letter-spacing: 0.4px;
+      text-transform: none;
+    }
+    .access-gate-form button {
+      padding: 10px 14px;
+      background: linear-gradient(135deg, #00b4ff 0%, #0066cc 100%);
+      border: 1px solid rgba(0,180,255,0.6);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: box-shadow .15s;
+    }
+    .access-gate-form button:hover {
+      box-shadow: 0 0 14px rgba(0,180,255,0.5);
+    }
+    .access-gate-error {
+      margin-top: 12px;
+      font-size: 11px;
+      color: #ff4d6a;
+      min-height: 14px;
+      opacity: 0;
+      transition: opacity .15s;
+    }
+    .access-gate-error.show { opacity: 1; }
+    .access-gate-card.shake { animation: gate-shake .3s ease; }
+    @keyframes gate-shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
   </style>
 </head>
 <body class="sidebar-hidden">
+
+<!-- ACCESS GATE — client-side password overlay, hidden after correct code
+     entry (7-day localStorage grant). Blocks the map/UI behind it. -->
+<div class="access-gate" id="access-gate">
+  <div class="access-gate-card">
+    <img src="ship-logo.png" alt="SHIP" class="access-gate-logo"/>
+    <div class="access-gate-title">Sea Hawk Intelligence Portal</div>
+    <div class="access-gate-subtitle">PIL internal preview &mdash; access code required</div>
+    <form class="access-gate-form" id="access-gate-form" autocomplete="off">
+      <input type="password" id="access-gate-input" placeholder="Enter access code" autocomplete="off" spellcheck="false" autofocus/>
+      <button type="submit">Continue &#8594;</button>
+    </form>
+    <div class="access-gate-error" id="access-gate-error">Incorrect code. Try again.</div>
+  </div>
+</div>
+<script>
+  (function initAccessGate() {
+    var CODE = 'PIL-SHIP';
+    var STORAGE_KEY = 'ship-access-granted';
+    var TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+    var gate = document.getElementById('access-gate');
+    if (!gate) return;
+    // If already unlocked and grant is still fresh, hide the gate immediately.
+    try {
+      var ts = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+      if (ts && (Date.now() - ts) < TTL_MS) {
+        gate.classList.add('hidden');
+        return;
+      }
+    } catch (e) { /* localStorage unavailable — always prompt */ }
+    var form  = document.getElementById('access-gate-form');
+    var input = document.getElementById('access-gate-input');
+    var err   = document.getElementById('access-gate-error');
+    var card  = gate.querySelector('.access-gate-card');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var val = (input.value || '').trim().toUpperCase();
+      if (val === CODE) {
+        try { localStorage.setItem(STORAGE_KEY, Date.now().toString()); } catch (e) {}
+        gate.classList.add('hidden');
+      } else {
+        err.classList.add('show');
+        card.classList.remove('shake');
+        void card.offsetWidth; // reflow to restart animation
+        card.classList.add('shake');
+        input.value = '';
+        input.focus();
+      }
+    });
+    setTimeout(function () { input.focus(); }, 60);
+  })();
+</script>
 
 <!-- NAV -->
 <nav>
