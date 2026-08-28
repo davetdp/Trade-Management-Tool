@@ -2877,8 +2877,10 @@ L.control.zoom({ position: 'topright' }).addTo(map);
 // Carto basemap API key — restricted to sea-hawk-intelligence-portal.vercel.app
 // and localhost via Carto dashboard settings, so exposure in client HTML is OK.
 const CARTO_KEY = 'cb1_2fbz_1_a22a142a2a5efe5ab2d6b038';
-const TILE_DARK  = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=' + CARTO_KEY;
-const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?api_key=' + CARTO_KEY;
+// Carto's key parameter is `key=` (not `api_key=`) per their docs.
+// Using the wrong name silently returns a watermarked tile from their CDN.
+const TILE_DARK  = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=' + CARTO_KEY;
+const TILE_LIGHT = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=' + CARTO_KEY;
 
 // Shared tile options — crossOrigin prevents CORS issues; keepBuffer keeps
 // already-loaded tiles in memory when the map pans/resizes.
